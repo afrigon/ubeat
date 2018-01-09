@@ -1,0 +1,11 @@
+td i {
+    visibility: hidden;
+}
+
+tr:hover td i {
+    visibility: visible;
+}
+
+#turntable {
+    transition: transform 0.25s ease, border-radius 0.25s ease-out;
+}
