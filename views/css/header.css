@@ -2,22 +2,10 @@
 .logo:hover .logo-main { fill: #E0E0E0; }
 #logo-letter { transform: translateY(-300px); }
 #logo-headphones, #logo-letter {
-    transition: opacity 1.5s ease, transform 1s ease, fill .5s ease;
+    transition: opacity 1.5s ease, transform 1s ease, fill 0.5s ease;
     opacity: 0;
 }
-#logo-headphones path { transition: fill .5s ease; }
-#logo-border {
-    stroke-dasharray: 5221.11572265625 5221.11572265625;
-    stroke-dashoffset: 5221.11572265625;
-    -webkit-transition: stroke-dashoffset 1000ms ease-in-out, 250ms opacity ease-out;
-    opacity: 0;
-}
-.logo:hover #logo-border {
-    /* stroke-dashoffset: 0;
-    opacity: 0.75; */
-}
-
-
+#logo-headphones path { transition: fill 0.5s ease; }
 
 header nav.underline-animate li::after { opacity: 0.75; }
 
