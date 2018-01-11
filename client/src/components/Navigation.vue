@@ -1,5 +1,5 @@
 <template>
-    <header class="no-scroll relative grey darken-5 margin-0 flex flex-spaced">
+    <header class="no-scroll grey darken-5 margin-0 flex flex-spaced">
         <div class="hide-after-s margin-left-30 margin-right-30 scroll-animate fadeInRight" style="flex-grow: 4">
             <i class="material-icons l text-white">menu</i>
         </div>
@@ -85,6 +85,7 @@
     #logo-headphones path { transition: fill 0.5s ease; }
 
     header nav.underline-animate li::after { opacity: 0.75; }
+    .input-wrapper label.active { transform: translateY(-8px) scale(.8); }
 
     #form-search { height: 100%; min-width: 350px; }
     #search-filter-wrapper {

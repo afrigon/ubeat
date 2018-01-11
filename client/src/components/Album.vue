@@ -41,7 +41,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="clickable">
-                                        <tr class="active">
+                                        <tr>
                                             <td class="text-center">1</td>
                                             <td>Close</td>
                                             <td>3:04</td>
