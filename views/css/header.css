@@ -23,4 +23,34 @@ header nav.underline-animate li::after { opacity: 0.75; }
     transition: border 300ms ease;
 }
 #search-filter-wrapper ul li:hover { background-color: #353535; }
-#search-filter-wrapper ul .active { border-bottom: 3px solid; background-color: #353535;  }
+#search-filter-wrapper ul .active { border-bottom: 3px solid; background-color: #353535; }
+
+.notch-left {
+    background: -moz-radial-gradient(0 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+    background: -o-radial-gradient(0 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+    background: -webkit-radial-gradient(0 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+    background-position: bottom left;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    left: -15px;
+    top: -1px;
+}
+
+.notch-right {
+    background: -moz-radial-gradient(100% 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+    background: -o-radial-gradient(100% 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+    background: -webkit-radial-gradient(100% 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+    background-position: bottom right;
+    -moz-background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    right: -15px;
+    top: -1px;
+}

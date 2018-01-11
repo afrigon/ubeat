@@ -151,15 +151,17 @@ class AutoScrollAnimator extends Component {
             'selector': options.selector || 'scroll-animate',
             'trigger': options.trigger || 'animate'
         }
+        this.didScroll = this.didScroll.bind(this)
+        this.scrollCallback = this.scrollCallback.bind(this)
     }
 
     init () {
         const tickInterval = 50
-        window.scrollAnimator = this
         this.hasScroll = true // will animate elements visible on page load
         this.elements = document.querySelectorAll(`.${this.options.selector}`)
         if (this.elements.length) {
             this.elements.forEach((element) => {
+                element.classList.remove('animate')
                 this.setVisibility(element, false)
             })
             Util.addEvent(this.options.scrollContainer, 'scroll', this.didScroll)
@@ -210,25 +212,25 @@ class AutoScrollAnimator extends Component {
     }
 
     didScroll () {
-        window.scrollAnimator.hasScroll = true
+        this.hasScroll = true
     }
 
     scrollCallback () {
-        if (this.scrollAnimator.hasScroll) {
-            this.scrollAnimator.hasScroll = false
-            if (!this.scrollAnimator.elements.length) {
-                Util.removeEvent(this.scrollAnimator.options.scrollContainer, 'scroll', this.scrollAnimator.didScroll)
-                Util.removeEvent(this.scrollAnimator.options.scrollContainer, 'resize', this.scrollAnimator.didScroll)
-                if (this.scrollAnimator.timer) {
-                    clearInterval(this.scrollAnimator.timer)
+        if (this.hasScroll) {
+            this.hasScroll = false
+            if (!this.elements.length) {
+                Util.removeEvent(this.options.scrollContainer, 'scroll', this.didScroll)
+                Util.removeEvent(this.options.scrollContainer, 'resize', this.didScroll)
+                if (this.timer) {
+                    clearInterval(this.timer)
                 }
                 return
             }
 
-            this.scrollAnimator.elements = Array.from(this.scrollAnimator.elements).filter((element) => {
-                if (this.scrollAnimator.isElementOnScreen(element)) {
-                    this.scrollAnimator.setVisibility(element, true)
-                    element.className += ` ${this.scrollAnimator.options.trigger}`
+            this.elements = Array.from(this.elements).filter((element) => {
+                if (this.isElementOnScreen(element)) {
+                    this.setVisibility(element, true)
+                    element.className += ` ${this.options.trigger}`
                     return false
                 }
 
@@ -459,4 +461,24 @@ class OpacityScrollAnimator extends ScrollAnimator {
         const value = (100 - percent) * (this.options.endValue - this.options.startValue) / 100 + this.options.startValue
         this.element.style.opacity = value
     }
+}
+
+var flags = 0
+function setFilter (event, value) {
+    if (event) { event.preventDefault() }
+    if ((flags & value) !== 0) {
+        flags -= (flags & value)
+    } else {
+        flags |= value
+    }
+
+    document.getElementById('search-filter').value = [1, 2, 4, 8].map((n) => {
+        if ((n & flags) === 0) {
+            document.getElementById(`filter-button-${n}`).classList.remove('active')
+            return null
+        }
+
+        document.getElementById(`filter-button-${n}`).classList.add('active')
+        return n
+    }).join(',')
 }

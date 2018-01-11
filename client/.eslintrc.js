@@ -1,14 +1,15 @@
 module.exports = {
-    root: true,
     parser: 'babel-eslint',
     extends: 'standard',
     parserOptions: {
         sourceType: 'module'
     },
     env: {
-        node: true
+        browser: true
     },
+    plugins: ['html', 'import'],
     rules: {
-        indent: [2, 4]
+        indent: [2, 4],
+        'import/extensions': ['error', 'never']
     }
 }

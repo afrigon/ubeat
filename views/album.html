@@ -46,16 +46,18 @@
             </nav>
             <form id="form-search" class="center-vertical column s6 padding-0">
                 <div class="input-wrapper margin-0 margin-up-5 grey darken-5">
-                    <input type="search" onfocus="document.getElementById('search-filter-wrapper').style.top = '70px'" onblur="document.getElementById('search-filter-wrapper').style.top = '30px'"/>
+                    <input type="search" name="q" onfocus="document.getElementById('search-filter-wrapper').style.top = '70px'" onblur="document.getElementById('search-filter-wrapper').style.top = '30px'"/>
                     <label>Search</label>
                 </div>
-                <div id="search-filter-wrapper" class="center">
+                <div id="search-filter-wrapper" class="center relative">
                     <select id="search-filter" name="filter" class="gone" multiple>
                         <option value="1"></option>
                         <option value="2"></option>
                         <option value="4"></option>
                         <option value="8"></option>
                     </select>
+                    <div class="notch-left absolute"></div>
+                    <div class="notch-right absolute"></div>
                     <ul class="capitalize clickable text-white grey darken-5 margin-0 padding-left-15 padding-right-15">
                         <li id="filter-button-1" onmousedown="setFilter(event, 1)" class="inline-block text-thin text-size-small-8 padding-left-15 padding-right-15 padding-up-10 padding-down-5 primary-border">artist</li>
                         <li id="filter-button-2" onmousedown="setFilter(event, 2)" class="inline-block text-thin text-size-small-8 padding-left-15 padding-right-15 padding-up-10 padding-down-5 primary-border">album</li>
@@ -102,10 +104,10 @@
                                         <table class="interactive text-light-color">
                                             <thead>
                                                 <tr class="uppercase text-grey text-darken-3 text-size-small-9">
-                                                    <th>&nbsp</th>
+                                                    <th></th>
                                                     <th>name</th>
                                                     <th>time</th>
-                                                    <th>&nbsp</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody class="clickable">
