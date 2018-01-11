@@ -1,9 +1,12 @@
 <template>
-    <header class="relative grey darken-5 row margin-0">
-        <nav class="left underline-animate column s3 padding-0 margin-0">
+    <header class="no-scroll relative grey darken-5 margin-0 flex flex-spaced">
+        <div class="hide-after-s margin-left-30 margin-right-30 scroll-animate fadeInRight" style="flex-grow: 4">
+            <i class="material-icons l text-white">menu</i>
+        </div>
+        <nav class="underline-animate padding-0 margin-0 scroll-animate fadeInScale" style="flex-grow: 4">
             <a class="block clickable" href="index.html">
-                <div class="logo animate fadeIn">
-                    <svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1500 1500" enable-background="new 0 0 1500 1500" xml:space="preserve">
+                <div class="logo">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1500 1500" enable-background="new 0 0 1500 1500" xml:space="preserve">
                         <path id="logo-letter" fill="#FFFFFF" d="M637.529,1317.249c-33.94-10.352-63.983-25.649-90.111-45.892c-26.135-20.234-46.534-46.528-61.189-78.878c-14.663-32.343-21.99-69.077-21.99-110.188v-382.91c0-21.348,6.693-38.557,20.079-51.629c13.385-13.063,29.474-19.6,48.281-19.6c18.8,0,34.972,6.536,48.522,19.6c13.541,13.072,20.316,30.281,20.316,51.629v379.564c0,24.858,4.22,46.93,12.668,66.208c8.44,19.288,19.675,34.502,33.701,45.653c14.02,11.16,29.556,19.601,46.609,25.336c17.045,5.736,35.136,8.605,54.257,8.605c19.122,0,37.287-2.869,54.497-8.605c17.21-5.735,32.984-14.176,47.326-25.336c14.341-11.151,25.733-26.365,34.18-45.653c8.439-19.278,12.669-41.35,12.669-66.208V699.381c0-21.348,6.767-38.557,20.316-51.629c13.543-13.063,29.712-19.6,48.521-19.6c18.479,0,34.493,6.536,48.043,19.6c13.543,13.072,20.317,30.281,20.317,51.629v382.91c0,41.111-7.41,77.764-22.229,109.949c-14.819,32.194-35.301,58.402-61.428,78.638c-26.135,20.243-56.334,35.614-90.588,46.132c-34.262,10.517-71.468,15.773-111.624,15.773C708.518,1332.783,671.47,1327.601,637.529,1317.249z"/>
                         <g id="logo-headphones">
                             <path fill="#FFFFFF" d="M452,616.259v183.568c0,0-4.175,35.313-47.88,35.313c0,0-44.12,10.926-44.12-39.335V616.259c0,0-1.467-43.357,44.425-43.357C450.317,572.902,452,616.259,452,616.259z"/>
@@ -15,18 +18,18 @@
                     </svg>
                 </div>
             </a>
-            <ul class="margin-left-30 capitalize scroll-animate fadeIn">
+            <ul class="margin-left-30 capitalize hide-until-m">
                 <router-link to="/"><li>Home</li></router-link>
                 <router-link to="/album"><li>Album</li></router-link>
                 <router-link to="/artist"><li>Artist</li></router-link>
             </ul>
         </nav>
-        <form id="form-search" class="center-vertical column s6 padding-0">
+        <form id="form-search" class="padding-0 flex flex-center hide-until-l">
             <div class="input-wrapper margin-0 margin-up-5 grey darken-5">
                 <input type="search" name="q" onfocus="document.getElementById('search-filter-wrapper').style.top = '70px'" onblur="document.getElementById('search-filter-wrapper').style.top = '30px'"/>
                 <label>Search</label>
             </div>
-            <div id="search-filter-wrapper" class="center relative">
+            <div id="search-filter-wrapper">
                 <select id="search-filter" name="filter" class="gone" multiple>
                     <option value="1"></option>
                     <option value="2"></option>
@@ -43,21 +46,32 @@
                 </ul>
             </div>
         </form>
+        <div id="avatar" class="text-right flex flex-right scroll-animate fadeInLeft" style="flex-grow: 4">
+            <p class="text-white inline-block margin-0 margin-right-20 truncate hide-until-l">alexfrigon154</p>
+            <div class="margin-left-30 margin-right-30 flex flex-center clickable">
+                <img class="circle primary-border" src="/static/card.jpg" />
+                <i class="material-icons text-white">keyboard_arrow_down</i>
+            </div>
+        </div>
     </header>
 </template>
 
 <script>
-    // setFilter(null, 7)
-
-    /* setTimeout(function () {
-        document.getElementById('logo-letter').style.opacity = 1
-    }, 200)
-    setTimeout(function () {
-        document.getElementById('logo-headphones').style.opacity = 1
-    }, 800)
-    setTimeout(function () {
-        document.getElementById('logo-letter').style.transform = 'none'
-    }, 1200) */
+    export default {
+        mounted () {
+            this.load()
+        },
+        watch: { '$route': 'load' },
+        methods: {
+            load () {
+                const letter = document.getElementById('logo-letter')
+                const headphones = document.getElementById('logo-headphones')
+                setTimeout(() => { return (letter.style.opacity = 1) }, 200)
+                setTimeout(() => { return (headphones.style.opacity = 1) }, 800)
+                setTimeout(() => { return (letter.style.transform = 'none') }, 1200)
+            }
+        }
+    }
 </script>
 
 <style>
@@ -72,7 +86,7 @@
 
     header nav.underline-animate li::after { opacity: 0.75; }
 
-    #form-search { height: 100%; }
+    #form-search { height: 100%; min-width: 350px; }
     #search-filter-wrapper {
         position: absolute;
         height: 40px;
@@ -116,5 +130,15 @@
         height: 16px;
         right: -15px;
         top: -1px;
+    }
+
+    #avatar img {
+        width: 40px;
+        height: 40px;
+        border: solid 2px;
+    }
+
+    #avatar p {
+        min-width: 150px;
     }
 </style>

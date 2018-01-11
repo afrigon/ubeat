@@ -17,7 +17,7 @@ module.exports = {
         symlinks: false,
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
-            '@': sourceDir,
+            '@': sourceDir
         }
     },
     module: {
@@ -25,7 +25,7 @@ module.exports = {
             test: /\.(js|vue)$/,
             loader: 'eslint-loader',
             enforce: 'pre',
-            include: sourceDir,
+            include: sourceDir
         }, {
             test: /\.vue$/,
             loader: 'vue-loader',

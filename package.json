@@ -5,6 +5,8 @@
   "main": "server.js",
   "scripts": {
     "build": "webpack -d --config client/webpack.config.js",
+    "build-watch": "webpack -d --watch --config client/webpack.config.js",
+    "build-prod": "webpack -p --config client/webpack.config.js",
     "start": "node server.js",
     "lint": "eslint --ext .js,.vue ."
   },
