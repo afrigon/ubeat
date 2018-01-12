@@ -1,9 +1,9 @@
-![](http://res.cloudinary.com/frigstudio/image/upload/v1514115143/image-resize-banner_guzwlg.jpg)
+![](https://raw.githubusercontent.com/afrigon/ubeat/master/static/img/banner.jpg)
 
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
 [![Dependency Status](https://david-dm.org/afrigon/ubeat/status.svg)](https://david-dm.org/afrigon/ubeat)
 
-This command line interface enables you to resize squared images to desired size super quickly.
+Ubeat is a platform to share music with friends created for the course GLO-3201 at University Laval.
 
 ## Installation
 
