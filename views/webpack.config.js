@@ -48,7 +48,7 @@ module.exports = {
         new webpack.NoEmitOnErrorsPlugin(),
         new HtmlWebpackPlugin({
             filename: path.join('index.html'),
-            template: path.join('src', 'index.html'),
+            template: path.join('views', 'index.html'),
             inject: true
         })
     ]

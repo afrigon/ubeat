@@ -14,10 +14,14 @@
         mounted () {
             this.load()
         },
-        watch: { '$route': 'load' },
         methods: {
             load () {
                 FS.addComponent(new AutoScrollAnimator()) // eslint-disable-line no-undef
+                setTimeout(() => {
+                    document.getElementById('link-home').classList.add('active')
+                    document.getElementById('link-artist').classList.remove('active')
+                    document.getElementById('link-album').classList.remove('active')
+                }, 100)
             }
         }
     }

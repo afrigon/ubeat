@@ -13,7 +13,7 @@
                         </div>
                         <div class="column s12 m6 l12 padding-0 scroll-animate blurInRight">
                             <div class="row">
-                                <a target="_blank" href="https://geo.itunes.apple.com/ca/album/connecting-the-dots-ep/1255658593?app=itunes" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/itunes-lrg.svg) no-repeat;width:110px;height:40px;background-size:contain"></a>
+                                <a class="itunes-button" target="_blank" href="https://geo.itunes.apple.com/ca/album/connecting-the-dots-ep/1255658593?app=itunes"></a>
                             </div>
                         </div>
                     </div>
@@ -22,7 +22,7 @@
                             <h2 class="text-light-color text-size-5 margin-down-0 scroll-animate blurInLeft">Connecting the dots EP</h2>
                             <div class="row margin-0">
                                 <div class="column s12 l6 padding-0">
-                                    <a class="no-hover-decoration" href="#"><h3 class="text-primary-light text-size-3 text-thin margin-left-20 margin-0"><span class="text-size-2">by </span>Conro</h3></a>
+                                    <a class="no-hover-decoration" href="/#/artist?id=1"><h3 class="text-primary-light text-size-3 text-thin margin-left-20 margin-0"><span class="text-size-2">by </span>Conro</h3></a>
                                 </div>
                                 <div class="column s12 l6 padding-0">
                                     <h5 class="text-grey text-size-1 text-thin margin-0 padding-5 margin-left-15">Dance • 2017</h5>
@@ -93,10 +93,14 @@
         mounted () {
             this.load()
         },
-        watch: { '$route': 'load' },
         methods: {
             load () {
                 FS.addComponent(new AutoScrollAnimator()) // eslint-disable-line no-undef
+                setTimeout(() => {
+                    document.getElementById('link-home').classList.remove('active')
+                    document.getElementById('link-artist').classList.remove('active')
+                    document.getElementById('link-album').classList.add('active')
+                }, 100)
             }
         }
     }
@@ -112,5 +116,14 @@
         line-height: 200px;
         width: 200px;
         text-shadow: 1px 1px 10px rgba(0, 0, 0, 1);
+    }
+
+    .itunes-button {
+        display: inline-block;
+        overflow: hidden;
+        background: url(https://linkmaker.itunes.apple.com/assets/shared/badges/en-us/itunes-lrg.svg) no-repeat;
+        width: 110px;
+        height :40px;
+        background-size: contain
     }
 </style>

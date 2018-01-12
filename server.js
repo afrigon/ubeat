@@ -15,7 +15,7 @@ if (process.argv.indexOf('-p') !== -1) {
     const webpack = require('webpack')
     const webpackDev = require('webpack-dev-middleware')
     const webpackHot = require('webpack-hot-middleware')
-    const webpackConfig = require(path.join(__dirname, 'src', 'webpack.config'))
+    const webpackConfig = require(path.join(__dirname, 'views', 'webpack.config'))
     const compiler = webpack(webpackConfig)
 
     app.use(webpackDev(compiler, {
@@ -41,7 +41,7 @@ app.get('/artist', (req, res) => { return res.redirect('/#/artist') })
 app.use('/api', proxy({
     target: 'https://ubeat.herokuapp.com',
     changeOrigin: true,
-    pathRewrite: {'^/api' : ''},
+    pathRewrite: { '^/api': '' },
     logLevel: 'warn'
 }))
 
