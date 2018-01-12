@@ -26,12 +26,12 @@ You can now run the server in production mode with the following command.
 npm run-script start-prod
 ```
 
-The website will now be accessible according the configuration file ```config.json```. The following routes are available with the default configuration.
+The website will now be accessible according the configuration file ```config.json```. The following routes are available at ```localhost:8080``` with the default configuration.
 
 ```
-localhost:8080
-localhost:8080/album
-localhost:8080/artist
+/
+/album
+/artist
 ```
 
 ### License
