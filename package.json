@@ -4,12 +4,14 @@
   "description": "Project for GLO-3102 at University Laval",
   "main": "server.js",
   "scripts": {
-    "build": "webpack -d --config client/webpack.config.js",
-    "build-watch": "webpack -d --watch --config client/webpack.config.js",
-    "build-prod": "webpack -p --config client/webpack.config.js",
+    "build-prod": "webpack --config src/webpack.prod.config.js",
     "start": "node server.js",
+    "start-prod": "webpack --config src/webpack.prod.config.js && node server.js -p",
     "lint": "eslint --ext .js,.vue ."
   },
+  "eslintIgnore": [
+    "client/dist/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/afrigon/ubeat.git"
@@ -21,8 +23,8 @@
   "homepage": "https://github.com/afrigon/ubeat#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "connect-history-api-fallback": "^1.5.0",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "http-proxy-middleware": "^0.17.4"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -39,12 +41,19 @@
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
+    "eventsource-polyfill": "^0.9.6",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
     "vue": "^2.5.13",
     "vue-loader": "^13.7.0",
     "vue-router": "^3.0.1",
     "vue-style-loader": "^3.0.3",
     "vue-template-compiler": "^2.5.13",
-    "webpack": "^3.10.0"
+    "webpack": "^3.10.0",
+    "webpack-dev-middleware": "^2.0.4",
+    "webpack-hot-middleware": "^2.21.0"
   }
 }

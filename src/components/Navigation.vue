@@ -3,9 +3,9 @@
         <div class="hide-after-s margin-left-30 margin-right-30 scroll-animate fadeInRight" style="flex-grow: 4">
             <i class="material-icons l text-white">menu</i>
         </div>
-        <nav class="underline-animate padding-0 margin-0 scroll-animate fadeInScale" style="flex-grow: 4">
+        <nav class="underline-animate padding-0 margin-0 scroll-animate fadeIn" style="flex-grow: 4">
             <a class="block clickable" href="index.html">
-                <div class="logo">
+                <div class="logo scroll-animate fadeInScale">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1500 1500" enable-background="new 0 0 1500 1500" xml:space="preserve">
                         <path id="logo-letter" fill="#FFFFFF" d="M637.529,1317.249c-33.94-10.352-63.983-25.649-90.111-45.892c-26.135-20.234-46.534-46.528-61.189-78.878c-14.663-32.343-21.99-69.077-21.99-110.188v-382.91c0-21.348,6.693-38.557,20.079-51.629c13.385-13.063,29.474-19.6,48.281-19.6c18.8,0,34.972,6.536,48.522,19.6c13.541,13.072,20.316,30.281,20.316,51.629v379.564c0,24.858,4.22,46.93,12.668,66.208c8.44,19.288,19.675,34.502,33.701,45.653c14.02,11.16,29.556,19.601,46.609,25.336c17.045,5.736,35.136,8.605,54.257,8.605c19.122,0,37.287-2.869,54.497-8.605c17.21-5.735,32.984-14.176,47.326-25.336c14.341-11.151,25.733-26.365,34.18-45.653c8.439-19.278,12.669-41.35,12.669-66.208V699.381c0-21.348,6.767-38.557,20.316-51.629c13.543-13.063,29.712-19.6,48.521-19.6c18.479,0,34.493,6.536,48.043,19.6c13.543,13.072,20.317,30.281,20.317,51.629v382.91c0,41.111-7.41,77.764-22.229,109.949c-14.819,32.194-35.301,58.402-61.428,78.638c-26.135,20.243-56.334,35.614-90.588,46.132c-34.262,10.517-71.468,15.773-111.624,15.773C708.518,1332.783,671.47,1327.601,637.529,1317.249z"/>
                         <g id="logo-headphones">
@@ -49,7 +49,7 @@
         <div id="avatar" class="text-right flex flex-right scroll-animate fadeInLeft" style="flex-grow: 4">
             <p class="text-white inline-block margin-0 margin-right-20 truncate hide-until-l">alexfrigon154</p>
             <div class="margin-left-30 margin-right-30 flex flex-center clickable">
-                <img class="circle primary-border" src="/static/card.jpg" />
+                <img class="circle primary-border" src="/static/img/card.jpg" />
                 <i class="material-icons text-white">keyboard_arrow_down</i>
             </div>
         </div>
@@ -74,9 +74,7 @@
     }
 </script>
 
-<style>
-    .logo:hover{ border-color: #E0E0E0; }
-    .logo:hover .logo-main { fill: #E0E0E0; }
+<style lang="scss">
     #logo-letter { transform: translateY(-300px); }
     #logo-headphones, #logo-letter {
         transition: opacity 1.5s ease, transform 1s ease, fill 0.5s ease;
@@ -94,14 +92,24 @@
         top: 30px;
         transition: top 300ms ease-out, opacity 300ms ease-in;
         z-index: -1;
+
+        ul {
+            border-radius: 0 0 15px 15px;
+            height: 100%;
+
+            .active {
+                border-bottom: 3px solid;
+                background-color: #353535;
+            }
+
+            li {
+                border: 0px solid;
+                transition: border 300ms ease;
+
+                &:hover { background-color: #353535; }
+            }
+        }
     }
-    #search-filter-wrapper ul { border-radius: 0 0 15px 15px; height: 100%; }
-    #search-filter-wrapper ul li { 
-        border: 0px solid;
-        transition: border 300ms ease;
-    }
-    #search-filter-wrapper ul li:hover { background-color: #353535; }
-    #search-filter-wrapper ul .active { border-bottom: 3px solid; background-color: #353535; }
 
     .notch-left {
         background: -moz-radial-gradient(0 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
@@ -133,13 +141,13 @@
         top: -1px;
     }
 
-    #avatar img {
-        width: 40px;
-        height: 40px;
-        border: solid 2px;
-    }
+    #avatar {
+        img {
+            width: 40px;
+            height: 40px;
+            border: solid 2px;
+        }
 
-    #avatar p {
-        min-width: 150px;
+        p { min-width: 150px; }
     }
 </style>
