@@ -3,7 +3,7 @@
         <div class="section">
             <div class="row">
                 <div class="column s12">
-                    <div class="column s12 l5 text-center scroll-animate blurInRight">
+                    <div class="column s12 l5 text-center scroll-animate fadeInRight">
                         <div class="column s12 m6 l12 padding-0 relative">
                             <img id="albumArt" alt="Connecting the Dots EP album art" class="hoverable-pop no-select" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/200x200bb.jpg" 
                                  srcset="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/200x200bb.jpg,
@@ -13,7 +13,7 @@
                                 <p id="releaseDate" class="text-grey text-center text-size-small-5 margin-0">Released: August 9, 2017</p>
                             </div>
                         </div>
-                        <div class="column s12 m6 l12 padding-0 scroll-animate blurInRight">
+                        <div class="column s12 m6 l12 padding-0 scroll-animate fadeInRight">
                             <div class="row">
                                 <a class="itunes-button" target="_blank" rel="noopener" href="https://geo.itunes.apple.com/ca/album/connecting-the-dots-ep/1255658593?app=itunes"></a>
                             </div>
@@ -21,7 +21,7 @@
                     </div>
                     <div class="column s12 l7 padding-0">
                         <div class="scroll-animate fadeInLeft">
-                            <h2 id="collectionName" class="text-light-color text-size-5 margin-down-0 scroll-animate blurInLeft">Connecting the dots EP</h2>
+                            <h2 id="collectionName" class="text-light-color text-size-5 margin-down-0 scroll-animate fadeInLeft">Connecting the dots EP</h2>
                             <div class="row margin-0">
                                 <div class="column s12 l6 padding-0">
                                     <a class="no-hover-decoration" href="/#/artist?id=583126594"><h3 class="text-primary-light text-size-3 text-thin margin-left-20 margin-0"><span class="text-size-2">by </span><span id="artistName">Conro</span></h3></a>
@@ -31,7 +31,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="section padding-left-0 padding-right-0 scroll-animate blurIn">
+                        <div class="section padding-left-0 padding-right-0 scroll-animate fadeIn">
                             <div class="row">
                                 <table class="interactive text-light-color">
                                     <thead>

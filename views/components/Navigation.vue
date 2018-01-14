@@ -1,7 +1,19 @@
 <template>
     <header class="grey darken-5 margin-0 flex flex-spaced">
-        <div class="hide-after-s scroll-animate fadeInRight">
+        <div class="hide-after-s scroll-animate fadeInRight drawer-action" data-drawer-wrapper-id="drawer-menu">
             <i class="material-icons m text-white margin-left-25">menu</i>
+        </div>
+        <div id="drawer-menu" class="drawer-wrapper">
+            <nav>
+                <ul class="capitalize">
+                    <router-link id="link-home" to="/">
+                        <i class="material-icons">settings</i>
+                        <li>Home</li>
+                    </router-link>
+                    <router-link id="link-artist" to="/artist"><li>Artist</li></router-link>
+                    <router-link id="link-album" to="/album"><li>Album</li></router-link>
+                </ul>
+            </nav>
         </div>
         <nav class="underline-animate padding-0 margin-0 margin-left-25 margin-right-25 scroll-animate fadeIn text-left">
             <a class="block clickable" href="/#/">

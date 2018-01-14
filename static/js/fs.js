@@ -66,9 +66,14 @@ class FS {
     static logError (err) {
         console.error(`FrigStudio Error line(${err.line}:${err.column}): ${err.message}`)
     }
+    
+    static init () {
+        FS.addComponent(new MaterialInput())
+        FS.addComponent(new Drawer())
+    }
 }
 
-class FrigstudioInit extends Component {
+class MaterialInput extends Component {
     init () {
         const selector = 'input[type=text], input[type=password], input[type=email], input[type=url], input[type=tel], input[type=number], input[type=search], textarea'
         document.querySelectorAll(selector).forEach((element) => {
@@ -87,7 +92,45 @@ class FrigstudioInit extends Component {
         })
     }
 }
-FS.addComponent(new FrigstudioInit())
+
+class Drawer extends Component {
+    init () {
+        this.initDrawers()
+        this.initActions()
+    }
+
+    initDrawers () {
+        const drawers = document.querySelectorAll('.drawer-wrapper')
+        return drawers.forEach((drawer) => {
+            return this.initDrawer(drawer)
+        })
+    }
+
+    initDrawer (drawer) {
+        const component = document.createElement('div')
+        component.classList.add('drawer')
+        while (drawer.firstChild) { component.appendChild(drawer.removeChild(drawer.firstChild)) }
+        drawer.appendChild(component)
+
+        const filter = document.createElement('div')
+        filter.classList.add('drawer-filter')
+        Util.addEvent(filter, 'click', (event) => {
+            return event.currentTarget.parentNode.classList.remove('open')
+        })
+        return drawer.appendChild(filter)
+    }
+
+    initActions () {
+        const elements = document.querySelectorAll('.drawer-action')
+        return elements.forEach((element) => {
+            return Util.addEvent(element, 'click', (event) => {
+                const targetId = event.currentTarget.getAttribute('data-drawer-wrapper-id').replace(/^#/, '')
+                const target = document.getElementById(targetId)
+                return target && target.classList.add('open')
+            })
+        })
+    }
+}
 
 // eslint-disable-next-line no-unused-vars
 class FrigStudioLogo extends Component {
@@ -463,3 +506,5 @@ class OpacityScrollAnimator extends ScrollAnimator {
         this.element.style.opacity = value
     }
 }
+
+FS.init()
