@@ -1,4 +1,3 @@
-const config = require('./config')
 const path = require('path')
 const express = require('express')
 const app = express()
@@ -6,6 +5,7 @@ const server = require('http').createServer(app)
 const bodyParser = require('body-parser')
 const favicon = require('serve-favicon')
 const proxy = require('http-proxy-middleware')
+let config = require('./config')
 
 if (process.argv.indexOf('-p') !== -1) {
     config = config.prod;
