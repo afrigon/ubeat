@@ -4,7 +4,7 @@
   "description": "Project for GLO-3102 at University Laval",
   "main": "server.js",
   "scripts": {
-    "build-prod": "webpack --config views/webpack.prod.config.js",
+    "build": "webpack --config views/webpack.prod.config.js",
     "start": "node server.js",
     "start-prod": "webpack --config views/webpack.prod.config.js && node server.js -p",
     "lint": "eslint --ext .js,.vue . || :"
