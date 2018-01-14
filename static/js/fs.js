@@ -182,10 +182,11 @@ class AutoScrollAnimator extends Component {
         } catch (ex) {
             element.style.animationIterationCount = 0
         }
-        element.style.animationName = element.getAttribute('data-animation-name') || 'none'
-        return (element.style.visibility = isVisible
+
+        element.style.visibility = isVisible
             ? 'visible'
-            : 'hidden')
+            : 'hidden'
+        return (element.style.animationName = element.getAttribute('data-animation-name') || 'none')
     }
 
     getElementOffsetToTop (element, offset) {

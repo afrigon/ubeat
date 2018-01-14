@@ -4,13 +4,11 @@ const express = require('express')
 const app = express()
 const server = require('http').createServer(app)
 const bodyParser = require('body-parser')
+const favicon = require('serve-favicon')
 const proxy = require('http-proxy-middleware')
 
 if (process.argv.indexOf('-p') !== -1) {
     app.use('/js', express.static(path.join('.', 'dist', 'js')))
-    app.get('/', (req, res) => {
-        return res.sendFile(path.join(__dirname, 'dist', 'index.html'))
-    })
 } else {
     const webpack = require('webpack')
     const webpackDev = require('webpack-dev-middleware')
@@ -24,25 +22,38 @@ if (process.argv.indexOf('-p') !== -1) {
     }))
     app.use(webpackHot(compiler))
     compiler.plugin('compilation', (compilation) => {
-        compilation.plugin('html-webpack-plugin-after-emit', (data, callback) => {
+        return compilation.plugin('html-webpack-plugin-after-emit', (data, callback) => {
             webpackHot.publish({ action: 'reload' })
-            callback()
+            return callback()
         })
     })
 }
 
 app.disable('x-powered-by')
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(favicon(path.join(__dirname, 'assets', 'favicon.ico')))
 app.use('/static', express.static(path.join('.', 'static')))
-
-app.get('/album', (req, res) => { return res.redirect('/#/album') })
-app.get('/artist', (req, res) => { return res.redirect('/#/artist') })
-
 app.use('/api', proxy({
     target: 'https://ubeat.herokuapp.com',
     changeOrigin: true,
     pathRewrite: { '^/api': '' },
     logLevel: 'warn'
 }))
+
+app.get('/album', (req, res) => { return res.redirect('/#/album') })
+app.get('/artist', (req, res) => { return res.redirect('/#/artist') })
+
+app.get('/login', (req, res) => {
+    return res.send('login')
+})
+
+// res.cookie('access_token', 'abc', {
+//     maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+//     // secure: true
+// })
+
+app.get('/logout', (req, res) => {
+    return res.clearCookie('access_token') & res.redirect('/login')
+})
 
 server.listen(config.port, config.ip)

@@ -5,27 +5,26 @@
                 <div class="column s12">
                     <div class="column s12 l5 text-center scroll-animate blurInRight">
                         <div class="column s12 m6 l12 padding-0 relative">
-                            <i id="turntable-icon" class="material-icons icon-size-20 absolute text-white no-events invisible">play_arrow</i>
-                            <img id="turntable" onClick="spin()" class="hoverable-pop no-select" src="https://is4-ssl.mzstatic.com/image/thumb/Music117/v4/5c/cd/0c/5ccd0cfd-61b9-e372-fc34-c2b252597920/Conro_-_Connecting_The_Dots_EP.jpg/200x200bb.jpg" />
+                            <img alt="Connecting the Dots EP album art" class="hoverable-pop no-select" src="http://is5.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/200x200bb.jpg" />
                             <div class="row">
-                                <p class="text-grey text-center text-size-small-5 margin-0">Released: August 9, 2017</p>
+                                <p id="releaseDate" class="text-grey text-center text-size-small-5 margin-0">Released: August 9, 2017</p>
                             </div>
                         </div>
                         <div class="column s12 m6 l12 padding-0 scroll-animate blurInRight">
                             <div class="row">
-                                <a class="itunes-button" target="_blank" href="https://geo.itunes.apple.com/ca/album/connecting-the-dots-ep/1255658593?app=itunes"></a>
+                                <a class="itunes-button" target="_blank" rel="noopener" href="https://geo.itunes.apple.com/ca/album/connecting-the-dots-ep/1255658593?app=itunes"></a>
                             </div>
                         </div>
                     </div>
                     <div class="column s12 l7 padding-0">
                         <div class="scroll-animate fadeInLeft">
-                            <h2 class="text-light-color text-size-5 margin-down-0 scroll-animate blurInLeft">Connecting the dots EP</h2>
+                            <h2 id="collectionName" class="text-light-color text-size-5 margin-down-0 scroll-animate blurInLeft">Connecting the dots EP</h2>
                             <div class="row margin-0">
                                 <div class="column s12 l6 padding-0">
-                                    <a class="no-hover-decoration" href="/#/artist?id=1"><h3 class="text-primary-light text-size-3 text-thin margin-left-20 margin-0"><span class="text-size-2">by </span>Conro</h3></a>
+                                    <a class="no-hover-decoration" href="/#/artist?id=583126594"><h3 class="text-primary-light text-size-3 text-thin margin-left-20 margin-0"><span class="text-size-2">by </span><span id="artistName">Conro</span></h3></a>
                                 </div>
                                 <div class="column s12 l6 padding-0">
-                                    <h5 class="text-grey text-size-1 text-thin margin-0 padding-5 margin-left-15">Dance • 2017</h5>
+                                    <h5 class="text-grey text-size-1 text-thin margin-0 padding-5 margin-left-15"><span id="primaryGenreName">Dance</span> • <span id="releaseDateYear">2017</span></h5>
                                 </div>
                             </div>
                         </div>
@@ -34,13 +33,13 @@
                                 <table class="interactive text-light-color">
                                     <thead>
                                         <tr class="uppercase text-grey text-darken-3 text-size-small-9">
-                                            <th></th>
+                                            <th>&nbsp;</th>
                                             <th>name</th>
                                             <th>time</th>
-                                            <th></th>
+                                            <th>&nbsp;</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="clickable">
+                                    <tbody class="clickable" id="tracks">
                                         <tr>
                                             <td class="text-center">1</td>
                                             <td>Close</td>
@@ -107,15 +106,12 @@
 </script>
 
 <style>
-    td i { visibility: hidden; }
-    tr:hover td i { visibility: visible; }
+    td i {
+        visibility: hidden;
+    }
 
-    #turntable { transition: transform 0.25s ease, border-radius 0.25s ease-out; }
-    #turntable-icon {
-        z-index: 100;
-        line-height: 200px;
-        width: 200px;
-        text-shadow: 1px 1px 10px rgba(0, 0, 0, 1);
+    tr:hover td i {
+        visibility: visible;
     }
 
     .itunes-button {

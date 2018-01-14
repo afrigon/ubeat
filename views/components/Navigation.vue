@@ -1,11 +1,11 @@
 <template>
-    <header class="no-scroll grey darken-5 margin-0 flex flex-spaced">
-        <div class="hide-after-s scroll-animate fadeInRight ignore-border flex-width">
+    <header class="grey darken-5 margin-0 flex flex-spaced">
+        <div class="hide-after-s scroll-animate fadeInRight">
             <i class="material-icons m text-white margin-left-25">menu</i>
         </div>
-        <nav class="underline-animate padding-0 margin-0 scroll-animate fadeIn flex-width">
+        <nav class="underline-animate padding-0 margin-0 margin-left-25 margin-right-25 scroll-animate fadeIn text-left">
             <a class="block clickable" href="index.html">
-                <div class="logo margin-left-25 margin-right-25 scroll-animate fadeInScale">
+                <div class="logo scroll-animate fadeInScale">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1500 1500" enable-background="new 0 0 1500 1500" xml:space="preserve">
                         <path id="logo-letter" fill="#FFFFFF" d="M637.529,1317.249c-33.94-10.352-63.983-25.649-90.111-45.892c-26.135-20.234-46.534-46.528-61.189-78.878c-14.663-32.343-21.99-69.077-21.99-110.188v-382.91c0-21.348,6.693-38.557,20.079-51.629c13.385-13.063,29.474-19.6,48.281-19.6c18.8,0,34.972,6.536,48.522,19.6c13.541,13.072,20.316,30.281,20.316,51.629v379.564c0,24.858,4.22,46.93,12.668,66.208c8.44,19.288,19.675,34.502,33.701,45.653c14.02,11.16,29.556,19.601,46.609,25.336c17.045,5.736,35.136,8.605,54.257,8.605c19.122,0,37.287-2.869,54.497-8.605c17.21-5.735,32.984-14.176,47.326-25.336c14.341-11.151,25.733-26.365,34.18-45.653c8.439-19.278,12.669-41.35,12.669-66.208V699.381c0-21.348,6.767-38.557,20.316-51.629c13.543-13.063,29.712-19.6,48.521-19.6c18.479,0,34.493,6.536,48.043,19.6c13.543,13.072,20.317,30.281,20.317,51.629v382.91c0,41.111-7.41,77.764-22.229,109.949c-14.819,32.194-35.301,58.402-61.428,78.638c-26.135,20.243-56.334,35.614-90.588,46.132c-34.262,10.517-71.468,15.773-111.624,15.773C708.518,1332.783,671.47,1327.601,637.529,1317.249z"/>
                         <g id="logo-headphones">
@@ -18,15 +18,15 @@
                     </svg>
                 </div>
             </a>
-            <ul class="margin-left-30 capitalize hide-until-m">
+            <ul class="margin-left-5 capitalize hide-until-m">
                 <router-link id="link-home" to="/"><li class="text-size-1">Home</li></router-link>
                 <router-link id="link-artist" to="/artist"><li class="text-size-1">Artist</li></router-link>
                 <router-link id="link-album" to="/album"><li class="text-size-1">Album</li></router-link>
             </ul>
         </nav>
-        <form id="form-search" class="padding-0 flex flex-center hide-until-l">
+        <form id="form-search" method="GET" action="/api/unsecure/search" class="padding-0 flex flex-center hide-until-l">
             <div class="input-wrapper margin-0 margin-up-5 grey darken-5">
-                <input type="search" name="q" onfocus="document.getElementById('search-filter-wrapper').style.top = '70px'" onblur="document.getElementById('search-filter-wrapper').style.top = '30px'"/>
+                <input type="search" name="q" autocomplete="off" onfocus="document.getElementById('search-filter-wrapper').style.top = '70px'" onblur="document.getElementById('search-filter-wrapper').style.top = '30px'"/>
                 <label>Search</label>
             </div>
             <div id="search-filter-wrapper">
@@ -39,19 +39,43 @@
                 <div class="notch-left absolute"></div>
                 <div class="notch-right absolute"></div>
                 <ul class="capitalize clickable text-white grey darken-5 margin-0 padding-left-15 padding-right-15">
-                    <li id="filter-button-1" onmousedown="setFilter(event, 1)" class="inline-block text-thin text-size-small-8 padding-left-15 padding-right-15 padding-up-10 padding-down-5 primary-border">artist</li>
-                    <li id="filter-button-2" onmousedown="setFilter(event, 2)" class="inline-block text-thin text-size-small-8 padding-left-15 padding-right-15 padding-up-10 padding-down-5 primary-border">album</li>
-                    <li id="filter-button-4" onmousedown="setFilter(event, 4)" class="inline-block text-thin text-size-small-8 padding-left-15 padding-right-15 padding-up-10 padding-down-5 primary-border">song</li>
-                    <li id="filter-button-8" onmousedown="setFilter(event, 8)" class="inline-block text-thin text-size-small-8 padding-left-15 padding-right-15 padding-up-10 padding-down-5 primary-border">user</li>
+                    <li id="filter-button-1" onmousedown="setFilter(event, 1)" class="inline-block text-thin text-size-small-8 padding-left-15 padding-right-15 padding-up-10 padding-down-5 primary-border">artist</li><!--
+                 --><li id="filter-button-2" onmousedown="setFilter(event, 2)" class="inline-block text-thin text-size-small-8 padding-left-15 padding-right-15 padding-up-10 padding-down-5 primary-border">album</li><!--
+                 --><li id="filter-button-4" onmousedown="setFilter(event, 4)" class="inline-block text-thin text-size-small-8 padding-left-15 padding-right-15 padding-up-10 padding-down-5 primary-border">song</li><!--
+                 --><li id="filter-button-8" onmousedown="setFilter(event, 8)" class="inline-block text-thin text-size-small-8 padding-left-15 padding-right-15 padding-up-10 padding-down-5 primary-border">user</li>
                 </ul>
             </div>
         </form>
-        <div id="avatar" class="text-right flex flex-right scroll-animate fadeInLeft flex-width">
-            <i class="material-icons m text-white clickable hide-after-m">search</i>
-            <p class="text-white inline-block margin-0 truncate hide-until-l">alexfrigon154</p>
-            <div class="flex flex-center clickable margin-right-25 margin-left-20">
-                <img class="circle primary-border" src="/static/img/card.jpg" />
-                <i class="material-icons s text-white margin-left-5">keyboard_arrow_down</i>
+        
+        <div id="options-wrapper" class="grey darken-5 scroll-animate fadeInLeft no-select" onclick="event.stopPropagation()">
+            <ul id="options-list" class="hide-until-m">
+                <a href="/#/playlists" class="no-hover-decoration">
+                    <li class="text-white capitalize interactive clickable">
+                        <i class="material-icons s">playlist_play</i>
+                        <span>Playlists</span>
+                    </li>
+                </a>
+                <a href="/#/settings" class="no-hover-decoration">
+                    <li class="text-white capitalize interactive clickable">
+                        <i class="material-icons s">settings</i>
+                        <span>Settings</span>
+                    </li>
+                </a>
+                <a href="/logout" class="no-hover-decoration">
+                    <li class="text-white capitalize interactive clickable">
+                        <i class="material-icons s">exit_to_app</i>
+                        <span>Logout</span>
+                    </li>
+                </a>
+            </ul>
+            <div id="options-divider" class="divider hide-until-m"></div>
+            <div id="avatar" class="text-right flex flex-right clickable margin-left-25 margin-right-25">
+                <i class="material-icons m text-white clickable hide-after-m margin-right-20">search</i>
+                <p id="username" class="text-white inline-block margin-0 margin-right-20 truncate hide-until-l">alexfrigon154</p>
+                <div class="flex flex-center clickable" onclick="toggleOptionsMenu();">
+                    <img class="circle primary-border hide-until-m" src="/static/img/card.jpg" />
+                    <i id="options-button" class="material-icons s text-white margin-left-5 hide-until-m">keyboard_arrow_down</i>
+                </div>
             </div>
         </div>
     </header>
@@ -60,97 +84,166 @@
 <script>
     export default {
         mounted () {
-            this.load()
-        },
-        methods: {
-            load () {
-                const letter = document.getElementById('logo-letter')
-                const headphones = document.getElementById('logo-headphones')
-                setTimeout(() => { return (letter.style.opacity = 1) }, 200)
-                setTimeout(() => { return (headphones.style.opacity = 1) }, 800)
-                setTimeout(() => { return (letter.style.transform = 'none') }, 1200)
-            }
+            const letter = document.getElementById('logo-letter')
+            const headphones = document.getElementById('logo-headphones')
+            setTimeout(() => { return (letter.style.opacity = 1) }, 200)
+            setTimeout(() => { return (headphones.style.opacity = 1) }, 800)
+            setTimeout(() => { return (letter.style.transform = 'none') }, 1200)
         }
     }
 </script>
 
 <style lang="scss">
-    #logo-letter { transform: translateY(-300px); }
+    #logo-letter {
+        transform: translateY(-300px);
+    }
+
     #logo-headphones, #logo-letter {
         transition: opacity 1.5s ease, transform 1s ease, fill 0.5s ease;
         opacity: 0;
+
+        path {
+            transition: fill 0.5s ease;
+        }
     }
-    #logo-headphones path { transition: fill 0.5s ease; }
 
-    header nav.underline-animate li::after { opacity: 0.75; }
-    .input-wrapper label.active { transform: translateY(-8px) scale(.8); }
-
-    #form-search { height: 100%; min-width: 330px; }
-    .flex-width {
-        min-width: 150px;
+    header nav.underline-animate li::after {
+        opacity: 0.75;
     }
-    #search-filter-wrapper {
-        position: absolute;
-        height: 40px;
-        top: 30px;
-        transition: top 300ms ease-out, opacity 300ms ease-in;
-        z-index: -1;
 
-        ul {
-            border-radius: 0 0 15px 15px;
-            height: 100%;
+    nav ul li {
+        line-height: 1.5;
+    }
 
-            .active {
-                border-bottom: 3px solid;
+    .input-wrapper label.active {
+        transform: translateY(-8px) scale(.8);
+    }
+
+    #form-search {
+        height: 100%;
+        min-width: 330px;
+
+        #search-filter-wrapper {
+            position: absolute;
+            height: 33px;
+            top: 30px;
+            transition: top 300ms ease-out, opacity 300ms ease-in;
+            z-index: -1;
+
+            ul {
+                border-radius: 0 0 15px 15px;
+                height: 100%;
+
+                .active {
+                    border-bottom: 3px solid;
+                    background-color: #353535;
+                }
+
+                li {
+                    border: 0px solid;
+                    transition: border 300ms ease;
+
+                    &:hover { background-color: #353535; }
+                }
+            }
+
+            .notch-left, .notch-right {
+                background-repeat: no-repeat;
+                -moz-background-size: 100% 100%;
+                -webkit-background-size: 100% 100%;
+                background-size: 100% 100%;
+                width: 16px;
+                height: 16px;
+                top: -1px;
+            }
+
+            .notch-left {
+                background: -moz-radial-gradient(0 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+                background: -o-radial-gradient(0 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+                background: -webkit-radial-gradient(0 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+                background-position: bottom left;
+                left: -15px;
+            }
+
+            .notch-right {
+                background: -moz-radial-gradient(100% 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+                background: -o-radial-gradient(100% 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+                background: -webkit-radial-gradient(100% 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
+                background-position: bottom right;
+                right: -15px;
+            }
+        }
+    }
+
+    #options-wrapper {
+        border-bottom-left-radius: 15px;
+        transition: margin-bottom 300ms ease;
+        align-self: flex-end;
+        max-width: 367px;
+
+        .interactive {
+            padding: 2px 0px;
+            min-width: 120px;
+
+            &:hover {
                 background-color: #353535;
             }
+        }
 
-            li {
-                border: 0px solid;
-                transition: border 300ms ease;
+        #options-divider {
+            margin: 13px 0;
+        }
 
-                &:hover { background-color: #353535; }
+        &.active {
+            #options-button { transform: scale(-1); }
+            margin-bottom: -139px;
+        }
+
+        #options-list {
+            padding: 0px 25px;
+            margin: 13px 0px;
+
+            i, span {
+                line-height: 30px;
+                vertical-align: middle;
+            }
+
+            i {
+                padding: 0px 5px;
             }
         }
-    }
 
-    .notch-left {
-        background: -moz-radial-gradient(0 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
-        background: -o-radial-gradient(0 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
-        background: -webkit-radial-gradient(0 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
-        background-position: bottom left;
-        -moz-background-size: 100% 100%;
-        -webkit-background-size: 100% 100%;
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-        width: 16px;
-        height: 16px;
-        left: -15px;
-        top: -1px;
-    }
+        #avatar {
+            margin: 8px 0px;
+            padding: 5px;
+            
+            p {
+                max-width: 220px;
+            }
+            #options-button {
+                transition: transform 300ms linear;
+            }
 
-    .notch-right {
-        background: -moz-radial-gradient(100% 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
-        background: -o-radial-gradient(100% 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
-        background: -webkit-radial-gradient(100% 100%, circle, rgba(0,0,0,0) 14px, #212121 15px);
-        background-position: bottom right;
-        -moz-background-size: 100% 100%;
-        -webkit-background-size: 100% 100%;
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-        width: 16px;
-        height: 16px;
-        right: -15px;
-        top: -1px;
-    }
+            &:hover #options-button {
+                color: #C0C0C0 !important;
+            }
+        
+            img {
+                height: 40px;
+                width: 40px;
+                border: solid 2px;
+            }
 
-    #avatar {
-        img {
-            width: 40px;
-            height: 40px;
-            border: solid 2px;
+            i {
+                line-height: 40px;
+            }
         }
 
-        p { max-width: 220px; }
+        @media only screen and (max-width : 600px) {
+            #avatar {
+                margin-left: 0px !important;
+                margin-right: 0px !important;
+            }
+        }
     }
 </style>

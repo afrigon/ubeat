@@ -7,7 +7,7 @@
     "build-prod": "webpack --config views/webpack.prod.config.js",
     "start": "node server.js",
     "start-prod": "webpack --config views/webpack.prod.config.js && node server.js -p",
-    "lint": "eslint --ext .js,.vue ."
+    "lint": "eslint --ext .js,.vue . || :"
   },
   "eslintIgnore": [
     "dist"
@@ -24,7 +24,8 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
-    "http-proxy-middleware": "^0.17.4"
+    "http-proxy-middleware": "^0.17.4",
+    "serve-favicon": "^2.4.5"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
