@@ -1,0 +1,3 @@
+dist/js/* linguist-generated=true
+static/css/fs.min.css linguist-vendored
+static/js/fs.js linguist-vendored
