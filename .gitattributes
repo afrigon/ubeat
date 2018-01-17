@@ -1,2 +1,2 @@
-dist/js/* linguist-generated=true
+/dist/js/* linguist-generated=true
 fs.* linguist-vendored
