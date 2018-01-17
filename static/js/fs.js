@@ -66,7 +66,7 @@ class FS {
     static logError (err) {
         console.error(`FrigStudio Error line(${err.line}:${err.column}): ${err.message}`)
     }
-    
+
     static init () {
         FS.addComponent(new MaterialInput())
         FS.addComponent(new Drawer())
@@ -194,6 +194,7 @@ class AutoScrollAnimator extends Component {
             'selector': options.selector || 'scroll-animate',
             'trigger': options.trigger || 'animate'
         }
+        this.vendors = ['moz', 'webkit']
         this.didScroll = this.didScroll.bind(this)
         this.scrollCallback = this.scrollCallback.bind(this)
     }
@@ -216,20 +217,28 @@ class AutoScrollAnimator extends Component {
     setVisibility (element, isVisible) {
         if (!isVisible) {
             element.setAttribute('data-animation-name', window.getComputedStyle(element).getPropertyValue('animation-name') || 'none')
-            element.style.animationName = 'none'
         }
 
-        element.style.animationDelay = element.getAttribute('data-delay') || '0s'
-        try {
-            element.style.animationIterationCount = parseInt(element.getAttribute('data-iteration'), 10)
-        } catch (ex) {
-            element.style.animationIterationCount = 0
-        }
-
+        this.setStyles(element, {
+            animationDelay: element.getAttribute('data-delay') || '0s',
+            animationIterationCount: (isNaN(element.getAttribute('data-iteration'))
+                ? parseInt(element.getAttribute('data-iteration'), 10)
+                : 1),
+            animationName: (isVisible
+                ? element.getAttribute('data-animation-name') || 'none'
+                : 'none')
+        })
         element.style.visibility = isVisible
             ? 'visible'
             : 'hidden'
-        return (element.style.animationName = element.getAttribute('data-animation-name') || 'none')
+    }
+
+    setStyles (element, styles) {
+        for (const [key, value] of Object.entries(styles)) {
+            this.vendors.forEach((vendor) => {
+                element.style[`${vendor}${key.charAt(0).toUpperCase()}${key.substr(1)}`] = value
+            })
+        }
     }
 
     getElementOffsetToTop (element, offset) {

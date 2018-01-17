@@ -8,13 +8,13 @@ const proxy = require('http-proxy-middleware')
 let config = require('./config')
 
 if (process.argv.indexOf('-p') !== -1) {
-    config = config.prod;
+    config = config.prod
     app.use('/js', express.static(path.join(__dirname, 'dist', 'js')))
     app.get('/', (req, res) => {
         return res.sendFile(path.join(__dirname, 'dist', 'index.html'))
     })
 } else {
-    config = config.dev;
+    config = config.dev
     const webpack = require('webpack')
     const webpackDev = require('webpack-dev-middleware')
     const webpackHot = require('webpack-hot-middleware')
