@@ -34,6 +34,6 @@ GET /album HTTP/1.1
 GET /artist HTTP/1.1
 ```
 
-### License
+## License
 
 Ubeat is [MIT licensed](./LICENSE).
