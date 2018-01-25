@@ -1,5 +1,5 @@
 <template>
-    <header class="fixed grey darken-5 margin-0 flex flex-spaced">
+    <header class="relative grey darken-5 margin-0 flex flex-spaced">
         <div class="hide-after-s scroll-animate fadeInRight drawer-action" data-drawer-wrapper-id="drawer-menu">
             <i class="material-icons m text-white margin-left-25">menu</i>
         </div>
