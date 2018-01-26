@@ -4,7 +4,7 @@ var flags = 0
 function setFilter (event, value) {
     if (event) { event.preventDefault() }
     if ((flags & value) !== 0) {
-        flags -= (flags & value)
+        flags &= ~value
     } else {
         flags |= value
     }
