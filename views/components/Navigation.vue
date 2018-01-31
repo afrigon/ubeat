@@ -88,7 +88,7 @@
             </ul>
             <div id="options-divider" class="divider hide-until-m"></div>
             <div id="avatar" class="text-right flex flex-right clickable margin-left-25 margin-right-25">
-                <i class="material-icons m text-white clickable hide-after-m margin-right-20">search</i>
+                <i onclick="searchClick()" class="material-icons m text-white clickable hide-after-m margin-right-20">search</i>
                 <p id="username" class="text-white inline-block margin-0 margin-right-20 truncate hide-until-l">alexfrigon154</p>
                 <div class="flex flex-center clickable" onclick="toggleOptionsMenu();">
                     <img class="circle primary-border hide-until-m" src="/static/img/card.jpg" />

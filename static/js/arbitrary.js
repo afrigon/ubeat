@@ -28,3 +28,8 @@ function toggleOptionsMenu () {
     const wrapper = document.getElementById('options-wrapper')
     return wrapper && wrapper.classList.toggle('active')
 }
+
+// eslint-disable-next-line no-unused-vars
+function searchClick () {
+    document.getElementById('form-search').style.display = 'inline-block'
+}
