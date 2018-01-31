@@ -1,17 +1,23 @@
 <template>
     <header class="relative grey darken-5 margin-0 flex flex-spaced">
-        <div class="hide-after-s scroll-animate fadeInRight drawer-action" data-drawer-wrapper-id="drawer-menu">
+        <div class="hide-after-s scroll-animate fadeInRight drawer-trigger" data-drawer-wrapper-id="drawer-menu">
             <i class="material-icons m text-white margin-left-25">menu</i>
         </div>
         <div id="drawer-menu" class="drawer-wrapper">
             <nav>
                 <ul class="capitalize">
-                    <router-link id="link-home" to="/">
-                        <i class="material-icons">settings</i>
+                    <router-link id="link-home" class="drawer-action active" to="/">
+                        <i class="material-icons">home</i>
                         <li>Home</li>
                     </router-link>
-                    <router-link id="link-artist" to="/artist"><li>Artist</li></router-link>
-                    <router-link id="link-album" to="/album"><li>Album</li></router-link>
+                    <router-link id="link-artist" class="drawer-action" to="/artist">
+                        <i class="material-icons">person</i>
+                        <li>Artist</li>
+                    </router-link>
+                    <router-link id="link-album" class="drawer-action" to="/album">
+                        <i class="material-icons">album</i>
+                        <li>Album</li>
+                    </router-link>
                 </ul>
             </nav>
         </div>

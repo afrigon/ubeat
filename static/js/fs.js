@@ -96,7 +96,7 @@ class MaterialInput extends Component {
 class Drawer extends Component {
     init () {
         this.initDrawers()
-        this.initActions()
+        this.initTriggers()
     }
 
     initDrawers () {
@@ -117,16 +117,31 @@ class Drawer extends Component {
         Util.addEvent(filter, 'click', (event) => {
             return event.currentTarget.parentNode.classList.remove('open')
         })
+        this.initActions(drawer)
         return drawer.appendChild(filter)
     }
 
-    initActions () {
-        const elements = document.querySelectorAll('.drawer-action')
+    initTriggers () {
+        const elements = document.querySelectorAll('.drawer-trigger')
         return elements.forEach((element) => {
             return Util.addEvent(element, 'click', (event) => {
                 const targetId = event.currentTarget.getAttribute('data-drawer-wrapper-id').replace(/^#/, '')
                 const target = document.getElementById(targetId)
                 return target && target.classList.add('open')
+            })
+        })
+    }
+
+    initActions (drawer) {
+        const elements = drawer.querySelectorAll('.drawer-action')
+        return elements.forEach((element) => {
+            return Util.addEvent(element, 'click', (event) => {
+                const actions = drawer.querySelectorAll('.drawer-action')
+                actions.forEach((action) => {
+                    action.classList.remove('active')
+                })
+                event.target.classList.add('active')
+                return drawer.classList.remove('open')
             })
         })
     }
