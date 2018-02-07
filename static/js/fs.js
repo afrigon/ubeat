@@ -34,7 +34,7 @@ class Util {
     }
 
     static logError (err) {
-        console.error(`FrigStudio Error line(${err.line}:${err.column}): ${err.message}`)
+        console.error(`FS Error line(${err.line}:${err.column}): ${err.message}`)
     }
 
     static isObject (target) {
@@ -564,11 +564,10 @@ class AudioPlayer extends Component {
         this.source = source
         this.options = Util.extends(options, {
             visual: false,
-            backgroundColor: 'transparent',
             visualColor: '#2196f3',
             color: '#FFFFFF',
             barCount: 200,
-            height: 200
+            height: 75
         })
     }
 
@@ -582,7 +581,6 @@ class AudioPlayer extends Component {
         player.style.justifyContent = 'center'
         player.style.alignItems = 'center'
         player.classList.add('no-select')
-        player.style.backgroundColor = this.options.backgroundColor
 
         const audio = document.createElement('audio')
         this.audio = audio
@@ -638,10 +636,10 @@ class AudioPlayer extends Component {
             canvas.style.position = 'absolute'
             this.canvas = canvas
             timeline.appendChild(canvas)
-            canvas.width = el.clientWidth - 119 // terrible hack
+            canvas.width = el.clientWidth - 120 // terrible hack -> 120 == full width - controls
             canvas.height = this.options.height
             Util.addEvent(canvas, 'resize', () => {
-                canvas.width = el.clientWidth - 119 
+                canvas.width = el.clientWidth - 120
                 canvas.height = this.options.height
             })
         }
@@ -652,7 +650,7 @@ class AudioPlayer extends Component {
         time.style.color = this.options.color
         time.style.fontSize = '12px'
         time.style.whiteSpace = 'nowrap'
-        time.style.width = '75px'
+        time.style.width = '76px'
         time.innerHTML = '00:00 / 00:00'
         player.appendChild(time)
         
@@ -681,12 +679,12 @@ class AudioPlayer extends Component {
             let data = new Uint8Array(this.analyser.frequencyBinCount)
             this.analyser.getByteFrequencyData(data)
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-    
+            
             const margin = 2
             const barWidth = (this.canvas.width - (this.options.barCount + 1) * margin) / this.options.barCount
             for (let i = 0; i < this.options.barCount; ++i) {
                 const percent = data[Math.floor(data.length / this.options.barCount * i)] / 255
-                this.context.globalAlpha = Math.min(percent + 0.2, 1)
+                this.context.globalAlpha = Math.min(percent + 0.2, 1) // 0.2 is the initial value in f(x) = ax + b
                 this.context.fillRect(i * barWidth + (i + 1) * margin, this.canvas.height, barWidth, -(percent * (this.canvas.height - margin)))
             }
         }

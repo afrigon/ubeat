@@ -3,11 +3,11 @@
         <div class="container">
             <div class="section">
                 <div class="row text-center">
-                    <img class="playlist hoverable-pop clickable" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/400x400bb.jpg" alt="Playlist Art" />
-                    <img class="playlist hoverable-pop clickable" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/400x400bb.jpg" alt="Playlist Art" />
-                    <img class="playlist hoverable-pop clickable" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/400x400bb.jpg" alt="Playlist Art" />
-                    <img class="playlist hoverable-pop clickable" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/400x400bb.jpg" alt="Playlist Art" />
-                    <img class="playlist hoverable-pop clickable" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/400x400bb.jpg" alt="Playlist Art" />
+                    <div class="playlist hoverable-pop clickable" id="pop"></div>
+                    <div class="playlist hoverable-pop clickable" id="classical"></div>
+                    <div class="playlist hoverable-pop clickable" id="dance"></div>
+                    <div class="playlist hoverable-pop clickable" id="rock"></div>
+                    <div class="playlist hoverable-pop clickable" id="metal"></div>
                 </div>
             </div>
         </div>
@@ -45,7 +45,21 @@
 
 <style lang="scss">
     .playlist {
-        width: 150px;
+        $size: 150;
+        background-image: url('/static/img/playlists.jpg');
+        background-repeat: no-repeat;
+        width: #{$size}px;
+        height: #{$size}px;
+        border-radius: 4px;
         margin: 10px;
+        display: inline-block;
+
+        @for $i from 0 to 4 {
+            @for $j from 0 to 4 {
+                &:nth-child(#{$i * 4 + $j + 1}) {
+                    background-position: #{-$size * $j}px #{-$size * $i}px;
+                }
+            }
+        }
     }
 </style>
