@@ -10,7 +10,7 @@ Ubeat is a platform to share music with friends created for the course GLO-3201 
 You'll need to have [node and npm](https://nodejs.org/en/download/) installed. Start off by cloning the project to your machine.
 
 ```sh
-git clone https://github.com/afrigon/ubeat.git
+git clone https://github.com/GLO3102-H18/ubeat-team-01.git ubeat
 ```
 
 Install dependencies with npm.
