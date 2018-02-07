@@ -1,4 +1,14 @@
 class Util {
+    static extends (object, defaults) {
+        if (!Util.isObject(object)) object = {}
+        if (!Util.isObject(defaults)) defaults = {}
+
+        for (let k in defaults) {
+            object[k] = object[k] || defaults[k]
+        }
+        return object
+    }
+
     static addEvent (element, eventName, eventCallback) {
         if (element.addEventListener) {
             element.addEventListener(eventName, eventCallback, false)
@@ -21,6 +31,25 @@ class Util {
 
     static clone (instance) {
         return Object.assign(Object.create(Object.getPrototypeOf(instance)), instance)
+    }
+
+    static logError (err) {
+        console.error(`FrigStudio Error line(${err.line}:${err.column}): ${err.message}`)
+    }
+
+    static isObject (target) {
+        return target !== null && typeof target === 'object'
+    }
+
+    static isFunction (target) {
+        return typeof target === 'function'
+    }
+
+    static secondsToTime (seconds) {
+        const h = '0' + Math.floor(seconds / 3600)
+        const m = '0' + Math.floor((seconds - (h * 3600)) / 60)
+        const s = '0' + Math.floor(seconds - (h * 3600) - (m * 60))
+        return `${h > 0 ? `${h.substr(h.length - 2)}:` : ''}${m.substr(m.length - 2)}:${s.substr(s.length - 2)}`
     }
 }
 
@@ -61,10 +90,6 @@ class FS {
         } else {
             Util.addEvent(document, 'DOMContentLoaded', initComponent)
         }
-    }
-
-    static logError (err) {
-        console.error(`FrigStudio Error line(${err.line}:${err.column}): ${err.message}`)
     }
 
     static init () {
@@ -266,7 +291,7 @@ class AutoScrollAnimator extends Component {
             }
             return elementOffset
         } catch (ex) {
-            return FS.logError(new Error('invalid offset provided for scrollAnimator'))
+            return Util.logError(new Error('invalid offset provided for scrollAnimator'))
         }
     }
 
@@ -528,6 +553,150 @@ class OpacityScrollAnimator extends ScrollAnimator {
         this.element.style.visibility = 'visible'
         const value = (100 - percent) * (this.options.endValue - this.options.startValue) / 100 + this.options.startValue
         this.element.style.opacity = value
+    }
+}
+
+// eslint-disable-next-line no-unused-vars
+class AudioPlayer extends Component {
+    constructor (source, options) {
+        if (!source) return Util.logError(new Error('No source provided to audio player'))
+        super()
+        this.source = source
+        this.options = Util.extends(options, {
+            visual: false,
+            backgroundColor: 'transparent',
+            visualColor: '#2196f3',
+            color: '#FFFFFF',
+            barCount: 200,
+            height: 200
+        })
+    }
+
+    init (el) {
+        el.appendChild(this.createPlayer(el))
+    }
+
+    createPlayer (el) {
+        const player = document.createElement('div')
+        player.style.display = 'flex'
+        player.style.justifyContent = 'center'
+        player.style.alignItems = 'center'
+        player.classList.add('no-select')
+        player.style.backgroundColor = this.options.backgroundColor
+
+        const audio = document.createElement('audio')
+        this.audio = audio
+        player.appendChild(audio)
+        audio.crossOrigin = 'anonymous'
+        audio.style.display = 'none'
+        audio.src = this.source
+        audio.autoplay = false
+        audio.loop = false
+        Util.addEvent(audio, 'ended', () => {
+            return audio.pause()
+        })
+        Util.addEvent(audio, 'pause', () => {
+            return button.innerHTML = 'play_arrow'
+        })
+        Util.addEvent(audio, 'play', () => {
+            return button.innerHTML = 'pause'
+        })
+
+        const button = document.createElement('i')
+        button.classList.add('material-icons')
+        button.innerHTML = 'play_arrow'
+        button.style.color = this.options.color
+        button.style.cursor = 'pointer'
+        Util.addEvent(button, 'click', () => {
+            if (!this.audio.paused) {
+                return this.audio.pause()
+            }
+            return this.audio.play()
+        })
+        player.appendChild(button)
+
+        const timeline = document.createElement('div')
+        timeline.style.margin = '0 10px'
+        timeline.style.width = '100%'
+        timeline.style.height = '4px'
+        timeline.style.position = 'relative'
+        timeline.style.backgroundColor = this.options.color
+        player.appendChild(timeline)
+
+        const progress = document.createElement('div')
+        this.progress = progress
+        progress.style.width = '0%'
+        progress.style.height = '100%'
+        progress.style.backgroundColor = this.options.visualColor
+        timeline.appendChild(progress)
+
+        if (this.options.visual) {
+            const canvas = document.createElement('canvas')
+            canvas.style.width = '100%'
+            canvas.style.height = `${this.options.height}px`
+            canvas.style.bottom = '4px'
+            canvas.style.position = 'absolute'
+            this.canvas = canvas
+            timeline.appendChild(canvas)
+            canvas.width = el.clientWidth - 119 // terrible hack
+            canvas.height = this.options.height
+            Util.addEvent(canvas, 'resize', () => {
+                canvas.width = el.clientWidth - 119 
+                canvas.height = this.options.height
+            })
+        }
+        this.initVisual()
+
+        const time = document.createElement('div')
+        this.time = time
+        time.style.color = this.options.color
+        time.style.fontSize = '12px'
+        time.style.whiteSpace = 'nowrap'
+        time.style.width = '75px'
+        time.innerHTML = '00:00 / 00:00'
+        player.appendChild(time)
+        
+        this.isCreated = true
+        return player
+    }
+
+    initVisual () {
+        if (this.options.visual) {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext
+            const audioContext = new AudioContext()
+            const source = audioContext.createMediaElementSource(this.audio)
+            this.analyser = audioContext.createAnalyser()
+            source.connect(this.analyser)
+            this.analyser.connect(audioContext.destination)
+            this.context = this.canvas.getContext('2d')
+            this.context.fillStyle = this.options.visualColor
+            this.context.translate(0.5, 0.5) // terrible hack again
+        }
+
+        return window.requestAnimationFrame(this.loopVisual.bind(this))
+    }
+
+    loopVisual () {
+        if (this.options.visual) {
+            let data = new Uint8Array(this.analyser.frequencyBinCount)
+            this.analyser.getByteFrequencyData(data)
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    
+            const margin = 2
+            const barWidth = (this.canvas.width - (this.options.barCount + 1) * margin) / this.options.barCount
+            for (let i = 0; i < this.options.barCount; ++i) {
+                const percent = data[Math.floor(data.length / this.options.barCount * i)] / 255
+                this.context.globalAlpha = Math.min(percent + 0.2, 1)
+                this.context.fillRect(i * barWidth + (i + 1) * margin, this.canvas.height, barWidth, -(percent * (this.canvas.height - margin)))
+            }
+        }
+
+        if (this.isCreated) {
+            this.progress.style.width = `${this.audio.currentTime / this.audio.duration * 100}%`
+            this.time.innerHTML = `${Util.secondsToTime(this.audio.currentTime || 0)} / ${Util.secondsToTime(this.audio.duration || 0)}`
+        }
+
+        return window.requestAnimationFrame(this.loopVisual.bind(this))
     }
 }
 

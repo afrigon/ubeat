@@ -5,10 +5,7 @@
                 <div class="column s12">
                     <div class="column s12 l5 text-center scroll-animate fadeInRight">
                         <div class="column s12 m6 l12 padding-0 relative">
-                            <img id="albumArt" alt="Connecting the Dots EP album art" class="hoverable-pop no-select" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/200x200bb.jpg" 
-                                 srcset="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/200x200bb.jpg,
-                                         https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/400x400bb.jpg 2x,
-                                         https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/600x600bb.jpg 3x" />
+                            <img id="albumArt" alt="Connecting the Dots EP album art" class="hoverable-pop no-select" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/400x400bb.jpg" />
                             <div class="row">
                                 <p id="releaseDate" class="text-grey text-center text-size-small-5 margin-0">Released: August 9, 2017</p>
                             </div>
