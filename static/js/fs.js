@@ -601,13 +601,11 @@ class OpacityScrollAnimator extends ScrollAnimator {
     }
 }
 
-// TODO: make sure audioContext are close when deleted
-
 // eslint-disable-next-line no-unused-vars
 class AudioPlayer extends Component {
     constructor (source, options) {
-        if (!source) return Util.logError(new Error('No source provided to audio player'))
         super()
+        if (!source) return Util.logError(new Error('No source provided to audio player'))
         this.source = source
         this.options = Util.extends(options, {
             visual: false,
@@ -763,6 +761,10 @@ class AudioPlayer extends Component {
         text.style.margin = '0 10px'
         text.style.lineHeight = '30px'
         text.style.verticalAlign = 'top'
+        text.style.width = 'calc(100% - 94px)'
+        text.style.whiteSpace = 'nowrap'
+        text.style.textOverflow = 'ellipsis'
+        text.style.overflow = 'hidden'
         this.metaText = text
         meta.appendChild(text)
 

@@ -1,90 +1,13 @@
 [
-    {
-        "meta": {
-            "title": "Close",
-            "artist": "Conro",
-            "pictureUrl": "https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview127/v4/9d/91/a0/9d91a04c-f41a-f605-8ca8-71821a1f69d2/mzaf_1381500230730914803.plus.aac.p.m4a"
-    },
-    {
-        "meta": {
-            "title": "Ready to Fly (feat. Adam Young)",
-            "artist": "Didrick",
-            "pictureUrl": "http://is4.mzstatic.com/image/thumb/Music128/v4/49/f3/c1/49f3c1a5-c59f-dd1c-dfbb-bb2eeab95c53/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview128/v4/dc/c8/c5/dcc8c5d6-1b70-09e9-5699-e24c90039e24/mzaf_4327354984554622238.plus.aac.p.m4a"
-    },
-    {
-        "meta": {
-            "title": "Step by Step",
-            "artist": "Slushii",
-            "pictureUrl": "http://is2.mzstatic.com/image/thumb/Music118/v4/5a/0f/39/5a0f39bb-8cc2-4acd-c869-891df767ee11/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview128/v4/a5/4f/39/a54f3904-d671-9cd2-0757-7ac255bd4851/mzaf_6030032835376879936.plus.aac.p.m4a"
-    },
-    {
-        "meta": {
-            "title": "Helix",
-            "artist": "WE ARE FURY",
-            "pictureUrl": "http://is1.mzstatic.com/image/thumb/Music127/v4/cd/d4/36/cdd436a6-4108-b3ee-a85f-c287316e397f/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview117/v4/bc/85/8d/bc858d4a-2c62-a54b-7cdb-c4ea21ee9896/mzaf_4463840327166996941.plus.aac.p.m4a"
-    },
-    {
-        "meta": {
-            "title": "Miss You",
-            "artist": "Fox Stevenson",
-            "pictureUrl": "http://is5.mzstatic.com/image/thumb/Music128/v4/a0/6e/d4/a06ed4f3-4dad-6764-a5aa-143824900197/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview128/v4/25/5c/74/255c74dd-bbbd-64a7-a63c-75ae9bbde481/mzaf_5754927388359267097.plus.aac.p.m4a"
-    },
-    {
-        "meta": {
-            "title": "Strangers",
-            "artist": "Veorra",
-            "pictureUrl": "http://is4.mzstatic.com/image/thumb/Music32/v4/97/af/2e/97af2ebb-de20-de1f-018a-4276c8aa75cd/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/Music69/v4/15/25/0a/15250acd-5a01-4045-2846-83b3c3bfe23d/mzaf_4596873757274855028.plus.aac.p.m4a"
-    },
-    {
-        "meta": {
-            "title": "Silence (feat. Khalid) [Illenium Remix]",
-            "artist": "Marshmello",
-            "pictureUrl": "http://is4.mzstatic.com/image/thumb/Music118/v4/ae/3c/1d/ae3c1db2-2697-5a16-b167-36dd9ee11c98/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview118/v4/38/e9/8d/38e98d85-f9fb-67f6-3d86-169640d32f01/mzaf_8874914430365960550.plus.aac.p.m4a"
-    },
-    {
-        "meta": {
-            "title": "Lost (feat. Emilie Brandt)",
-            "artist": "Illenium",
-            "pictureUrl": "http://is4.mzstatic.com/image/thumb/Music118/v4/8e/aa/d7/8eaad7ff-2580-8b51-00f1-a45e20b80df3/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview128/v4/a4/f5/09/a4f5096d-5d2c-fa50-48c4-f3939c2f4bf3/mzaf_7739821116447122709.plus.aac.p.m4a"
-    },
-    {
-        "meta": {
-            "title": "Haunted VIP",
-            "artist": "Slips & Slurs",
-            "pictureUrl": "http://is4.mzstatic.com/image/thumb/Music118/v4/b9/64/d2/b964d26f-32f2-fff1-fa68-093a7f5779b2/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview128/v4/52/de/71/52de71e3-f667-1210-c401-93df1c17eaf3/mzaf_888136978173869239.plus.aac.p.m4a"
-    },
-    {
-        "meta": {
-            "title": "So Far Away",
-            "artist": "Martin Garrix & David Guetta",
-            "pictureUrl": "http://is4.mzstatic.com/image/thumb/Music118/v4/b2/11/2a/b2112a02-9742-ede6-0690-bbd4c6394467/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview118/v4/69/b0/8f/69b08fb6-52d8-7331-aebb-f2d5e886671d/mzaf_344953078753756251.plus.aac.p.m4a"
-    },
-    {
-        "meta": {
-            "title": "Lost",
-            "artist": "Tule",
-            "pictureUrl": "http://is1.mzstatic.com/image/thumb/Music128/v4/90/d8/37/90d837d3-fb52-e831-fb89-b4dceddd0881/source/30x30bb.jpg"
-        },
-        "url": "https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview118/v4/8e/c2/15/8ec215a0-51e6-18d9-1bba-2ce299596404/mzaf_7142793565030216730.plus.aac.p.m4a"
-    }
+    1255658615,
+    1329318231,
+    1265163201,
+    1247055433,
+    1323228290,
+    1047533745,
+    1293885429,
+    1267000216,
+    1322598926,
+    1315768443,
+    1328345696
 ]

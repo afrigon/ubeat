@@ -5,6 +5,7 @@ const fs = require('fs')
 const ffprobe = require('fluent-ffmpeg').ffprobe
 const sanitizer = require('validator')
 const whilst = require('async/whilst')
+const config = require('../config').shared
 
 class Radio {
     constructor (genre) {
@@ -28,6 +29,8 @@ class Radio {
     nextSong () {
         this.loadPlaylist(() => {
             this.song = this.playlist.pop()
+            if (!this.song) return (this.song = {}) & (this.song.duration = this.timeout)
+
             return this.getSongDuration(this.song.url, (err, duration) => {
                 if (err) return this.song.duration = this.timeout
                 
@@ -42,12 +45,16 @@ class Radio {
         if (this.playlist.length > 0) return callback()
 
         const songs = this.songs.slice()
-        return whilst((whilstCallback) => {
-            return songs.length
-        }, () => {
+        return whilst(() => {
+            return songs.length > 0
+        }, (whilstCallback) => {
             const i = Math.floor(Math.random() * songs.length)
             return this.fetchData(songs[i], (err, song) => {
-                if (err) return whilstCallback()
+                if (err) {
+                    songs.splice(i, 1)
+                    return whilstCallback()
+                }
+
                 this.playlist.push(song)
                 songs.splice(i, 1)
                 return whilstCallback()
@@ -67,8 +74,8 @@ class Radio {
                 return callback(new Error('Failed to parse song data'))
             }
 
-            if (!json.result || !json.results.length) return callback(new Error('Invalid song data'))
-            const songData = json.results[0]
+            if (!song.results || !song.results.length > 0) return callback(new Error('Invalid song data'))
+            const songData = song.results[0]
             return callback(null, {
                 meta: {
                     title: songData.trackName || '',
@@ -95,7 +102,12 @@ class Radio {
 }
 
 let radios = {
-    dance: new Radio('dance')
+    pop: new Radio('pop'),
+    classical: new Radio('classical'),
+    dance: new Radio('dance'),
+    rock: new Radio('rock'),
+    metal: new Radio('metal'),
+    rap: new Radio('rap')
 }
 
 router.get('/:genre', (req ,res) => {
