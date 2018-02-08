@@ -50,10 +50,6 @@ class Radio {
         }, (whilstCallback) => {
             const i = Math.floor(Math.random() * songs.length)
 
-            // ensure that the first song is not the same as the last played
-            // not tested I guess it's chill
-            if (this.playlist.length == 0 && songs[i] == this.song.id || -1) return whilstCallback()
-
             return this.fetchData(songs[i], (err, song) => {
                 if (err) {
                     songs.splice(i, 1)
