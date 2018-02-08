@@ -51,6 +51,29 @@ class Util {
         const s = '0' + Math.floor(seconds - (h * 3600) - (m * 60))
         return `${h > 0 ? `${h.substr(h.length - 2)}:` : ''}${m.substr(m.length - 2)}:${s.substr(s.length - 2)}`
     }
+
+    static request (url, method, data, callback) {
+        const request = new XMLHttpRequest()
+        request.onreadystatechange = () => {
+            if(request.readyState === 4) {
+                if(request.status >= 400) { 
+                    return callback(new Error('Could not complete ajax request'))
+                }
+                
+                if (!request.responseText) return callback()
+                let json;
+                try {
+                    json = JSON.parse(request.responseText)
+                } catch (e) {
+                    return callback(new Error(e.message))
+                }
+                return callback(null, json) 
+            }
+        }
+        request.open(method, url)
+        if (data) (data = JSON.stringify(data)) & request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        request.send(data)
+    }
 }
 
 class Component {
@@ -572,6 +595,7 @@ class AudioPlayer extends Component {
     }
 
     init (el) {
+        while (el.firstChild) el.removeChild(el.firstChild)
         el.appendChild(this.createPlayer(el))
     }
 

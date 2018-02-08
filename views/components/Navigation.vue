@@ -3,7 +3,7 @@
         <div class="hide-after-s scroll-animate fadeInRight drawer-trigger" data-drawer-wrapper-id="drawer-menu">
             <i class="material-icons m text-white margin-left-25">menu</i>
         </div>
-        <div id="drawer-menu" class="drawer-wrapper">
+        <div id="drawer-menu" class="drawer-wrapper drawer-wrapper-popup">
             <nav>
                 <ul class="capitalize">
                     <router-link id="link-home" class="drawer-action active" to="/">
