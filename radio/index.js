@@ -4,6 +4,7 @@ const request = require('request')
 const fs = require('fs')
 const ffprobe = require('fluent-ffmpeg').ffprobe
 const sanitizer = require('validator')
+const whilst = require('async/whilst')
 
 class Radio {
     constructor (genre) {
@@ -25,29 +26,59 @@ class Radio {
     }
 
     nextSong () {
-        if (this.playlist.length <= 0) this.loadPlaylist()
-        
-        this.song = this.playlist.pop()
-        return this.getSongDuration(this.song.url, (err, duration) => {
-            if (err) return this.song.duration = this.timeout
+        this.loadPlaylist(() => {
+            this.song = this.playlist.pop()
+            return this.getSongDuration(this.song.url, (err, duration) => {
+                if (err) return this.song.duration = this.timeout
+                
+                this.song.duration = duration
+                this.startTime = Date.now()
+                return setTimeout(this.nextSong.bind(this), (this.song.duration - 0.5) * 1000)
+            })
+        })
+    }
+    
+    loadPlaylist (callback) {
+        if (this.playlist.length > 0) return callback()
 
-            this.song.duration = duration
-            this.startTime = Date.now()
-            return setTimeout(this.nextSong.bind(this), (this.song.duration - 0.5) * 1000)
+        const songs = this.songs.slice()
+        return whilst((whilstCallback) => {
+            return songs.length
+        }, () => {
+            const i = Math.floor(Math.random() * songs.length)
+            return this.fetchData(songs[i], (err, song) => {
+                if (err) return whilstCallback()
+                this.playlist.push(song)
+                songs.splice(i, 1)
+                return whilstCallback()
+            })
+        }, (err, n) => {
+            return callback()
         })
     }
 
-    loadPlaylist () {
-        const songs = this.songs.slice()
-        while (songs.length) {
-            const i = Math.floor(Math.random() * songs.length)
-            this.playlist.push(songs[i])
-            songs.splice(i, 1)
-        }
-    }
+    fetchData (id, callback) {
+        return request(`${config.api}tracks/${id}`, (err, response, data) => {
+            if (err || response.statusCode >= 400) return callback(new Error('Failed to download song data'))
+            let song;
+            try {
+                song = JSON.parse(data)
+            } catch (e) {
+                return callback(new Error('Failed to parse song data'))
+            }
 
-    fetchData () {
-        //return request(`${config.api}`)
+            if (!json.result || !json.results.length) return callback(new Error('Invalid song data'))
+            const songData = json.results[0]
+            return callback(null, {
+                meta: {
+                    title: songData.trackName || '',
+                    artist: songData.artistName || '',
+                    album: songData.collectionName || '',
+                    pictureUrl: songData.artworkUrl30|| ''
+                },
+                url: songData.previewUrl || ''
+            })
+        })
     }
 
     getSongDuration (url, callback) {
