@@ -86,6 +86,10 @@ class Component {
             throw new TypeError('Please implement abstract method init.')
         }
     }
+
+    getName () {
+        return this.constructor.name;
+    }
 }
 
 class FS {
@@ -94,6 +98,8 @@ class FS {
             if (!component || !(component instanceof Component)) {
                 return this.logError(new Error('invalid component passed to FrigStudio.addComponent'))
             }
+
+            this.components.push(component)
 
             if (!selector) {
                 return component.init()
@@ -115,7 +121,23 @@ class FS {
         }
     }
 
+    static removeComponent (component) {
+        if (component.deinit && Util.isFunction(component.deinit())) {
+            component.deinit()
+        }
+        return this.components.splice(this.components.indexOf(component), 1)
+    }
+
+    static autoRemoveComponentsOfTypes(type) {
+        for (let i = 0; i < this.components.length-1; ++i) {
+            if (type === this.components[i].constructor.name && this.components[i].options.shouldAutoRemove) {
+                this.removeComponent(this.components[i])
+            }
+        }
+    }
+
     static init () {
+        this.components = []
         FS.addComponent(new MaterialInput())
         FS.addComponent(new Drawer())
     }
@@ -579,6 +601,8 @@ class OpacityScrollAnimator extends ScrollAnimator {
     }
 }
 
+// TODO: make sure audioContext are close when deleted
+
 // eslint-disable-next-line no-unused-vars
 class AudioPlayer extends Component {
     constructor (source, options) {
@@ -590,16 +614,28 @@ class AudioPlayer extends Component {
             visualColor: '#2196f3',
             color: '#FFFFFF',
             barCount: 200,
-            height: 75
+            height: 75,
+            autoplay: false, // not working on safari
+            loop: false,
+            startTime: 0,
+            disabled: false,
+            stopCallback: null,
+            shouldAutoRemove: true
         })
     }
 
     init (el) {
-        while (el.firstChild) el.removeChild(el.firstChild)
-        el.appendChild(this.createPlayer(el))
+        FS.autoRemoveComponentsOfTypes(this.constructor.name)
+        this.el = el
+        el.appendChild(this.createPlayer())
     }
 
-    createPlayer (el) {
+    deinit () {
+        this.audioContext.close()
+        while (this.el.firstChild) this.el.removeChild(this.el.firstChild)
+    }
+
+    createPlayer () {
         const player = document.createElement('div')
         player.style.display = 'flex'
         player.style.justifyContent = 'center'
@@ -612,8 +648,10 @@ class AudioPlayer extends Component {
         audio.crossOrigin = 'anonymous'
         audio.style.display = 'none'
         audio.src = this.source
-        audio.autoplay = false
-        audio.loop = false
+        audio.autoplay = this.options.autoplay
+        audio.loop = this.options.loop
+        audio.currentTime = this.options.startTime
+
         Util.addEvent(audio, 'ended', () => {
             return audio.pause()
         })
@@ -621,6 +659,10 @@ class AudioPlayer extends Component {
             return button.innerHTML = 'play_arrow'
         })
         Util.addEvent(audio, 'play', () => {
+            if (this.options.stopCallback) {
+                return button.innerHTML = 'stop'
+            }
+
             return button.innerHTML = 'pause'
         })
 
@@ -628,13 +670,23 @@ class AudioPlayer extends Component {
         button.classList.add('material-icons')
         button.innerHTML = 'play_arrow'
         button.style.color = this.options.color
-        button.style.cursor = 'pointer'
-        Util.addEvent(button, 'click', () => {
-            if (!this.audio.paused) {
-                return this.audio.pause()
-            }
-            return this.audio.play()
-        })
+        if (!this.options.disabled) {
+            button.style.cursor = 'pointer'
+            Util.addEvent(button, 'click', () => {
+                if (!this.audio.paused) {
+                    if (this.options.stopCallback && Util.isFunction(this.options.stopCallback)) {
+                        return this.options.stopCallback(this.el, this.audio)
+                    }
+
+                    return this.audio.pause()
+                }
+
+                return this.audio.play()
+            })
+        } else {
+            button.style.cursor = 'not-allowed'
+            button.style.opacity = '.4'
+        }
         player.appendChild(button)
 
         const timeline = document.createElement('div')
@@ -660,10 +712,10 @@ class AudioPlayer extends Component {
             canvas.style.position = 'absolute'
             this.canvas = canvas
             timeline.appendChild(canvas)
-            canvas.width = el.clientWidth - 120 // terrible hack -> 120 == full width - controls
+            canvas.width = this.el.clientWidth - 120 // terrible hack -> 120 == full width - controls
             canvas.height = this.options.height
             Util.addEvent(canvas, 'resize', () => {
-                canvas.width = el.clientWidth - 120
+                canvas.width = this.el.clientWidth - 120
                 canvas.height = this.options.height
             })
         }
@@ -685,11 +737,11 @@ class AudioPlayer extends Component {
     initVisual () {
         if (this.options.visual) {
             window.AudioContext = window.AudioContext || window.webkitAudioContext
-            const audioContext = new AudioContext()
-            const source = audioContext.createMediaElementSource(this.audio)
-            this.analyser = audioContext.createAnalyser()
+            this.audioContext = new AudioContext()
+            const source = this.audioContext.createMediaElementSource(this.audio)
+            this.analyser = this.audioContext.createAnalyser()
             source.connect(this.analyser)
-            this.analyser.connect(audioContext.destination)
+            this.analyser.connect(this.audioContext.destination)
             this.context = this.canvas.getContext('2d')
             this.context.fillStyle = this.options.visualColor
             this.context.translate(0.5, 0.5) // terrible hack again

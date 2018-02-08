@@ -1,11 +1,11 @@
 <template>
     <main class="dark no-scroll flex flex-spaced flex-vertical">
-        <div class="container">
+        <div class="container margin-up-30">
             <div class="section">
-                <div class="row text-center">
+                <div class="row text-center no-select">
                     <div class="playlist clickable" id="pop">
                         <div class="filter black"></div>
-                        <i class="play material-icons no-events text-white">play_circle_outline</i>
+                        <i class="play material-icons text-white">play_circle_outline</i>
                         <svg class="live" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
                             <circle cx="0" cy="0" r="12.247" transform="translate(50 50)">
                                 <animateTransform attributeName="transform" type="scale" dur="3s" repeatCount="indefinite" from="1 1" to="0.5 0.5" additive="sum" values="1 1 ; 0.8 0.8 ; 1 1" keyTimes="0;0.5;1" />
@@ -13,19 +13,19 @@
                             <g class="small">
                                 <path d="M35.499,68.75c-0.578,0-1.159-0.199-1.631-0.606C33.536,67.857,25.75,61.019,25.75,50c0-11.019,7.786-17.858,8.118-18.144c1.046-0.901,2.625-0.784,3.526,0.261c0.9,1.044,0.785,2.618-0.255,3.521C37.044,35.721,30.75,41.347,30.75,50c0,8.753,6.318,14.302,6.382,14.356c1.046,0.901,1.163,2.48,0.261,3.526C36.899,68.456,36.201,68.75,35.499,68.75z"/>
                                 <path d="M64.405,68.75c-0.702,0-1.4-0.294-1.895-0.867c-0.901-1.046-0.784-2.625,0.261-3.526c0.058-0.05,6.383-5.683,6.383-14.356c0-8.753-6.318-14.301-6.383-14.356c-1.045-0.901-1.162-2.48-0.261-3.526c0.902-1.045,2.479-1.163,3.526-0.261c0.331,0.286,8.117,7.125,8.117,18.144c0,11.019-7.786,17.857-8.117,18.144C65.564,68.551,64.983,68.75,64.405,68.75z"/>
-                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;-30 50 50;210 50 50;180 50 50 ; 180 50 50;150 50 50;390 50 50;360 50 50;360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline"/>
+                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;30 50 50;-210 50 50;-180 50 50 ; -180 50 50;-150 50 50;-390 50 50;-360 50 50;-360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline" />
                             </g>
                             
                             <g class="big">
                                 <path d="M24.835,86.247c-1.153,0-2.311-0.397-3.253-1.21C20.941,84.485,5.904,71.277,5.904,50s15.038-34.485,15.678-35.037c2.091-1.804,5.25-1.569,7.052,0.522c1.8,2.087,1.57,5.237-0.511,7.042C27.911,22.714,15.904,33.475,15.904,50c0,16.588,12.099,27.368,12.221,27.475c2.072,1.814,2.295,4.969,0.489,7.048C27.624,85.662,26.233,86.247,24.835,86.247z"/>
                                 <path d="M75.06,86.25c-1.404,0-2.8-0.588-3.789-1.735c-1.803-2.092-1.569-5.249,0.522-7.052C71.901,77.368,84,66.588,84,50c0-16.746-12.085-27.358-12.207-27.463c-2.092-1.803-2.325-4.96-0.522-7.052c1.804-2.09,4.961-2.325,7.052-0.522C78.963,15.515,94,28.723,94,50S78.963,84.485,78.322,85.037C77.378,85.852,76.216,86.25,75.06,86.25z"/>
-                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;30 50 50;-210 50 50;-180 50 50 ; -180 50 50;-150 50 50;-390 50 50;-360 50 50;-360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline" />
+                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;-30 50 50;210 50 50;180 50 50 ; 180 50 50;150 50 50;390 50 50;360 50 50;360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline"/>
                             </g>
                         </svg>
                     </div>
                     <div class="playlist clickable" id="classical">
                         <div class="filter black"></div>
-                        <i class="play material-icons no-events text-white">play_circle_outline</i>
+                        <i class="play material-icons text-white">play_circle_outline</i>
                         <svg class="live" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
                             <circle cx="0" cy="0" r="12.247" transform="translate(50 50)">
                                 <animateTransform attributeName="transform" type="scale" dur="3s" repeatCount="indefinite" from="1 1" to="0.5 0.5" additive="sum" values="1 1 ; 0.8 0.8 ; 1 1" keyTimes="0;0.5;1" />
@@ -33,19 +33,19 @@
                             <g class="small">
                                 <path d="M35.499,68.75c-0.578,0-1.159-0.199-1.631-0.606C33.536,67.857,25.75,61.019,25.75,50c0-11.019,7.786-17.858,8.118-18.144c1.046-0.901,2.625-0.784,3.526,0.261c0.9,1.044,0.785,2.618-0.255,3.521C37.044,35.721,30.75,41.347,30.75,50c0,8.753,6.318,14.302,6.382,14.356c1.046,0.901,1.163,2.48,0.261,3.526C36.899,68.456,36.201,68.75,35.499,68.75z"/>
                                 <path d="M64.405,68.75c-0.702,0-1.4-0.294-1.895-0.867c-0.901-1.046-0.784-2.625,0.261-3.526c0.058-0.05,6.383-5.683,6.383-14.356c0-8.753-6.318-14.301-6.383-14.356c-1.045-0.901-1.162-2.48-0.261-3.526c0.902-1.045,2.479-1.163,3.526-0.261c0.331,0.286,8.117,7.125,8.117,18.144c0,11.019-7.786,17.857-8.117,18.144C65.564,68.551,64.983,68.75,64.405,68.75z"/>
-                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;-30 50 50;210 50 50;180 50 50 ; 180 50 50;150 50 50;390 50 50;360 50 50;360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline"/>
+                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;30 50 50;-210 50 50;-180 50 50 ; -180 50 50;-150 50 50;-390 50 50;-360 50 50;-360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline" />
                             </g>
                             
                             <g class="big">
                                 <path d="M24.835,86.247c-1.153,0-2.311-0.397-3.253-1.21C20.941,84.485,5.904,71.277,5.904,50s15.038-34.485,15.678-35.037c2.091-1.804,5.25-1.569,7.052,0.522c1.8,2.087,1.57,5.237-0.511,7.042C27.911,22.714,15.904,33.475,15.904,50c0,16.588,12.099,27.368,12.221,27.475c2.072,1.814,2.295,4.969,0.489,7.048C27.624,85.662,26.233,86.247,24.835,86.247z"/>
                                 <path d="M75.06,86.25c-1.404,0-2.8-0.588-3.789-1.735c-1.803-2.092-1.569-5.249,0.522-7.052C71.901,77.368,84,66.588,84,50c0-16.746-12.085-27.358-12.207-27.463c-2.092-1.803-2.325-4.96-0.522-7.052c1.804-2.09,4.961-2.325,7.052-0.522C78.963,15.515,94,28.723,94,50S78.963,84.485,78.322,85.037C77.378,85.852,76.216,86.25,75.06,86.25z"/>
-                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;30 50 50;-210 50 50;-180 50 50 ; -180 50 50;-150 50 50;-390 50 50;-360 50 50;-360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline" />
+                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;-30 50 50;210 50 50;180 50 50 ; 180 50 50;150 50 50;390 50 50;360 50 50;360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline"/>
                             </g>
                         </svg>
                     </div>
                     <div class="playlist clickable" id="dance">
                         <div class="filter black"></div>
-                        <i class="play material-icons no-events text-white">play_circle_outline</i>
+                        <i class="play material-icons text-white">play_circle_outline</i>
                         <svg class="live" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
                             <circle cx="0" cy="0" r="12.247" transform="translate(50 50)">
                                 <animateTransform attributeName="transform" type="scale" dur="3s" repeatCount="indefinite" from="1 1" to="0.5 0.5" additive="sum" values="1 1 ; 0.8 0.8 ; 1 1" keyTimes="0;0.5;1" />
@@ -53,19 +53,19 @@
                             <g class="small">
                                 <path d="M35.499,68.75c-0.578,0-1.159-0.199-1.631-0.606C33.536,67.857,25.75,61.019,25.75,50c0-11.019,7.786-17.858,8.118-18.144c1.046-0.901,2.625-0.784,3.526,0.261c0.9,1.044,0.785,2.618-0.255,3.521C37.044,35.721,30.75,41.347,30.75,50c0,8.753,6.318,14.302,6.382,14.356c1.046,0.901,1.163,2.48,0.261,3.526C36.899,68.456,36.201,68.75,35.499,68.75z"/>
                                 <path d="M64.405,68.75c-0.702,0-1.4-0.294-1.895-0.867c-0.901-1.046-0.784-2.625,0.261-3.526c0.058-0.05,6.383-5.683,6.383-14.356c0-8.753-6.318-14.301-6.383-14.356c-1.045-0.901-1.162-2.48-0.261-3.526c0.902-1.045,2.479-1.163,3.526-0.261c0.331,0.286,8.117,7.125,8.117,18.144c0,11.019-7.786,17.857-8.117,18.144C65.564,68.551,64.983,68.75,64.405,68.75z"/>
-                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;-30 50 50;210 50 50;180 50 50 ; 180 50 50;150 50 50;390 50 50;360 50 50;360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline"/>
+                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;30 50 50;-210 50 50;-180 50 50 ; -180 50 50;-150 50 50;-390 50 50;-360 50 50;-360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline" />
                             </g>
                             
                             <g class="big">
                                 <path d="M24.835,86.247c-1.153,0-2.311-0.397-3.253-1.21C20.941,84.485,5.904,71.277,5.904,50s15.038-34.485,15.678-35.037c2.091-1.804,5.25-1.569,7.052,0.522c1.8,2.087,1.57,5.237-0.511,7.042C27.911,22.714,15.904,33.475,15.904,50c0,16.588,12.099,27.368,12.221,27.475c2.072,1.814,2.295,4.969,0.489,7.048C27.624,85.662,26.233,86.247,24.835,86.247z"/>
                                 <path d="M75.06,86.25c-1.404,0-2.8-0.588-3.789-1.735c-1.803-2.092-1.569-5.249,0.522-7.052C71.901,77.368,84,66.588,84,50c0-16.746-12.085-27.358-12.207-27.463c-2.092-1.803-2.325-4.96-0.522-7.052c1.804-2.09,4.961-2.325,7.052-0.522C78.963,15.515,94,28.723,94,50S78.963,84.485,78.322,85.037C77.378,85.852,76.216,86.25,75.06,86.25z"/>
-                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;30 50 50;-210 50 50;-180 50 50 ; -180 50 50;-150 50 50;-390 50 50;-360 50 50;-360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline" />
+                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;-30 50 50;210 50 50;180 50 50 ; 180 50 50;150 50 50;390 50 50;360 50 50;360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline"/>
                             </g>
                         </svg>
                     </div>
                     <div class="playlist clickable" id="rock">
                         <div class="filter black"></div>
-                        <i class="play material-icons no-events text-white">play_circle_outline</i>
+                        <i class="play material-icons text-white">play_circle_outline</i>
                         <svg class="live" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
                             <circle cx="0" cy="0" r="12.247" transform="translate(50 50)">
                                 <animateTransform attributeName="transform" type="scale" dur="3s" repeatCount="indefinite" from="1 1" to="0.5 0.5" additive="sum" values="1 1 ; 0.8 0.8 ; 1 1" keyTimes="0;0.5;1" />
@@ -73,19 +73,19 @@
                             <g class="small">
                                 <path d="M35.499,68.75c-0.578,0-1.159-0.199-1.631-0.606C33.536,67.857,25.75,61.019,25.75,50c0-11.019,7.786-17.858,8.118-18.144c1.046-0.901,2.625-0.784,3.526,0.261c0.9,1.044,0.785,2.618-0.255,3.521C37.044,35.721,30.75,41.347,30.75,50c0,8.753,6.318,14.302,6.382,14.356c1.046,0.901,1.163,2.48,0.261,3.526C36.899,68.456,36.201,68.75,35.499,68.75z"/>
                                 <path d="M64.405,68.75c-0.702,0-1.4-0.294-1.895-0.867c-0.901-1.046-0.784-2.625,0.261-3.526c0.058-0.05,6.383-5.683,6.383-14.356c0-8.753-6.318-14.301-6.383-14.356c-1.045-0.901-1.162-2.48-0.261-3.526c0.902-1.045,2.479-1.163,3.526-0.261c0.331,0.286,8.117,7.125,8.117,18.144c0,11.019-7.786,17.857-8.117,18.144C65.564,68.551,64.983,68.75,64.405,68.75z"/>
-                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;-30 50 50;210 50 50;180 50 50 ; 180 50 50;150 50 50;390 50 50;360 50 50;360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline"/>
+                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;30 50 50;-210 50 50;-180 50 50 ; -180 50 50;-150 50 50;-390 50 50;-360 50 50;-360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline" />
                             </g>
                             
                             <g class="big">
                                 <path d="M24.835,86.247c-1.153,0-2.311-0.397-3.253-1.21C20.941,84.485,5.904,71.277,5.904,50s15.038-34.485,15.678-35.037c2.091-1.804,5.25-1.569,7.052,0.522c1.8,2.087,1.57,5.237-0.511,7.042C27.911,22.714,15.904,33.475,15.904,50c0,16.588,12.099,27.368,12.221,27.475c2.072,1.814,2.295,4.969,0.489,7.048C27.624,85.662,26.233,86.247,24.835,86.247z"/>
                                 <path d="M75.06,86.25c-1.404,0-2.8-0.588-3.789-1.735c-1.803-2.092-1.569-5.249,0.522-7.052C71.901,77.368,84,66.588,84,50c0-16.746-12.085-27.358-12.207-27.463c-2.092-1.803-2.325-4.96-0.522-7.052c1.804-2.09,4.961-2.325,7.052-0.522C78.963,15.515,94,28.723,94,50S78.963,84.485,78.322,85.037C77.378,85.852,76.216,86.25,75.06,86.25z"/>
-                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;30 50 50;-210 50 50;-180 50 50 ; -180 50 50;-150 50 50;-390 50 50;-360 50 50;-360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline" />
+                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;-30 50 50;210 50 50;180 50 50 ; 180 50 50;150 50 50;390 50 50;360 50 50;360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline"/>
                             </g>
                         </svg>
                     </div>
                     <div class="playlist clickable" id="metal">
                         <div class="filter black"></div>
-                        <i class="play material-icons no-events text-white">play_circle_outline</i>
+                        <i class="play material-icons text-white">play_circle_outline</i>
                         <svg class="live" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
                             <circle cx="0" cy="0" r="12.247" transform="translate(50 50)">
                                 <animateTransform attributeName="transform" type="scale" dur="3s" repeatCount="indefinite" from="1 1" to="0.5 0.5" additive="sum" values="1 1 ; 0.8 0.8 ; 1 1" keyTimes="0;0.5;1" />
@@ -93,13 +93,13 @@
                             <g class="small">
                                 <path d="M35.499,68.75c-0.578,0-1.159-0.199-1.631-0.606C33.536,67.857,25.75,61.019,25.75,50c0-11.019,7.786-17.858,8.118-18.144c1.046-0.901,2.625-0.784,3.526,0.261c0.9,1.044,0.785,2.618-0.255,3.521C37.044,35.721,30.75,41.347,30.75,50c0,8.753,6.318,14.302,6.382,14.356c1.046,0.901,1.163,2.48,0.261,3.526C36.899,68.456,36.201,68.75,35.499,68.75z"/>
                                 <path d="M64.405,68.75c-0.702,0-1.4-0.294-1.895-0.867c-0.901-1.046-0.784-2.625,0.261-3.526c0.058-0.05,6.383-5.683,6.383-14.356c0-8.753-6.318-14.301-6.383-14.356c-1.045-0.901-1.162-2.48-0.261-3.526c0.902-1.045,2.479-1.163,3.526-0.261c0.331,0.286,8.117,7.125,8.117,18.144c0,11.019-7.786,17.857-8.117,18.144C65.564,68.551,64.983,68.75,64.405,68.75z"/>
-                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;-30 50 50;210 50 50;180 50 50 ; 180 50 50;150 50 50;390 50 50;360 50 50;360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline"/>
+                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;30 50 50;-210 50 50;-180 50 50 ; -180 50 50;-150 50 50;-390 50 50;-360 50 50;-360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline" />
                             </g>
                             
                             <g class="big">
                                 <path d="M24.835,86.247c-1.153,0-2.311-0.397-3.253-1.21C20.941,84.485,5.904,71.277,5.904,50s15.038-34.485,15.678-35.037c2.091-1.804,5.25-1.569,7.052,0.522c1.8,2.087,1.57,5.237-0.511,7.042C27.911,22.714,15.904,33.475,15.904,50c0,16.588,12.099,27.368,12.221,27.475c2.072,1.814,2.295,4.969,0.489,7.048C27.624,85.662,26.233,86.247,24.835,86.247z"/>
                                 <path d="M75.06,86.25c-1.404,0-2.8-0.588-3.789-1.735c-1.803-2.092-1.569-5.249,0.522-7.052C71.901,77.368,84,66.588,84,50c0-16.746-12.085-27.358-12.207-27.463c-2.092-1.803-2.325-4.96-0.522-7.052c1.804-2.09,4.961-2.325,7.052-0.522C78.963,15.515,94,28.723,94,50S78.963,84.485,78.322,85.037C77.378,85.852,76.216,86.25,75.06,86.25z"/>
-                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;30 50 50;-210 50 50;-180 50 50 ; -180 50 50;-150 50 50;-390 50 50;-360 50 50;-360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline" />
+                                <animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" values="0 50 50;-30 50 50;210 50 50;180 50 50 ; 180 50 50;150 50 50;390 50 50;360 50 50;360 50 50" keyTimes="0;0.05;0.15;0.25 ; 0.5;0.55;0.65;0.75;1" keySplines="0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0.42 0 0.58 1 ; 0 0 1 1" calcMode="spline"/>
                             </g>
                         </svg>
                     </div>
@@ -118,8 +118,46 @@
     export default {
         mounted () {
             this.load()
+            this.createEvents([
+                { genre: 'pop', color: '#f06292' },
+                { genre: 'classical', color: '#4caf50' },
+                { genre: 'dance', color: '#5c6bc0' },
+                { genre: 'rock', color: '#ffb74d' },
+                { genre: 'metal', color: '#f44336' }
+            ])
         },
         methods: {
+            hideLiveIcons () {
+                document.querySelectorAll('.playlist').forEach((playlist) => {
+                    playlist.classList.remove('playing')
+                })
+            },
+            showLiveIcon (element) {
+                this.hideLiveIcons()
+                element.classList.add('playing')
+            },
+            createEvents (options) {
+                for (let i = 0; i < options.length; ++i) {
+                    document.getElementById(options[i].genre).addEventListener('click', (event) => {
+                        // eslint-disable-next-line no-undef
+                        Util.request(`/radio/${options[i].genre}`, 'get', null, (err, data) => {
+                            if (err) return console.log(err)
+                            // eslint-disable-next-line no-undef
+                            FS.addComponent(new AudioPlayer(data.link, {
+                                visual: true,
+                                visualColor: options[i].color,
+                                autoplay: true,
+                                startTime: data.time,
+                                stopCallback: (el, audio) => {
+                                    while (el.firstChild) el.removeChild(el.firstChild)
+                                    this.hideLiveIcons()
+                                }
+                            }), '#player')
+                            this.showLiveIcon(event.target)
+                        })
+                    })
+                }
+            },
             load () {
                 FS.addComponent(new AutoScrollAnimator()) // eslint-disable-line no-undef
                 setTimeout(() => {
@@ -127,12 +165,6 @@
                     document.getElementById('link-artist').classList.remove('active')
                     document.getElementById('link-album').classList.remove('active')
                 }, 100)
-
-                // eslint-disable-next-line no-undef
-                FS.addComponent(new AudioPlayer('https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview127/v4/9d/91/a0/9d91a04c-f41a-f605-8ca8-71821a1f69d2/mzaf_1381500230730914803.plus.aac.p.m4a', {
-                    visual: true,
-                    visualColor: '#9575CD'
-                }), '#player')
             }
         }
     }
@@ -157,7 +189,7 @@
                 }
             }
         }
-
+        
         .play, .live {
             opacity: 0;
             transition: opacity 300ms ease;
@@ -169,7 +201,6 @@
             right: 0;
             line-height: 150px;
         }
-
         .live {
             width: 60px;
             height: 60px;
@@ -182,7 +213,6 @@
                 fill: rgb(245, 68, 59);
             }
         }
-
         .filter {
             position: absolute;
             top: 0;
@@ -192,9 +222,9 @@
             opacity: 0;
             transition: opacity 300ms ease;
         }
-
         &:hover .filter, &.playing .filter { opacity: .5; }
         &:hover:not(.playing) { .play { opacity: 1; } }
         &.playing { .live { opacity: 1; } }
+        * { pointer-events: none; }
     }
 </style>

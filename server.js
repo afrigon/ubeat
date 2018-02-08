@@ -52,6 +52,13 @@ app.get('/login', (req, res) => {
     return res.send('login')
 })
 
+app.get('/radio/:genre', (req ,res) => {
+    return res.json({
+        link: 'https://audio-ssl.itunes.apple.com/apple-assets-us-std-000001/AudioPreview127/v4/9d/91/a0/9d91a04c-f41a-f605-8ca8-71821a1f69d2/mzaf_1381500230730914803.plus.aac.p.m4a',
+        time: 10
+    })
+})
+
 // res.cookie('access_token', 'abc', {
 //     maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
 //     // secure: true
