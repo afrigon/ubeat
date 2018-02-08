@@ -1,7 +1,6 @@
 ![](https://raw.githubusercontent.com/afrigon/ubeat/master/static/img/banner.jpg)
 
 ![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
-![Dependency Status](https://david-dm.org/afrigon/ubeat/status.svg)
 
 Ubeat is a platform to share music with friends created for the course GLO-3201 at Laval University.
 
