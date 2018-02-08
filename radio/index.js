@@ -49,6 +49,11 @@ class Radio {
             return songs.length > 0
         }, (whilstCallback) => {
             const i = Math.floor(Math.random() * songs.length)
+
+            // ensure that the first song is not the same as the last played
+            // not tested I guess it's chill
+            if (this.playlist.length == 0 && songs[i] == this.song.id || -1) return whilstCallback()
+
             return this.fetchData(songs[i], (err, song) => {
                 if (err) {
                     songs.splice(i, 1)
@@ -77,6 +82,7 @@ class Radio {
             if (!song.results || !song.results.length > 0) return callback(new Error('Invalid song data'))
             const songData = song.results[0]
             return callback(null, {
+                id: songData.trackId,
                 meta: {
                     title: songData.trackName || '',
                     artist: songData.artistName || '',
