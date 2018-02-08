@@ -143,14 +143,24 @@
                         Util.request(`/radio/${options[i].genre}`, 'get', null, (err, data) => {
                             if (err) return console.log(err)
                             // eslint-disable-next-line no-undef
-                            FS.addComponent(new AudioPlayer(data.link, {
+                            FS.addComponent(new AudioPlayer(data.url, {
                                 visual: true,
                                 visualColor: options[i].color,
                                 autoplay: true,
                                 startTime: data.time,
-                                stopCallback: (el, audio) => {
-                                    while (el.firstChild) el.removeChild(el.firstChild)
+                                meta: data.meta,
+                                stopCallback: (audioPlayer) => {
+                                    while (audioPlayer.el.firstChild) audioPlayer.el.removeChild(audioPlayer.el.firstChild)
                                     this.hideLiveIcons()
+                                },
+                                clipEndCallback: (audioPlayer) => {
+                                    // eslint-disable-next-line no-undef
+                                    Util.request(`/radio/${options[i].genre}`, 'get', null, (err, data) => {
+                                        if (err) return console.log(err)
+                                        audioPlayer.audio.src = data.url
+                                        audioPlayer.options.meta = data.meta
+                                        audioPlayer.setMeta()
+                                    })
                                 }
                             }), '#player')
                             this.showLiveIcon(event.target)

@@ -619,8 +619,10 @@ class AudioPlayer extends Component {
             loop: false,
             startTime: 0,
             disabled: false,
+            meta: {},
+            shouldAutoRemove: true,
             stopCallback: null,
-            shouldAutoRemove: true
+            clipEndCallback: null
         })
     }
 
@@ -628,6 +630,7 @@ class AudioPlayer extends Component {
         FS.autoRemoveComponentsOfTypes(this.constructor.name)
         this.el = el
         el.appendChild(this.createPlayer())
+        this.createMeta()
     }
 
     deinit () {
@@ -653,6 +656,14 @@ class AudioPlayer extends Component {
         audio.currentTime = this.options.startTime
 
         Util.addEvent(audio, 'ended', () => {
+            if (this.options.clipEndCallback && Util.isFunction(this.options.clipEndCallback)) {
+                return this.options.clipEndCallback(this)
+            }
+
+            if (this.options.stopCallback && Util.isFunction(this.options.stopCallback)) {
+                return this.options.stopCallback(this)
+            }
+
             return audio.pause()
         })
         Util.addEvent(audio, 'pause', () => {
@@ -670,12 +681,13 @@ class AudioPlayer extends Component {
         button.classList.add('material-icons')
         button.innerHTML = 'play_arrow'
         button.style.color = this.options.color
+        button.style.lineHeight = '24px'
         if (!this.options.disabled) {
             button.style.cursor = 'pointer'
             Util.addEvent(button, 'click', () => {
                 if (!this.audio.paused) {
                     if (this.options.stopCallback && Util.isFunction(this.options.stopCallback)) {
-                        return this.options.stopCallback(this.el, this.audio)
+                        return this.options.stopCallback(this)
                     }
 
                     return this.audio.pause()
@@ -729,9 +741,44 @@ class AudioPlayer extends Component {
         time.style.width = '76px'
         time.innerHTML = '00:00 / 00:00'
         player.appendChild(time)
-        
+
         this.isCreated = true
         return player
+    }
+
+    createMeta () {
+        const meta = document.createElement('div')
+        this.el.appendChild(meta)
+        meta.style.marginLeft = '44px'
+        meta.style.height = '30px'
+        const art = document.createElement('img')
+        this.metaArt = art
+        art.style.width = '30px'
+        art.style.height = '30px'
+        meta.appendChild(art)
+
+        const text = document.createElement('p')
+        text.style.display = 'inline-block'
+        text.style.color = this.options.color
+        text.style.margin = '0 10px'
+        text.style.lineHeight = '30px'
+        text.style.verticalAlign = 'top'
+        this.metaText = text
+        meta.appendChild(text)
+
+        return this.setMeta()
+    }
+
+    setMeta (meta) {
+        if (meta) this.options.meta = meta
+
+        if (!this.options.meta.title || !this.options.meta.artist) {
+            this.metaArt.src = ''
+            return this.metaText.innerHTML = ''
+        }
+
+        this.metaArt.src = this.options.meta.pictureUrl || ''
+        this.metaText.innerHTML = `${this.options.meta.title || ''} - ${this.options.meta.artist || ''}`
     }
 
     initVisual () {
