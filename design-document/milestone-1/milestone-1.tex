@@ -1,0 +1,61 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+
+\geometry{
+	left=2.5cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm
+}
+
+\begin{document}
+	\begin{titlepage}
+        {\setlength{\parindent}{0pt}
+            \underline{Équipe 01} \par
+            Mathieu \textsc{Dubreuil} (MADUB434 / 111 178 187) \par
+            Samuel \textsc{Foisy} (SAFOI / 111 157 794) \par
+            Alexandre \textsc{Frigon} (ALFRI8 / 111 175 404) \par
+            Alexandre \textsc{Godbout} (ALGOD40 / 111 123 834) \par
+        }
+
+        \begin{center}
+            \vspace{4cm}
+            {\Large\textbf{Document de design} \par}
+            {\large\textbf{UBeat - Livrable 1} \par}
+
+            \vspace{2cm}
+            {\large Travail présenté à messieurs William \textsc{Fortin} et Vincent \textsc{Séguin} \par}
+
+            \vspace{1.25cm}
+            {\large
+            	Développement d'applications Web \par
+            	GLO-3102 -- A \par
+            }
+
+            \vfill
+            Département d’informatique et de génie logiciel \par
+            Université Laval \par
+            11 février 2018 \par
+        \end{center}
+    \end{titlepage}
+    
+    \section*{Lancement de l'application}
+
+    \begin{enumerate}
+    	\item Installer les dépendances avec la commande \verb|npm i|
+    	\item Démarrer le serveur avec la commande \verb|npm run-script start-prod|
+        \item Aller à l'adresse \verb|localhost:9016| dans votre navigateur
+        \item Explorer les routes suivantes : \par
+        \verb|GET / HTTP/1.1| \par
+        \verb|GET /album HTTP/1.1| \par
+        \verb|GET /artist HTTP/1.1| \par
+    \end{enumerate}
+
+	\bigskip
+
+    Le projet est aussi hébergé sur \url{https://ubeat.frigstudio.com/}.
+\end{document}
