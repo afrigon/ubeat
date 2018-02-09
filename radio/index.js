@@ -2,17 +2,13 @@ const router = require('express').Router()
 const requestStream = require('request-stream')
 const request = require('request')
 const fs = require('fs')
-const ffprobe = require('fluent-ffmpeg').ffprobe
 const sanitizer = require('validator')
-const whilst = require('async/whilst')
 const config = require('../config').shared
 
 class Radio {
     constructor (genre) {
         this.timeout = 30
-        this.historySize = 3
         this.startTime = Date.now()
-        this.song = {}
         this.playlist = []
         this.songs = require(`./${genre}`)
         this.nextSong()
@@ -27,77 +23,59 @@ class Radio {
     }
 
     nextSong () {
-        this.loadPlaylist(() => {
-            this.song = this.playlist.pop()
-            if (!this.song) return (this.song = {}) & (this.song.duration = this.timeout)
+        this.loadPlaylist((song) => {
+            if (this.preFetchedSong) {
+                this.song = this.preFetchedSong
+            } else {
+                this.song = song || {}
+            }
 
-            return this.getSongDuration(this.song.url, (err, duration) => {
-                if (err) return this.song.duration = this.timeout
-                
-                this.song.duration = duration
-                this.startTime = Date.now()
-                return setTimeout(this.nextSong.bind(this), (this.song.duration - 0.5) * 1000)
+            setTimeout(this.nextSong.bind(this), /*this.song.duration*/29900) // preview time
+            this.startTime = Date.now()
+            return this.fetchSong(this.playlist.pop(), (err, song) => {
+                if (err) return this.preFetchedSong = {}
+                this.preFetchedSong = song
             })
         })
     }
     
     loadPlaylist (callback) {
         if (this.playlist.length > 0) return callback()
-
+        
         const songs = this.songs.slice()
-        return whilst(() => {
-            return songs.length > 0
-        }, (whilstCallback) => {
+        while (songs.length > 0) {
             const i = Math.floor(Math.random() * songs.length)
+            this.playlist.push(songs[i])
+            songs.splice(i, 1)
+        }
 
-            return this.fetchData(songs[i], (err, song) => {
-                if (err) {
-                    songs.splice(i, 1)
-                    return whilstCallback()
-                }
-
-                this.playlist.push(song)
-                songs.splice(i, 1)
-                return whilstCallback()
-            })
-        }, (err, n) => {
-            return callback()
+        return this.fetchSong(this.playlist.pop(), (err, song) => {
+            return callback(song)
         })
     }
 
-    fetchData (id, callback) {
+    fetchSong (id, callback) {
         return request(`${config.api}tracks/${id}`, (err, response, data) => {
             if (err || response.statusCode >= 400) return callback(new Error('Failed to download song data'))
-            let song;
+            let obj;
             try {
-                song = JSON.parse(data)
+                obj = JSON.parse(data)
             } catch (e) {
                 return callback(new Error('Failed to parse song data'))
             }
 
-            if (!song.results || !song.results.length > 0) return callback(new Error('Invalid song data'))
-            const songData = song.results[0]
+            if (!obj.results || !obj.results.length > 0) return callback(new Error('Invalid song data'))
+            const song = obj.results[0]
             return callback(null, {
-                id: songData.trackId,
+                id: song.trackId,
                 meta: {
-                    title: songData.trackName || '',
-                    artist: songData.artistName || '',
-                    album: songData.collectionName || '',
-                    pictureUrl: songData.artworkUrl30|| ''
+                    title: song.trackName || '',
+                    artist: song.artistName || '',
+                    album: song.collectionName || '',
+                    pictureUrl: song.artworkUrl30|| ''
                 },
-                url: songData.previewUrl || ''
-            })
-        })
-    }
-
-    getSongDuration (url, callback) {
-        return requestStream.get(url, (err, stream) => {
-            if (err) return callback(new Error('Could not download audio file'))
-            return ffprobe(stream, (err, meta) => {
-                if (err) return callback(new Error('Could not read metadata'))
-                if (!meta.streams || meta.streams.length) callback(new Error('Could not read metadata'))
-
-                return callback(null, meta.streams[0].duration || this.timeout)
+                duration: song.trackTimeMillis || this.timeout,
+                url: song.previewUrl || ''
             })
         })
     }

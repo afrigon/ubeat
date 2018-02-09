@@ -8,6 +8,6 @@ module.exports = {
         port: 8080
     },
     shared: {
-        api: 'https://ubeat.frigstudio.com/api/unsecure/'
+        api: 'https://ubeat.herokuapp.com/unsecure/'
     }
 }

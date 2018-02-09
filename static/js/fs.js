@@ -605,7 +605,6 @@ class OpacityScrollAnimator extends ScrollAnimator {
 class AudioPlayer extends Component {
     constructor (source, options) {
         super()
-        if (!source) return Util.logError(new Error('No source provided to audio player'))
         this.source = source
         this.options = Util.extends(options, {
             visual: false,
@@ -623,8 +622,9 @@ class AudioPlayer extends Component {
             clipEndCallback: null
         })
     }
-
+    
     init (el) {
+        if (!this.source) return Util.logError(new Error('No source provided to audio player'))
         FS.autoRemoveComponentsOfTypes(this.constructor.name)
         this.el = el
         el.appendChild(this.createPlayer())
