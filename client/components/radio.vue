@@ -25,39 +25,35 @@
             })
 
             window.addEventListener('load', () => {
-                let station = window.sessionStorage.getItem('radio-station')
-
-                try {
-                    station = JSON.parse(station)
-                } catch (e) {
-                    return
+                // starts radio for query param ?station={station}
+                let station = Util.getQueryParam('station')
+                station = stations.filter(n => n.genre === station)[0]
+                if (station) {
+                    this.startStation(station)
+                    return window.history.pushState(null, null, window.location.href.replace(/\?.*/, ''))
                 }
 
+                // else check if is refreshing
+                station = window.sessionStorage.getItem('radio-station')
+                try { station = JSON.parse(station) } catch (e) { return }
                 if (station && station.genre) {
                     // if reloading took more than 3s quit
                     const unloadTimestamp = window.sessionStorage.getItem('unload-timestamp')
                     if (unloadTimestamp < Date.now() - 3000) return
-                    !FS.hasComponentOfType(AudioPlayer.name) && this.startStation(station) // eslint-disable-line no-undef
+                    !FS.hasComponentOfType(AudioPlayer.name) && this.startStation(station)
                 }
             })
-
-            // starts radio for query param ?station={station}
-            let station = Util.getQueryParam('station') // eslint-disable-line no-undef
-            station = stations.filter(n => n.genre === station)[0]
-            if (station) {
-                this.startStation(station)
-                return window.history.pushState(null, null, window.location.href.replace(/\?.*/, ''))
-            }
         },
         methods: {
             startStation (station) {
-                FS.addComponent(new AudioPlayer({ // eslint-disable-line no-undef
+                window.sessionStorage.setItem('radio-station', JSON.stringify(station))
+                FS.addComponent(new AudioPlayer({
                     visual: true,
                     visualColor: station.color,
                     autoplay: true,
                     barHeight: 30,
                     fetchCallback: (audioPlayer, callback) => {
-                        return Util.request(`/radio/${station.genre}`, 'get', null, (err, data) => { // eslint-disable-line no-undef
+                        return Util.request(`/radio/${station.genre}`, 'get', null, (err, data) => {
                             if (err) return callback(err)
                             audioPlayer.options.startTime = data.time
                             audioPlayer.setMeta(data.meta)
@@ -68,7 +64,6 @@
                         const radio = document.getElementById('radio')
                         radio.style.backgroundColor = '#353535'
                         radio.style.transform = 'translateY(0)'
-                        window.sessionStorage.setItem('radio-station', JSON.stringify(station))
                     },
                     stopCallback: (audioPlayer) => {
                         window.sessionStorage.removeItem('radio-station')
@@ -82,7 +77,7 @@
                         }, 250)
                     },
                     clipEndCallback: (audioPlayer) => {
-                        return Util.request(`/radio/${station.genre}`, 'get', null, (err, data) => { // eslint-disable-line no-undef
+                        return Util.request(`/radio/${station.genre}`, 'get', null, (err, data) => {
                             if (err) return console.log(err)
                             audioPlayer.audio.src = data.url
                             return audioPlayer.setMeta(data.meta)

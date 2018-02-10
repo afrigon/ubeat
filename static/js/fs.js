@@ -63,29 +63,31 @@ class Util {
     static request (url, method, data, callback) {
         const request = new XMLHttpRequest()
         request.onreadystatechange = () => {
-            if(request.readyState === 4) {
-                if(request.status >= 400) { 
+            if (request.readyState === 4) {
+                if (request.status >= 400) {
                     return callback(new Error('Could not complete ajax request'))
                 }
-                
+
                 if (!request.responseText) return callback()
-                let json;
+                let json
                 try {
                     json = JSON.parse(request.responseText)
                 } catch (e) {
                     return callback(new Error(e.message))
                 }
-                return callback(null, json) 
+                return callback(null, json)
             }
         }
         request.open(method, url)
-        if (data) (data = JSON.stringify(data)) & request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        if (data) {
+            data = JSON.stringify(data)
+            request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+        }
         request.send(data)
     }
 
     static getQueryParam (name) {
         const url = window.location.href
-        name = name.replace(/[\[\]]/g, "\\$&")        
         const results = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`).exec(url)
         if (!results) return null
         if (!results[2]) return ''
@@ -105,7 +107,7 @@ class Component {
     }
 
     getName () {
-        return this.constructor.name;
+        return this.constructor.name
     }
 }
 
@@ -145,10 +147,10 @@ class FS {
         return this.components.splice(this.components.indexOf(component), 1)
     }
 
-    static autoRemoveComponentsOfTypes(type) {
+    static autoRemoveComponentsOfTypes (type) {
         const components = this.components.filter(n => n.constructor.name === type)
 
-        for (let i = 0; i < components.length-1; ++i) {
+        for (let i = 0; i < components.length - 1; ++i) {
             if (components[i].options.shouldAutoRemove) {
                 this.removeComponent(components[i])
             }
@@ -637,7 +639,7 @@ class AudioPlayer extends Component {
         } else {
             this.source = source
         }
-            
+
         this.options = Util.extends(options, {
             visual: false,
             visualColor: '#2196f3',
@@ -662,17 +664,17 @@ class AudioPlayer extends Component {
         })
         this.resize = this.resize.bind(this)
     }
-    
+
     init (el) {
         if (!this.options.fetchCallback || !Util.isFunction(this.options.fetchCallback)) {
             this.options.fetchCallback = (_, callback) => { return callback() }
         }
-        
+
         this.options.fetchCallback(this, (err, source) => {
             if (err) return Util.logError(new Error('Error in fetching script of audio player'))
             if (!source) return Util.logError(new Error('No source provided to audio player'))
             this.source = source
-            
+
             FS.autoRemoveComponentsOfTypes(this.constructor.name)
             this.el = el
             el.appendChild(this.createPlayer())
@@ -721,7 +723,7 @@ class AudioPlayer extends Component {
             return audio.pause()
         })
         Util.addEvent(audio, 'pause', () => {
-            return button.innerHTML = 'play_arrow'
+            return (button.innerHTML = 'play_arrow')
         })
         Util.addEvent(audio, 'play', () => {
             // stupid hack for safari
@@ -729,10 +731,10 @@ class AudioPlayer extends Component {
             this.options.startTime = 0
 
             if (this.options.stopCallback) {
-                return button.innerHTML = 'stop'
+                return (button.innerHTML = 'stop')
             }
 
-            return button.innerHTML = 'pause'
+            return (button.innerHTML = 'pause')
         })
 
         const button = document.createElement('i')
@@ -812,7 +814,7 @@ class AudioPlayer extends Component {
         meta.classList.add('meta')
         meta.style.margin = '13px 0 0 20px'
         meta.style.height = '30px'
-        
+
         const art = document.createElement('img')
         this.metaArt = art
         art.style.width = '30px'
@@ -828,7 +830,7 @@ class AudioPlayer extends Component {
         text.style.verticalAlign = 'top'
         text.style.width = 'calc(100% - 94px)'
         meta.appendChild(text)
-        
+
         const title = document.createElement('p')
         this.metaTitle = title
         title.style.margin = 0
@@ -892,16 +894,15 @@ class AudioPlayer extends Component {
             let barCount = this.options.barCount
             const totalMargin = margin * barCount
             let barWidth = (this.canvas.width - totalMargin) / barCount
-            let extraMargin = 0
-            
+
             // if the requested barCount doesn't fit player width
             if (barWidth < minBarWidth) {
                 // number of bars with minWidth that will fit screen
                 barCount = Math.floor((this.canvas.width) / (minBarWidth + margin))
 
-                //extra bar is the remaining modulo after bars have been removed
+                // extra bar is the remaining modulo after bars have been removed
                 const extraBar = (this.canvas.width) % (minBarWidth + margin)
-                
+
                 // new width is the minimum barWidth + the extra bar size distributed to each bar
                 barWidth = minBarWidth + extraBar * (minBarWidth + margin) / barCount
             }

@@ -20,11 +20,6 @@
         props: ['genre', 'color'],
         mounted () {
             this.createEvent(this.genre, this.color)
-
-            // set the live icon if radio is playing (watch out for that catch)
-            let station = window.sessionStorage.getItem('radio-station')
-            try { station = JSON.parse(station) } catch (e) { return }
-            if (station && station.genre) return this.showLiveIcon(document.getElementById(station.genre))
         },
         methods: {
             hideLiveIcons () {
@@ -38,14 +33,14 @@
             },
             createEvent (genre, color) {
                 document.getElementById(genre).addEventListener('click', (event) => {
-                    // eslint-disable-next-line no-undef
+                    window.sessionStorage.setItem('radio-station', JSON.stringify({genre: genre, color: color}))
                     const player = new AudioPlayer({
                         visual: true,
                         visualColor: color,
                         autoplay: true,
                         barHeight: 30,
                         fetchCallback: (audioPlayer, callback) => {
-                            return Util.request(`/radio/${genre}`, 'get', null, (err, data) => { // eslint-disable-line no-undef
+                            return Util.request(`/radio/${genre}`, 'get', null, (err, data) => {
                                 if (err) return callback(err)
                                 audioPlayer.options.startTime = data.time
                                 audioPlayer.setMeta(data.meta)
@@ -57,7 +52,6 @@
                             radio.style.backgroundColor = '#353535'
                             radio.style.transform = 'translateY(0)'
                             this.showLiveIcon(event.target)
-                            window.sessionStorage.setItem('radio-station', JSON.stringify({genre: genre, color: color}))
                         },
                         stopCallback: (audioPlayer) => {
                             window.sessionStorage.removeItem('radio-station')
@@ -70,19 +64,15 @@
                             }, 250)
                         },
                         clipEndCallback: (audioPlayer) => {
-                            return Util.request(`/radio/${genre}`, 'get', null, (err, data) => { // eslint-disable-line no-undef
+                            return Util.request(`/radio/${genre}`, 'get', null, (err, data) => {
                                 if (err) return console.log(err)
                                 audioPlayer.audio.src = data.url
                                 return audioPlayer.setMeta(data.meta)
                             })
                         }
                     })
-                    FS.addComponent(player, '#player') // eslint-disable-line no-undef
-
-                    // terrible safari hack
-                    setTimeout(() => {
-                        player.audio.play()
-                    }, 500)
+                    FS.addComponent(player, '#player')
+                    setTimeout(() => { player.audio.play() }, 500) // terrible safari hack
                 })
             }
         }

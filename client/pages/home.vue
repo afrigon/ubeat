@@ -22,8 +22,24 @@
             this.load()
         },
         methods: {
+            hideLiveIcons () {
+                document.querySelectorAll('.playlist').forEach((playlist) => {
+                    playlist.classList.remove('playing')
+                })
+            },
+            showLiveIcon (element) {
+                this.hideLiveIcons()
+                element.classList.add('playing')
+            },
             load () {
-                FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' })) // eslint-disable-line no-undef
+                FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' }))
+
+                window.addEventListener('load', () => {
+                    // set the live icon if radio is playing (watch out for that catch)
+                    let station = window.sessionStorage.getItem('radio-station')
+                    try { station = JSON.parse(station) } catch (e) { return }
+                    if (station && station.genre) return this.showLiveIcon(document.getElementById(station.genre))
+                })
             }
         }
     }

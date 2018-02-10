@@ -23,7 +23,7 @@
             'options': Options
         },
         mounted () {
-            FS.addComponent(new AutoScrollAnimator()) // eslint-disable-line no-undef
+            FS.addComponent(new AutoScrollAnimator())
         }
     }
 </script>

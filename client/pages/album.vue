@@ -78,7 +78,7 @@
         },
         methods: {
             load () {
-                FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' })) // eslint-disable-line no-undef
+                FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' }))
             }
         }
     }
