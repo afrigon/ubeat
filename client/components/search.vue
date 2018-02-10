@@ -78,6 +78,7 @@
         height: 100%;
         min-width: 330px;
 
+        .input-wrapper label.active { transform: translateY(-8px) scale(.8); }
         .input-wrapper {
             height: 100%;
             margin: 0 !important;

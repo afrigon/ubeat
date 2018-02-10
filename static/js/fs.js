@@ -206,6 +206,14 @@ class Drawer extends Component {
         Util.addEvent(filter, 'click', (event) => {
             return event.currentTarget.parentNode.classList.remove('open')
         })
+        Util.addEvent(window, 'resize', (event) => {
+            return drawer.classList.remove('open')
+        })
+        component.querySelectorAll('.drawer-close i').forEach((closeButton) => {
+            Util.addEvent(closeButton, 'click', (event) => {
+                return drawer.classList.remove('open')
+            })
+        })
         this.initActions(drawer)
         return drawer.appendChild(filter)
     }

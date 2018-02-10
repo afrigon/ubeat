@@ -6,13 +6,13 @@
 </template>
 
 <script>
-    import Navigation from '@/components/navigation'
+    import Header from '@/components/header'
     import Radio from '@/components/radio'
     
     export default {
         name: 'app',
         components: {
-            'navigation': Navigation,
+            'navigation': Header,
             'radio': Radio
         },
         mounted () {
