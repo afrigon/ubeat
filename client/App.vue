@@ -1,19 +1,18 @@
-<template>
-    <div id="app" class="body" style="overflow-x: hidden;" onclick="document.getElementById('options-wrapper').classList.remove('active')">
-        <nav-menu></nav-menu>
-        <radio></radio>
-        <router-view></router-view>
-    </div>
+<template lang="pug">
+    div#app.body(onclick="document.getElementById('options-wrapper').classList.remove('active')")
+        navigation
+        radio
+        router-view
 </template>
 
 <script>
-    import Navigation from '@/components/Navigation'
-    import Radio from '@/components/Radio'
+    import Navigation from '@/components/navigation'
+    import Radio from '@/components/radio'
     
     export default {
         name: 'app',
         components: {
-            'nav-menu': Navigation,
+            'navigation': Navigation,
             'radio': Radio
         },
         mounted () {
@@ -28,3 +27,7 @@
         }
     }
 </script>
+
+<style>
+    .body { overflow-x: hidden; }
+</style>

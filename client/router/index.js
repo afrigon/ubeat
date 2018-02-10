@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
-import Album from '@/components/Album'
-import Artist from '@/components/Artist'
-import Playlists from '@/components/Playlists'
-import Settings from '@/components/Settings'
+
+import Home from '@/pages/home'
+import Album from '@/pages/album'
+import Artist from '@/pages/artist'
+import Playlists from '@/pages/playlists'
+import Settings from '@/pages/settings'
 
 Vue.use(Router)
 

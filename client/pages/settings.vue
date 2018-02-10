@@ -1,13 +1,8 @@
-<template>
-    <main class="dark no-scroll flex flex-spaced flex-vertical">
-        <div class="container margin-up-30">
-            <div class="section">
-                <div class="row">
-                    
-                </div>
-            </div>
-        </div>
-    </main>
+<template lang="pug">
+    main.dark.no-scroll.flex.flex-spaced.flex-vertical
+        .container.margin-up-30
+            .section
+                .row
 </template>
 
 <script>
