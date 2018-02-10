@@ -33,7 +33,7 @@ class Radio {
             this.startTime = Date.now()
             return this.fetchSong(this.playlist.pop(), (err, song) => {
                 if (err) return (this.preFetchedSong = {})
-                this.preFetchedSong = song
+                return (this.preFetchedSong = song)
             })
         })
     }
