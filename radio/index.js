@@ -1,13 +1,11 @@
 const router = require('express').Router()
-const requestStream = require('request-stream')
 const request = require('request')
-const fs = require('fs')
 const sanitizer = require('validator')
 const config = require('../config').shared
 
 class Radio {
     constructor (genre) {
-        this.timeout = 30
+        this.timeout = 299000
         this.startTime = Date.now()
         this.playlist = []
         this.cache = []
@@ -31,18 +29,18 @@ class Radio {
                 this.song = song || {}
             }
 
-            setTimeout(this.nextSong.bind(this), /*this.song.duration*/29900) // preview time
+            setTimeout(this.nextSong.bind(this), /*this.song.duration || this.timeout*/this.timeout) // preview time
             this.startTime = Date.now()
             return this.fetchSong(this.playlist.pop(), (err, song) => {
-                if (err) return this.preFetchedSong = {}
+                if (err) return (this.preFetchedSong = {})
                 this.preFetchedSong = song
             })
         })
     }
-    
+
     loadPlaylist (callback) {
         if (this.playlist.length > 0) return callback()
-        
+
         const songs = this.songs.slice()
         while (songs.length > 0) {
             const i = Math.floor(Math.random() * songs.length)
@@ -61,7 +59,7 @@ class Radio {
 
         return request(`${config.api}tracks/${id}`, (err, response, data) => {
             if (err || response.statusCode >= 400) return callback(new Error('Failed to download song data'))
-            let obj;
+            let obj
             try {
                 obj = JSON.parse(data)
             } catch (e) {
@@ -96,7 +94,7 @@ let radios = {
     rap: new Radio('rap')
 }
 
-router.get('/:genre', (req ,res) => {
+router.get('/:genre', (req, res) => {
     const genre = sanitizer.escape(req.params.genre || '')
     if (!radios[genre]) return res.status(400).send(`${genre} radio does not exists`)
 
