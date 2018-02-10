@@ -74,6 +74,15 @@ class Util {
         if (data) (data = JSON.stringify(data)) & request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
         request.send(data)
     }
+
+    static getQueryParam (name) {
+        const url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        const results = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`).exec(url)
+        if (!results) return null
+        if (!results[2]) return ''
+        return decodeURIComponent(results[2].replace(/\+/g, ' '))
+    }
 }
 
 class Component {
@@ -860,7 +869,7 @@ class AudioPlayer extends Component {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
             this.context.fillStyle = this.options.visualColor
 
-            let margin = 2
+            const margin = 2
             const minBarWidth = 0.75
             let barCount = this.options.barCount
             const totalMargin = margin * barCount

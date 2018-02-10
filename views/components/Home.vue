@@ -146,6 +146,11 @@
             let station = window.sessionStorage.getItem('radio-station')
             try { station = JSON.parse(station) } catch (e) { return }
             if (station && station.genre) this.showLiveIcon(document.getElementById(station.genre))
+
+            // starts radio for query param ?station=${station}
+            station = Util.getQueryParam('station') // eslint-disable-line no-undef
+            const playlist = document.getElementById(station)
+            playlist && playlist.click()
         },
         methods: {
             hideLiveIcons () {
