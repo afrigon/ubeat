@@ -1,18 +1,18 @@
 <template lang="pug">
     div#app.body
-        navigation
+        header-bar
         radio
         router-view
 </template>
 
 <script>
-    import Header from '@/components/header'
+    import HeaderBar from '@/components/header-bar'
     import Radio from '@/components/radio'
     
     export default {
         name: 'app',
         components: {
-            'navigation': Header,
+            'header-bar': HeaderBar,
             'radio': Radio
         },
         mounted () {
