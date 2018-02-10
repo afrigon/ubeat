@@ -1,9 +1,9 @@
 <template lang="pug">
-    form.padding-0.flex.flex-center(v-bind:id="mobile ? 'form-search-mobile' : 'form-search'" class="form-search" v-bind:class="{ mobile: mobile, 'hide-after-m': mobile, 'hide-until-l': !mobile }" method="GET" action="/api/search")
+    form.form-search.padding-0.flex.flex-center(v-bind:id="mobile ? 'form-search-mobile' : 'form-search'" v-bind:class="{ mobile: mobile, 'hide-after-m': mobile, 'hide-until-l': !mobile }" method="GET" action="/api/search")
         .input-wrapper.margin-0.margin-up-5.grey.darken-5
-            input(v-bind:id="mobile ? 'search-input-mobile' : 'search-input'" type="search" name="q" autocomplete="off")
+            input.search-input(type="search" name="q" autocomplete="off")
             label Search
-        div.search-filter-wrapper.grey.darken-5(v-bind:id="mobile ? 'search-filter-wrapper-mobile' : 'search-filter-wrapper'")
+        div.search-filter-wrapper.grey.darken-5
             select#search-filter.gone(name="filter" multiple="" v-if="!mobile")
                 option(value="1")
                 option(value="2")
@@ -22,53 +22,36 @@
     export default {
         props: ['mobile'],
         mounted () {
-            const input = document.getElementById(this.mobile ? 'search-input-mobile' : 'search-input')
-            if (input) {
-                input.addEventListener('focus', () => {
-                    const target = document.getElementById(this.mobile ? 'search-filter-wrapper-mobile' : 'search-filter-wrapper')
-                    target && (target.style.transform = 'translateY(0)')
+            const form = document.getElementById(`form-search${this.mobile ? '-mobile' : ''}`)
+            if (!form) return console.log('could not find search form')
 
-                    if (this.mobile) {
-                        // show mobile options
-                        const form = document.getElementById('form-search-mobile')
-                        if (form) {
-                            const input = form.getElementsByTagName('input')[0]
-                            input && input.focus()
-    
-                            const label = form.getElementsByTagName('label')[0]
-                            label && label.classList.add('active')
-    
-                            return (form.style.transform = 'translateY(0)')
-                        }
-                    }
-                })
-                input.addEventListener('blur', () => {
-                    const target = document.getElementById(this.mobile ? 'search-filter-wrapper-mobile' : 'search-filter-wrapper')
-                    target && (target.style.transform = 'translateY(-100%)')
-                    input.value = ''
+            const input = form.querySelectorAll('.search-input')[0]
+            if (!input) return console.log('could not find search input')
 
-                    if (this.mobile) {
-                        const searchBar = document.getElementById('form-search-mobile')
-                        searchBar && (searchBar.style.transform = 'translateY(-100%)')
-                    }
-                })
-            }
+            const filter = form.querySelectorAll('.search-filter-wrapper')[0]
+            if (!filter) return console.log('could not find search filter')
 
-            if (this.mobile) {
-                const search = document.getElementById('search-action')
-                search && search.addEventListener('click', () => {
-                    const target = document.getElementById('form-search-mobile')
-                    if (target) {
-                        const input = target.getElementsByTagName('input')[0]
-                        input && input.focus()
+            input.addEventListener('focus', () => {
+                filter.style.transform = 'translateY(0)'
+                // show search form on mobile
+                return this.mobile && (form.style.transform = 'translateY(0)')
+            })
 
-                        const label = target.getElementsByTagName('label')[0]
-                        label && label.classList.add('active')
+            input.addEventListener('blur', () => {
+                filter.style.transform = 'translateY(-100%)'
+                input.value = ''
+                // hide form on mobile
+                return this.mobile && (form.style.transform = 'translateY(-100%)')
+            })
 
-                        return (target.style.transform = 'translateY(0)')
-                    }
-                })
-            }
+            if (!this.mobile) return
+            const button = document.getElementById('search-action')
+            if (!button) return
+
+            button.addEventListener('click', () => {
+                input.focus()
+                return (form.style.transform = 'translateY(0)')
+            })
         }
     }
 </script>
