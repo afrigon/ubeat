@@ -56,10 +56,7 @@ class Radio {
     }
 
     fetchSong (id, callback) {
-        const cachedSong = this.cache.filter((n) => {
-            return n.id === id
-        })
-
+        const cachedSong = this.cache.filter(n => n.id === id)
         if (cachedSong.length > 0) return callback(null, cachedSong[0])
 
         return request(`${config.api}tracks/${id}`, (err, response, data) => {

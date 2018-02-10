@@ -138,9 +138,7 @@ class FS {
     }
 
     static autoRemoveComponentsOfTypes(type) {
-        const components = this.components.filter((n) => {
-            n.constructor.name === type
-        })
+        const components = this.components.filter(n => n.constructor.name === type)
 
         for (let i = 0; i < components.length-1; ++i) {
             if (components[i].options.shouldAutoRemove) {
