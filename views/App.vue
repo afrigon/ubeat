@@ -1,20 +1,20 @@
 <template>
     <div id="app" class="body" style="overflow-x: hidden;" onclick="document.getElementById('options-wrapper').classList.remove('active')">
         <nav-menu></nav-menu>
+        <radio></radio>
         <router-view></router-view>
-        <footer-view></footer-view>
     </div>
 </template>
 
 <script>
     import Navigation from '@/components/Navigation'
-    import Footer from '@/components/Footer'
+    import Radio from '@/components/Radio'
     
     export default {
         name: 'app',
         components: {
             'nav-menu': Navigation,
-            'footer-view': Footer
+            'radio': Radio
         },
         mounted () {
             // eslint-disable-next-line no-undef

@@ -1,6 +1,6 @@
 <template>
-    <main class="dark no-scroll flex flex-spaced flex-vertical">
-        <div class="container margin-up-30">
+    <main class="dark no-scroll flex flex-center">
+        <div id="playlists" class="container scroll-animate fadeInHalfScale">
             <div class="section">
                 <div class="row text-center no-select">
                     <div class="playlist clickable" id="pop">
@@ -126,11 +126,6 @@
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div class="section">
-                <div id="player"></div>
-            </div>
-        </div>
     </main>
 </template>
 
@@ -146,6 +141,7 @@
                 { genre: 'metal', color: '#f44336' },
                 { genre: 'rap', color: '#ba68c8' }
             ])
+            if (window.liveRadio) this.showLiveIcon(document.getElementById(window.liveRadio))
         },
         methods: {
             hideLiveIcons () {
@@ -160,32 +156,47 @@
             createEvents (options) {
                 for (let i = 0; i < options.length; ++i) {
                     document.getElementById(options[i].genre).addEventListener('click', (event) => {
+                        window.liveRadio = options[i].genre
+
                         // eslint-disable-next-line no-undef
-                        Util.request(`/radio/${options[i].genre}`, 'get', null, (err, data) => {
-                            if (err) return console.log(err)
-                            console.log(data)
-                            // eslint-disable-next-line no-undef
-                            FS.addComponent(new AudioPlayer(data.url, {
-                                visual: true,
-                                visualColor: options[i].color,
-                                autoplay: true,
-                                startTime: data.time,
-                                meta: data.meta,
-                                stopCallback: (audioPlayer) => {
+                        FS.addComponent(new AudioPlayer({
+                            visual: true,
+                            visualColor: options[i].color,
+                            autoplay: true,
+                            barHeight: 30,
+                            fetchCallback: (audioPlayer, callback) => {
+                                return Util.request(`/radio/${options[i].genre}`, 'get', null, (err, data) => { // eslint-disable-line no-undef
+                                    if (err) return callback(err)
+                                    audioPlayer.options.startTime = data.time
+                                    audioPlayer.setMeta(data.meta)
+                                    return callback(null, data.url)
+                                })
+                            },
+                            createdCallback: (audioPlayer) => {
+                                const radio = document.getElementById('radio')
+                                radio.style.backgroundColor = '#353535'
+                                radio.style.transform = 'translateY(0)'
+                                audioPlayer.audio.play() // to test maybe bind some shit
+                                this.showLiveIcon(event.target)
+                            },
+                            stopCallback: (audioPlayer) => {
+                                let radio = document.getElementById('radio')
+                                radio.style.backgroundColor = 'transparent'
+                                radio.style.transform = 'translateY(100%)'
+                                window.liveRadio = null
+                                this.hideLiveIcons()
+                                setTimeout(() => {
                                     while (audioPlayer.el.firstChild) audioPlayer.el.removeChild(audioPlayer.el.firstChild)
-                                    this.hideLiveIcons()
-                                },
-                                clipEndCallback: (audioPlayer) => {
-                                    // eslint-disable-next-line no-undef
-                                    Util.request(`/radio/${options[i].genre}`, 'get', null, (err, data) => {
-                                        if (err) return console.log(err)
-                                        audioPlayer.audio.src = data.url
-                                        audioPlayer.setMeta(data.meta)
-                                    })
-                                }
-                            }), '#player')
-                            this.showLiveIcon(event.target)
-                        })
+                                }, 250)
+                            },
+                            clipEndCallback: (audioPlayer) => {
+                                return Util.request(`/radio/${options[i].genre}`, 'get', null, (err, data) => { // eslint-disable-line no-undef
+                                    if (err) return console.log(err)
+                                    audioPlayer.audio.src = data.url
+                                    return audioPlayer.setMeta(data.meta)
+                                })
+                            }
+                        }), '#player')
                     })
                 }
             },
@@ -202,6 +213,11 @@
 </script>
 
 <style lang="scss">
+    #playlists {
+        margin-top: -100px;
+        max-width: 775px;
+    }
+
     .playlist {
         position: relative;
         $size: 150;

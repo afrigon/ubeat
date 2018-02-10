@@ -67,18 +67,18 @@
         
         <div id="options-wrapper" class="grey darken-5 scroll-animate fadeInLeft no-select" onclick="event.stopPropagation()">
             <ul id="options-list" class="hide-until-m">
-                <a href="/#/playlists" class="no-hover-decoration">
+                <router-link id="link-playlists" onclick="document.getElementById('options-wrapper').classList.remove('active')" class="no-hover-decoration" to="/playlists">
                     <li class="text-white capitalize interactive clickable">
                         <i class="material-icons s">playlist_play</i>
                         <span>Playlists</span>
                     </li>
-                </a>
-                <a href="/#/settings" class="no-hover-decoration">
+                </router-link>
+                <router-link id="link-settings" onclick="document.getElementById('options-wrapper').classList.remove('active')" class="no-hover-decoration" to="/settings">
                     <li class="text-white capitalize interactive clickable">
                         <i class="material-icons s">settings</i>
                         <span>Settings</span>
                     </li>
-                </a>
+                </router-link>
                 <a href="/logout" class="no-hover-decoration">
                     <li class="text-white capitalize interactive clickable">
                         <i class="material-icons s">exit_to_app</i>

@@ -605,42 +605,72 @@ class OpacityScrollAnimator extends ScrollAnimator {
 class AudioPlayer extends Component {
     constructor (source, options) {
         super()
-        this.source = source
+        if (Util.isObject(source)) {
+            options = source
+        } else {
+            this.source = source
+        }
+            
         this.options = Util.extends(options, {
             visual: false,
             visualColor: '#2196f3',
             color: '#FFFFFF',
             barCount: 200,
-            height: 75,
+            barHeight: 75,
             autoplay: false, // not working on safari
             loop: false,
             startTime: 0,
             disabled: false,
-            meta: {},
+            meta: {
+                title: '',
+                artist: '',
+                album: '', // not used
+                pictureUrl: ''
+            },
             shouldAutoRemove: true,
+            fetchCallback: null,
+            createdCallback: null,
             stopCallback: null,
             clipEndCallback: null
         })
+        this.resize = this.resize.bind(this)
     }
     
     init (el) {
-        if (!this.source) return Util.logError(new Error('No source provided to audio player'))
-        FS.autoRemoveComponentsOfTypes(this.constructor.name)
-        this.el = el
-        el.appendChild(this.createPlayer())
-        this.createMeta()
+        if (!this.options.fetchCallback || !Util.isFunction(this.options.fetchCallback)) {
+            this.options.fetchCallback = (_, callback) => { return callback() }
+        }
+        
+        this.options.fetchCallback(this, (err, source) => {
+            if (err) return Util.logError(new Error('Error in fetching script of audio player'))
+            if (!source) return Util.logError(new Error('No source provided to audio player'))
+            this.source = source
+            
+            FS.autoRemoveComponentsOfTypes(this.constructor.name)
+            this.el = el
+            el.appendChild(this.createPlayer())
+            this.createMeta()
+        })
     }
 
     deinit () {
         this.audioContext.close()
+        Util.removeEvent(window, 'resize', this.resize)
         while (this.el.firstChild) this.el.removeChild(this.el.firstChild)
+    }
+
+    resize (event) {
+        this.canvas.width = this.el.clientWidth - 120
+        this.canvas.height = this.options.barHeight
     }
 
     createPlayer () {
         const player = document.createElement('div')
+        player.classList.add('timeline')
         player.style.display = 'flex'
         player.style.justifyContent = 'center'
         player.style.alignItems = 'center'
+        player.style.paddingTop = `${this.options.barHeight - 12}px` // 12 == half the timeline's height
         player.classList.add('no-select')
 
         const audio = document.createElement('audio')
@@ -716,71 +746,93 @@ class AudioPlayer extends Component {
 
         if (this.options.visual) {
             const canvas = document.createElement('canvas')
+            this.canvas = canvas
             canvas.style.width = '100%'
-            canvas.style.height = `${this.options.height}px`
+            canvas.style.height = `${this.options.barHeight}px`
             canvas.style.bottom = '4px'
             canvas.style.position = 'absolute'
             this.canvas = canvas
             timeline.appendChild(canvas)
             canvas.width = this.el.clientWidth - 120 // terrible hack -> 120 == full width - controls
-            canvas.height = this.options.height
-            Util.addEvent(canvas, 'resize', () => {
-                canvas.width = this.el.clientWidth - 120
-                canvas.height = this.options.height
-            })
+            canvas.height = this.options.barHeight
+            Util.addEvent(window, 'resize', this.resize)
         }
         this.initVisual()
 
         const time = document.createElement('div')
         this.time = time
         time.style.color = this.options.color
-        time.style.fontSize = '12px'
+        time.style.fontSize = '9px'
         time.style.whiteSpace = 'nowrap'
         time.style.width = '76px'
         time.innerHTML = '00:00 / 00:00'
-        player.appendChild(time)
+        time.style.margin = '3px 0 0 5px'
+        timeline.appendChild(time)
 
         this.isCreated = true
+        if (this.options.createdCallback && Util.isFunction(this.options.createdCallback)) {
+            this.options.createdCallback(this)
+        }
         return player
     }
 
     createMeta () {
         const meta = document.createElement('div')
         this.el.appendChild(meta)
-        meta.style.marginLeft = '44px'
+        meta.classList.add('meta')
+        meta.style.margin = '13px 0 0 20px'
         meta.style.height = '30px'
+        
         const art = document.createElement('img')
         this.metaArt = art
         art.style.width = '30px'
         art.style.height = '30px'
         meta.appendChild(art)
 
-        const text = document.createElement('p')
+        const text = document.createElement('div')
         text.style.display = 'inline-block'
         text.style.color = this.options.color
         text.style.margin = '0 10px'
-        text.style.lineHeight = '30px'
+        text.style.lineHeight = '15px'
+        text.style.fontSize = '10px'
         text.style.verticalAlign = 'top'
         text.style.width = 'calc(100% - 94px)'
-        text.style.whiteSpace = 'nowrap'
-        text.style.textOverflow = 'ellipsis'
-        text.style.overflow = 'hidden'
-        this.metaText = text
         meta.appendChild(text)
+        
+        const title = document.createElement('p')
+        this.metaTitle = title
+        title.style.margin = 0
+        title.style.textOverflow = 'ellipsis'
+        title.style.whiteSpace = 'nowrap'
+        title.style.overflow = 'hidden'
+        text.appendChild(title)
+
+        const artist = document.createElement('p')
+        this.metaArtist = artist
+        artist.style.color = this.options.visualColor
+        artist.style.margin = 0
+        artist.style.textOverflow = 'ellipsis'
+        artist.style.whiteSpace = 'nowrap'
+        artist.style.overflow = 'hidden'
+        text.appendChild(artist)
 
         return this.setMeta()
     }
 
     setMeta (meta) {
         if (meta) this.options.meta = meta
+        if (!this.isCreated) return
 
         if (!this.options.meta.title || !this.options.meta.artist) {
             this.metaArt.src = ''
-            return this.metaText.innerHTML = ''
+            this.metaTitle.innerHTML = ''
+            this.metaArtist.innerHTML = ''
         }
 
         this.metaArt.src = this.options.meta.pictureUrl || ''
-        this.metaText.innerHTML = `${this.options.meta.title || ''} - ${this.options.meta.artist || ''}`
+        this.metaTitle.innerHTML = this.options.meta.title || ''
+        this.metaArtist.innerHTML = this.options.meta.artist || ''
+        this.resize()
     }
 
     initVisual () {
@@ -792,7 +844,6 @@ class AudioPlayer extends Component {
             source.connect(this.analyser)
             this.analyser.connect(this.audioContext.destination)
             this.context = this.canvas.getContext('2d')
-            this.context.fillStyle = this.options.visualColor
             this.context.translate(0.5, 0.5) // terrible hack again
         }
 
@@ -804,13 +855,31 @@ class AudioPlayer extends Component {
             let data = new Uint8Array(this.analyser.frequencyBinCount)
             this.analyser.getByteFrequencyData(data)
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+            this.context.fillStyle = this.options.visualColor
+
+            let margin = 2
+            const minBarWidth = 0.75
+            let barCount = this.options.barCount
+            const totalMargin = margin * barCount
+            let barWidth = (this.canvas.width - totalMargin) / barCount
+            let extraMargin = 0
             
-            const margin = 2
-            const barWidth = (this.canvas.width - (this.options.barCount + 1) * margin) / this.options.barCount
+            // if the requested barCount doesn't fit player width
+            if (barWidth < minBarWidth) {
+                // number of bars with minWidth that will fit screen
+                barCount = Math.floor((this.canvas.width) / (minBarWidth + margin))
+
+                //extra bar is the remaining modulo after bars have been removed
+                const extraBar = (this.canvas.width) % (minBarWidth + margin)
+                
+                // new width is the minimum barWidth + the extra bar size distributed to each bar
+                barWidth = minBarWidth + extraBar * (minBarWidth + margin) / barCount
+            }
+
             for (let i = 0; i < this.options.barCount; ++i) {
                 const percent = data[Math.floor(data.length / this.options.barCount * i)] / 255
                 this.context.globalAlpha = Math.min(percent + 0.2, 1) // 0.2 is the initial value in f(x) = ax + b
-                this.context.fillRect(i * barWidth + (i + 1) * margin, this.canvas.height, barWidth, -(percent * (this.canvas.height - margin)))
+                this.context.fillRect(i * barWidth + i * margin, this.canvas.height, barWidth, -(percent * (this.canvas.height - margin)))
             }
         }
 

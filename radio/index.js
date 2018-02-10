@@ -10,6 +10,7 @@ class Radio {
         this.timeout = 30
         this.startTime = Date.now()
         this.playlist = []
+        this.cache = []
         this.songs = require(`./${genre}`)
         this.nextSong()
     }
@@ -55,6 +56,12 @@ class Radio {
     }
 
     fetchSong (id, callback) {
+        const cachedSong = this.cache.filter((n) => {
+            return n.id === id
+        })
+
+        if (cachedSong.length > 0) return callback(null, cachedSong[0])
+
         return request(`${config.api}tracks/${id}`, (err, response, data) => {
             if (err || response.statusCode >= 400) return callback(new Error('Failed to download song data'))
             let obj;
@@ -65,18 +72,20 @@ class Radio {
             }
 
             if (!obj.results || !obj.results.length > 0) return callback(new Error('Invalid song data'))
-            const song = obj.results[0]
-            return callback(null, {
-                id: song.trackId,
+            const songData = obj.results[0]
+            const song = {
+                id: songData.trackId,
                 meta: {
-                    title: song.trackName || '',
-                    artist: song.artistName || '',
-                    album: song.collectionName || '',
-                    pictureUrl: song.artworkUrl30|| ''
+                    title: songData.trackName || '',
+                    artist: songData.artistName || '',
+                    album: songData.collectionName || '',
+                    pictureUrl: songData.artworkUrl30 || ''
                 },
-                duration: song.trackTimeMillis || this.timeout,
-                url: song.previewUrl || ''
-            })
+                duration: songData.trackTimeMillis || this.timeout,
+                url: songData.previewUrl || ''
+            }
+            this.cache.push(song)
+            return callback(null, song)
         })
     }
 }
