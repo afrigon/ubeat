@@ -21,7 +21,7 @@ if (process.argv.indexOf('-p') !== -1) {
     const webpack = require('webpack')
     const webpackDev = require('webpack-dev-middleware')
     const webpackHot = require('webpack-hot-middleware')
-    const webpackConfig = require(path.join(__dirname, 'views', 'webpack.config'))
+    const webpackConfig = require(path.join(__dirname, 'client', 'webpack.config'))
     const compiler = webpack(webpackConfig)
 
     app.use(webpackDev(compiler, {
