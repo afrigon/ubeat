@@ -141,7 +141,11 @@
                 { genre: 'metal', color: '#f44336' },
                 { genre: 'rap', color: '#ba68c8' }
             ])
-            if (window.liveRadio) this.showLiveIcon(document.getElementById(window.liveRadio))
+
+            // set the live icon if radio is playing (watch out for that catch)
+            let station = window.sessionStorage.getItem('radio-station')
+            try { station = JSON.parse(station) } catch (e) { return }
+            if (station && station.genre) this.showLiveIcon(document.getElementById(station.genre))
         },
         methods: {
             hideLiveIcons () {
@@ -156,8 +160,6 @@
             createEvents (options) {
                 for (let i = 0; i < options.length; ++i) {
                     document.getElementById(options[i].genre).addEventListener('click', (event) => {
-                        window.liveRadio = options[i].genre
-
                         // eslint-disable-next-line no-undef
                         const player = new AudioPlayer({
                             visual: true,
@@ -177,12 +179,13 @@
                                 radio.style.backgroundColor = '#353535'
                                 radio.style.transform = 'translateY(0)'
                                 this.showLiveIcon(event.target)
+                                window.sessionStorage.setItem('radio-station', JSON.stringify(options[i]))
                             },
                             stopCallback: (audioPlayer) => {
+                                window.sessionStorage.removeItem('radio-station')
                                 let radio = document.getElementById('radio')
                                 radio.style.backgroundColor = 'transparent'
                                 radio.style.transform = 'translateY(100%)'
-                                window.liveRadio = null
                                 this.hideLiveIcons()
                                 setTimeout(() => {
                                     while (audioPlayer.el.firstChild) audioPlayer.el.removeChild(audioPlayer.el.firstChild)
@@ -196,8 +199,7 @@
                                 })
                             }
                         })
-                        // eslint-disable-next-line no-undef
-                        FS.addComponent(player, '#player')
+                        FS.addComponent(player, '#player') // eslint-disable-line no-undef
 
                         // terrible safari hack
                         setTimeout(() => {
@@ -274,5 +276,11 @@
         &:hover:not(.playing) { .play { opacity: 1; } }
         &.playing { .live { opacity: 1; } }
         * { pointer-events: none; }
+    }
+
+    @media only screen and (max-width : 450px) {
+        #playlists {
+            margin-top: 0;
+        }
     }
 </style>
