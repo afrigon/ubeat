@@ -1,6 +1,6 @@
 <template>
     <main class="dark no-scroll flex flex-center">
-        <div id="playlists" class="container scroll-animate fadeInHalfScale">
+        <div id="playlists" class="container scroll-animate-router fadeInHalfScale">
             <div class="section">
                 <div class="row text-center no-select">
                     <div class="playlist clickable" id="pop">
@@ -207,12 +207,7 @@
                 }
             },
             load () {
-                FS.addComponent(new AutoScrollAnimator()) // eslint-disable-line no-undef
-                setTimeout(() => {
-                    document.getElementById('link-home').classList.add('active')
-                    document.getElementById('link-artist').classList.remove('active')
-                    document.getElementById('link-album').classList.remove('active')
-                }, 100)
+                FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' })) // eslint-disable-line no-undef
             }
         }
     }

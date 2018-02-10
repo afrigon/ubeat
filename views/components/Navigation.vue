@@ -107,6 +107,8 @@
             setTimeout(() => { return (letter.style.opacity = 1) }, 200)
             setTimeout(() => { return (headphones.style.opacity = 1) }, 800)
             setTimeout(() => { return (letter.style.transform = 'none') }, 1200)
+
+            FS.addComponent(new AutoScrollAnimator()) // eslint-disable-line no-undef
         }
     }
 </script>
