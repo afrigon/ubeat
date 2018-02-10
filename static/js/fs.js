@@ -681,7 +681,6 @@ class AudioPlayer extends Component {
         audio.src = this.source
         audio.autoplay = this.options.autoplay
         audio.loop = this.options.loop
-        audio.currentTime = this.options.startTime
 
         Util.addEvent(audio, 'ended', () => {
             if (this.options.clipEndCallback && Util.isFunction(this.options.clipEndCallback)) {
@@ -698,6 +697,10 @@ class AudioPlayer extends Component {
             return button.innerHTML = 'play_arrow'
         })
         Util.addEvent(audio, 'play', () => {
+            // stupid hack for safari
+            audio.currentTime = this.options.startTime
+            this.options.startTime = 0
+
             if (this.options.stopCallback) {
                 return button.innerHTML = 'stop'
             }

@@ -159,7 +159,7 @@
                         window.liveRadio = options[i].genre
 
                         // eslint-disable-next-line no-undef
-                        FS.addComponent(new AudioPlayer({
+                        const player = new AudioPlayer({
                             visual: true,
                             visualColor: options[i].color,
                             autoplay: true,
@@ -176,7 +176,6 @@
                                 const radio = document.getElementById('radio')
                                 radio.style.backgroundColor = '#353535'
                                 radio.style.transform = 'translateY(0)'
-                                audioPlayer.audio.play() // to test maybe bind some shit
                                 this.showLiveIcon(event.target)
                             },
                             stopCallback: (audioPlayer) => {
@@ -196,7 +195,14 @@
                                     return audioPlayer.setMeta(data.meta)
                                 })
                             }
-                        }), '#player')
+                        })
+                        // eslint-disable-next-line no-undef
+                        FS.addComponent(player, '#player')
+
+                        // terrible safari hack
+                        setTimeout(() => {
+                            player.audio.play()
+                        }, 500)
                     })
                 }
             },
