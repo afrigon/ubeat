@@ -53,7 +53,7 @@ class Radio {
 
         return this.fetchSong(this.playlist.pop(), (err, song) => {
             if (err) {
-                return callback(new Error('Failed to load song from playlist'))
+                return callback(err)
             }
             return callback(song)
         })
