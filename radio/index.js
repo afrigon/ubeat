@@ -5,7 +5,7 @@ const config = require('../config').shared
 
 class Radio {
     constructor (genre) {
-        this.timeout = 299000
+        this.timeout = 29900
         this.startTime = Date.now()
         this.playlist = []
         this.cache = []
@@ -29,11 +29,11 @@ class Radio {
                 this.song = song || {}
             }
 
-            setTimeout(this.nextSong.bind(this), /*this.song.duration || this.timeout*/this.timeout) // preview time
+            setTimeout(this.nextSong.bind(this), /* this.song.duration || this.timeout */ this.timeout) // preview time
             this.startTime = Date.now()
             return this.fetchSong(this.playlist.pop(), (err, song) => {
                 if (err) return (this.preFetchedSong = {})
-                this.preFetchedSong = song
+                return (this.preFetchedSong = song)
             })
         })
     }
@@ -49,6 +49,7 @@ class Radio {
         }
 
         return this.fetchSong(this.playlist.pop(), (err, song) => {
+            err && console.log(err.message)
             return callback(song)
         })
     }
