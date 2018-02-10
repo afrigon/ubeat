@@ -18,7 +18,7 @@
         },
         mounted () {
             // eslint-disable-next-line no-undef
-            setFilter(null, 7)
+            setFilter(null, window.sessionStorage.getItem('search-flags') || 7)
 
             // eslint-disable-next-line no-undef
             Util.addEvent(window, 'resize', () => {

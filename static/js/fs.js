@@ -29,6 +29,14 @@ class Util {
         }
     }
 
+    static getBitwiseArray (length) {
+        const array = []
+        for (let i = 0; i < length; ++i) {
+            array.push(Math.pow(2, i))
+        }
+        return array
+    }
+
     static clone (instance) {
         return Object.assign(Object.create(Object.getPrototypeOf(instance)), instance)
     }
@@ -145,6 +153,10 @@ class FS {
                 this.removeComponent(components[i])
             }
         }
+    }
+
+    static hasComponentOfType (type) {
+        return this.components.filter(n => n.constructor.name === type).length > 0
     }
 
     static init () {

@@ -37,7 +37,7 @@
                     // if reloading took more than 3s quit
                     const unloadTimestamp = window.sessionStorage.getItem('unload-timestamp')
                     if (unloadTimestamp < Date.now() - 3000) return
-                    this.startStation(station)
+                    !FS.hasComponentOfType(AudioPlayer.name) && this.startStation(station) // eslint-disable-line no-undef
                 }
             })
 
