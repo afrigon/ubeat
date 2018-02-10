@@ -1,2 +1,3 @@
 /dist/js/* linguist-generated=true
 fs.* linguist-vendored
+*.tex linguist-vendored
