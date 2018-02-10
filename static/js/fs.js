@@ -172,15 +172,11 @@ class MaterialInput extends Component {
         document.querySelectorAll(selector).forEach((element) => {
             Util.addEvent(element, 'focus', (event) => {
                 const label = event.target.parentNode.getElementsByTagName('label')[0]
-                if (label) {
-                    label.classList.add('active')
-                }
+                label && label.classList.add('active')
             })
             Util.addEvent(element, 'blur', (event) => {
                 const label = event.target.parentNode.getElementsByTagName('label')[0]
-                if (label && !element.value) {
-                    label.classList.remove('active')
-                }
+                label && !element.value && label.classList.remove('active')
             })
         })
     }

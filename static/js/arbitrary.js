@@ -8,14 +8,18 @@ function setFilter (event, value) {
 
     const filter = document.getElementById('search-filter')
     filter && (filter.value = Util.getBitwiseArray(4).map((n) => { // eslint-disable-line no-undef
-        const button = document.getElementById(`filter-button-${n}`)
-        if (!button) { return null }
+        const buttons = document.querySelectorAll(`.filter-button-${n}`)
+        if (!buttons || buttons.length <= 0) return null
         if ((n & flags) === 0) {
-            button.classList.remove('active')
+            buttons.forEach((button) => {
+                button.classList.remove('active')
+            })
             return null
         }
 
-        button.classList.add('active')
+        buttons.forEach((button) => {
+            button.classList.add('active')
+        })
         return n
     }).join(','))
     return window.sessionStorage.setItem('search-flags', flags)
@@ -24,9 +28,5 @@ function setFilter (event, value) {
 function toggleOptionsMenu () {
     const wrapper = document.getElementById('options-wrapper')
     return wrapper && wrapper.classList.toggle('active')
-}
-
-function searchClick () {
-    document.getElementById('form-search').style.display = 'inline-block'
 }
 // eslint-enable no-unused-vars

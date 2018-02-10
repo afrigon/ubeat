@@ -1,5 +1,5 @@
 <template lang="pug">
-    div#app.body(onclick="document.getElementById('options-wrapper').classList.remove('active')")
+    div#app.body
         navigation
         radio
         router-view
@@ -16,14 +16,15 @@
             'radio': Radio
         },
         mounted () {
-            // eslint-disable-next-line no-undef
-            setFilter(null, window.sessionStorage.getItem('search-flags') || 7)
-
-            // eslint-disable-next-line no-undef
-            Util.addEvent(window, 'resize', () => {
+            Util.addEvent(window, 'resize', () => { // eslint-disable-line no-undef
                 const element = document.getElementById('options-wrapper')
-                if (element) { element.classList.remove('active') }
+                return element && element.classList.remove('active')
             })
+            Util.addEvent(document.getElementById('app'), 'click', () => { // eslint-disable-line no-undef
+                const element = document.getElementById('options-wrapper')
+                return element && element.classList.remove('active')
+            })
+            setFilter(null, window.sessionStorage.getItem('search-flags') || 7) // eslint-disable-line no-undef
         }
     }
 </script>

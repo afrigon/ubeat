@@ -26,6 +26,7 @@
                 router-link#link-album(to="/album")
                     li.text-size-1 Album
         search
+        search(v-bind:mobile="true")
         #options-wrapper.grey.darken-5.scroll-animate.fadeInLeft.no-select(onclick="event.stopPropagation()")
             ul#options-list.hide-until-m
                 router-link#link-playlists.no-hover-decoration(onclick="document.getElementById('options-wrapper').classList.remove('active')" to="/playlists")
@@ -42,7 +43,7 @@
                         span Logout
             #options-divider.divider.hide-until-m
             #avatar.text-right.flex.flex-right.clickable.margin-left-25.margin-right-25
-                i.material-icons.m.text-white.clickable.hide-after-m.margin-right-20(onclick="searchClick()") search
+                i#search-action.material-icons.m.text-white.clickable.hide-after-m.margin-right-20 search
                 p#username.text-white.inline-block.margin-0.margin-right-20.truncate.hide-until-l alexfrigon154
                 .flex.flex-center.clickable(onclick="toggleOptionsMenu();")
                     img.circle.primary-border.hide-until-m(src="/static/img/card.jpg")
