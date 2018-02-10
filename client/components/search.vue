@@ -1,5 +1,5 @@
 <template lang="pug">
-    form.padding-0.flex.flex-center(v-bind:id="mobile ? 'form-search-mobile' : 'form-search'" class="form-search" v-bind:class="{ mobile: mobile, 'hide-after-m': mobile, 'hide-until-l': !mobile }" method="GET" action="/api/unsecure/search")
+    form.padding-0.flex.flex-center(v-bind:id="mobile ? 'form-search-mobile' : 'form-search'" class="form-search" v-bind:class="{ mobile: mobile, 'hide-after-m': mobile, 'hide-until-l': !mobile }" method="GET" action="/api/search")
         .input-wrapper.margin-0.margin-up-5.grey.darken-5
             input(v-bind:id="mobile ? 'search-input-mobile' : 'search-input'" type="search" name="q" autocomplete="off")
             label Search

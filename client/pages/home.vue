@@ -31,15 +31,22 @@
                 this.hideLiveIcons()
                 element.classList.add('playing')
             },
+            initLiveIcon () {
+                // set the live icon if radio is playing (watch out for that catch)
+                let station = window.sessionStorage.getItem('radio-station')
+                try { station = JSON.parse(station) } catch (e) { return }
+                if (station && station.genre) {
+                    const target = document.getElementById(station.genre)
+                    target && this.showLiveIcon(target)
+                }
+            },
             load () {
                 FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' }))
-
-                window.addEventListener('load', () => {
-                    // set the live icon if radio is playing (watch out for that catch)
-                    let station = window.sessionStorage.getItem('radio-station')
-                    try { station = JSON.parse(station) } catch (e) { return }
-                    if (station && station.genre) return this.showLiveIcon(document.getElementById(station.genre))
-                })
+                if (['interactive', 'complete'].includes(document.readyState)) {
+                    this.initLiveIcon()
+                } else {
+                    Util.addEvent(window, 'load', this.initLiveIcon)
+                }
             }
         }
     }
