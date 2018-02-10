@@ -142,15 +142,15 @@
                 { genre: 'rap', color: '#ba68c8' }
             ])
 
-            // set the live icon if radio is playing (watch out for that catch)
-            let station = window.sessionStorage.getItem('radio-station')
-            try { station = JSON.parse(station) } catch (e) { return }
-            if (station && station.genre) this.showLiveIcon(document.getElementById(station.genre))
-
-            // starts radio for query param ?station=${station}
-            station = Util.getQueryParam('station') // eslint-disable-line no-undef
+            // starts radio for query param ?station={station}
+            let station = Util.getQueryParam('station') // eslint-disable-line no-undef
             const playlist = document.getElementById(station)
             playlist && playlist.click()
+
+            // set the live icon if radio is playing (watch out for that catch)
+            station = window.sessionStorage.getItem('radio-station')
+            try { station = JSON.parse(station) } catch (e) { return }
+            if (station && station.genre) this.showLiveIcon(document.getElementById(station.genre))
         },
         methods: {
             hideLiveIcons () {

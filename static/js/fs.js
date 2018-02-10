@@ -76,8 +76,8 @@ class Util {
     }
 
     static getQueryParam (name) {
-        const url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
+        const url = window.location.href
+        name = name.replace(/[\[\]]/g, "\\$&")        
         const results = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`).exec(url)
         if (!results) return null
         if (!results[2]) return ''
@@ -138,9 +138,13 @@ class FS {
     }
 
     static autoRemoveComponentsOfTypes(type) {
-        for (let i = 0; i < this.components.length-1; ++i) {
-            if (type === this.components[i].constructor.name && this.components[i].options.shouldAutoRemove) {
-                this.removeComponent(this.components[i])
+        const components = this.components.filter((n) => {
+            n.constructor.name === type
+        })
+
+        for (let i = 0; i < components.length-1; ++i) {
+            if (components[i].options.shouldAutoRemove) {
+                this.removeComponent(components[i])
             }
         }
     }
