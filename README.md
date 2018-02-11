@@ -25,6 +25,8 @@ You can now run the server in production mode with the following command.
 npm run-script start-prod
 ```
 
+### Routes
+
 The website will now be accessible according the configuration file ```config.json```. The following routes are available at ```localhost:9016``` with the default configuration.
 
 ```
@@ -33,7 +35,9 @@ GET /album
 GET /artist
 ```
 
-The ```station```parameter can be used on any ```GET```request to start a radio
+### Radio
+
+The ```station``` parameter can be used on any ```GET```request to start a radio
 
 ```
 GET /?station=pop
