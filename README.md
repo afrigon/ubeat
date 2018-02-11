@@ -28,9 +28,20 @@ npm run-script start-prod
 The website will now be accessible according the configuration file ```config.json```. The following routes are available at ```localhost:9016``` with the default configuration.
 
 ```
-GET / HTTP/1.1
-GET /album HTTP/1.1
-GET /artist HTTP/1.1
+GET /
+GET /album
+GET /artist
+```
+
+The ```station```parameter can be used on any ```GET```request to start a radio
+
+```
+GET /?station=pop
+GET /album?station=classical
+GET /artist?station=dance
+GET /?station=rock
+GET /?station=metal
+GET /?station=rap
 ```
 
 ## License
