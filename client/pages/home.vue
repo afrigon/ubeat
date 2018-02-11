@@ -42,11 +42,9 @@
             },
             load () {
                 FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' }))
-                if (['interactive', 'complete'].includes(document.readyState)) {
-                    this.initLiveIcon()
-                } else {
-                    Util.addEvent(window, 'load', this.initLiveIcon)
-                }
+
+                // the page was already loaded (mounting from router-link)
+                if (['interactive', 'complete'].includes(document.readyState)) this.initLiveIcon()
             }
         }
     }

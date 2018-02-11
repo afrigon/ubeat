@@ -46,7 +46,10 @@
         },
         methods: {
             startStation (station) {
+                const playlist = document.getElementById(station.genre)
+                playlist && playlist.classList.add('playing')
                 window.sessionStorage.setItem('radio-station', JSON.stringify(station))
+
                 FS.addComponent(new AudioPlayer({
                     visual: true,
                     visualColor: station.color,

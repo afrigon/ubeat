@@ -71,6 +71,7 @@ class Radio {
             const songData = obj.results[0]
 
             if (songData.kind !== 'song') return callback(new Error('Song is not a song, wat'))
+            if (!songData.previewUrl) return callback(new Error(`Song ${songData.trackId} does not have a preview, might not be released`))
 
             const song = {
                 id: songData.trackId,
