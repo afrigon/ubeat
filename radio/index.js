@@ -32,7 +32,7 @@ class Radio {
             setTimeout(this.nextSong.bind(this), /* this.song.duration || this.timeout */ this.timeout) // preview time
             this.startTime = Date.now()
             return this.fetchSong(this.playlist.pop(), (err, song) => {
-                if (err) return (this.preFetchedSong = {})
+                if (err) return (this.preFetchedSong = this.song)
                 return (this.preFetchedSong = song)
             })
         })
@@ -69,6 +69,9 @@ class Radio {
 
             if (!obj.results || !obj.results.length > 0) return callback(new Error('Invalid song data'))
             const songData = obj.results[0]
+
+            if (songData.kind !== 'song') return callback(new Error('Song is not a song, wat'))
+
             const song = {
                 id: songData.trackId,
                 meta: {
