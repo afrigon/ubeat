@@ -37,15 +37,17 @@ GET /artist
 
 ### Radio
 
-The ```station``` parameter can be used on any ```GET```request to start a radio
+The ```station``` query parameter can be used on any page to start a radio
+
+  * pop
+  * classical
+  * dance
+  * rock
+  * metal
+  * rap
 
 ```
 GET /?station=pop
-GET /album?station=classical
-GET /artist?station=dance
-GET /?station=rock
-GET /?station=metal
-GET /?station=rap
 ```
 
 ## License
