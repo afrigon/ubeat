@@ -667,7 +667,7 @@ class AudioPlayer extends Component {
 
     init (el) {
         if (!this.options.fetchCallback || !Util.isFunction(this.options.fetchCallback)) {
-            this.options.fetchCallback = (_, callback) => { return callback() }
+            this.options.fetchCallback = (_, callback) => { return callback(null, this.source) }
         }
 
         this.options.fetchCallback(this, (err, source) => {
@@ -695,6 +695,7 @@ class AudioPlayer extends Component {
 
     createPlayer () {
         const player = document.createElement('div')
+        this.player = player
         player.classList.add('timeline')
         player.style.display = 'flex'
         player.style.justifyContent = 'center'
@@ -811,6 +812,7 @@ class AudioPlayer extends Component {
     createMeta () {
         const meta = document.createElement('div')
         this.el.appendChild(meta)
+        this.meta = meta
         meta.classList.add('meta')
         meta.style.margin = '13px 0 0 20px'
         meta.style.height = '30px'
@@ -859,12 +861,15 @@ class AudioPlayer extends Component {
             this.metaArt.src = ''
             this.metaTitle.innerHTML = ''
             this.metaArtist.innerHTML = ''
+            this.meta.style.display = 'none'
+        } else {
+            this.metaArt.src = this.options.meta.pictureUrl || ''
+            this.metaTitle.innerHTML = this.options.meta.title || ''
+            this.metaArtist.innerHTML = this.options.meta.artist || ''
+            this.meta.style.display = 'inline-block'
         }
 
-        this.metaArt.src = this.options.meta.pictureUrl || ''
-        this.metaTitle.innerHTML = this.options.meta.title || ''
-        this.metaArtist.innerHTML = this.options.meta.artist || ''
-        this.resize()
+        return this.resize()
     }
 
     initVisual () {

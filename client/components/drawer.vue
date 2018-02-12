@@ -13,10 +13,10 @@
                 router-link.drawer-action(:to="{ path: '/', query: $route.query }")
                     i.material-icons home
                     li Home
-                router-link.drawer-action(:to="{ path: '/artist/123', query: $route.query }")
+                router-link.drawer-action(:to="{ path: '/artist/583126594', query: $route.query }")
                     i.material-icons person
                     li Artist
-                router-link.drawer-action(:to="{ path: '/album/123', query: $route.query }")
+                router-link.drawer-action(:to="{ path: '/album/1255658593', query: $route.query }")
                     i.material-icons album
                     li Album
         .divider.margin-up-10.margin-down-10

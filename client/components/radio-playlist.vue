@@ -24,6 +24,7 @@
         methods: {
             createEvent (genre, color) {
                 document.getElementById(genre).addEventListener('click', (event) => {
+                    window.sessionStorage.removeItem('song-url')
                     this.$router.replace({ path: '/', query: { station: genre } })
                 })
             }

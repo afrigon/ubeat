@@ -2,90 +2,120 @@
     main.dark.no-scroll
         .section
             .row
-                .column.s12
+                .text-center.error.text-red(v-if="error") {{ error }}
+                .column.s12(v-if="album")
                     .column.s12.l5.text-center.scroll-animate-router.fadeInRight
                         .column.s12.m6.l12.padding-0.relative
-                            img#albumArt.hoverable-pop.no-select(alt="Connecting the Dots EP album art" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/400x400bb.jpg")
+                            img#albumArt.hoverable-pop.no-select(v-bind:alt="`${album.collectionName} Album Art`" v-bind:src="album.artworkUrl400")
+                            .row(v-if="album.releaseDate")
+                                p#releaseDate.text-grey.text-center.text-size-small-5.margin-0 Released: {{ new Date(album.releaseDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+                        .column.s12.m6.l12.padding-0.scroll-animate-router.fadeInRight(v-if="album.collectionViewUrl")
                             .row
-                                p#releaseDate.text-grey.text-center.text-size-small-5.margin-0 Released: August 9, 2017
-                        .column.s12.m6.l12.padding-0.scroll-animate-router.fadeInRight
-                            .row
-                                a.itunes-button(target="_blank" rel="noopener" href="https://geo.itunes.apple.com/ca/album/connecting-the-dots-ep/1255658593?app=itunes")
+                                a.itunes-button(target="_blank" rel="noopener" v-bind:href="album.collectionViewUrl")
                     .column.s12.l7.padding-0
                         .scroll-animate-router.fadeInLeft
-                            h2#collectionName.text-light-color.text-size-5.margin-down-0.scroll-animate-router.fadeInLeft Connecting the dots EP
+                            h2#collectionName.text-light-color.text-size-5.margin-down-0.scroll-animate-router.fadeInLeft(v-if="album.collectionName") {{ album.collectionName }}
                             .row.margin-0
-                                .column.s12.l6.padding-0
-                                    a.no-hover-decoration(href="/#/artist?id=583126594")
+                                .column.s12.l6.padding-0(v-if="album.artistName")
+                                    router-link.no-hover-decoration(:to="{ path: `/artist/${album.artistId}`, query: $route.query }")
                                         h3.text-primary-light.text-size-3.text-thin.margin-left-20.margin-0
                                             span.text-size-2 by 
-                                            span#artistName Conro
+                                            span#artistName {{ album.artistName }}
                                 .column.s12.l6.padding-0
                                     h5.text-grey.text-size-1.text-thin.margin-0.padding-5.margin-left-15
-                                        span#primaryGenreName Dance
+                                        span#primaryGenreName {{ album.primaryGenreName || 'whatever' }}
                                         |  • 
-                                        span#releaseDateYear 2017
-                        .section.padding-left-0.padding-right-0.scroll-animate-router.fadeIn
+                                        span#releaseDateYear {{ new Date(album.releaseDate).getFullYear() || '' }}
+                        .section.padding-left-0.padding-right-0.scroll-animate-router.fadeIn(v-if="tracks")
                             .row
                                 table.interactive.text-light-color
                                     thead
                                         tr.uppercase.text-grey.text-darken-3.text-size-small-9
-                                            th  
+                                            th
                                             th name
                                             th time
-                                            th  
+                                            th
                                     tbody#tracks.clickable
-                                        tr
-                                            td.text-center 1
-                                            td Close
-                                            td 3:04
-                                            td
-                                                i.material-icons.no-select play_circle_outline
-                                        tr
-                                            td.text-center 2
-                                            td Circus (feat. Beckii Power)
-                                            td 3:34
-                                            td
-                                                i.material-icons.no-select play_circle_outline
-                                        tr
-                                            td.text-center 3
-                                            td Remedy
-                                            td 3:09
-                                            td
-                                                i.material-icons.no-select play_circle_outline
-                                        tr
-                                            td.text-center 4
-                                            td Lay Low (feat. David Benjamin)
-                                            td 3:26
-                                            td
-                                                i.material-icons.no-select play_circle_outline
-                                        tr
-                                            td.text-center 5
-                                            td Love Divine (feat. Alice Berg)
-                                            td 3:07
-                                            td
-                                                i.material-icons.no-select play_circle_outline
+                                        tr(v-for="(track, i) in tracks" :key="track.trackId" v-on:click="play(track.trackId, { title: track.trackName, artist: album.artistName, pictureUrl: album.artworkUrl30 }, track.previewUrl)" v-bind:class="playingId === track.trackId ? 'active': ''")
+                                            td.text-center {{ i + 1 }}
+                                            td {{ track.trackName }}
+                                            td {{ track.duration }}
+                                            td(v-bind:class="playingId === track.trackId ? 'playing': ''")
+                                                i.material-icons.no-select {{ playingId === track.trackId ? 'pause_circle_outline': 'play_circle_outline' }}
                             .row.margin-0.margin-left-20
-                                p.text-grey.text-size-small-5.margin-0 5 songs, 17 minutes
-                            .row.margin-0.margin-left-20
-                                p.text-grey.text-size-small-5 ℗ 2017 Monstercat
+                                p.text-grey.text-size-small-5.margin-0 {{ tracks.length }} songs, {{ tracks.totalDuration }} minutes
+                            .row.margin-0.margin-left-20(v-if="album.copyright")
+                                p.text-grey.text-size-small-5 {{ album.copyright }}
 </template>
 
 <script type="text/javascript">
     export default {
-        mounted () {
-            this.load()
+        data: () => ({
+            album: null,
+            tracks: null,
+            error: null,
+            playingId: null
+        }),
+        created () { this.fetchData() },
+        mounted () { this.load() },
+        beforeDestroy () { this.playingId = null },
+        watch: {
+            '$route': 'fetchData'
         },
         methods: {
+            play (id, meta, url) {
+                if (this.playingId === id) {
+                    this.playingId = null
+                    window.sessionStorage.removeItem('song-url')
+                } else {
+                    this.playingId = id
+                    window.sessionStorage.setItem('song-url', JSON.stringify({ id: id, meta: meta, url: url }))
+                }
+
+                this.$router.replace({
+                    path: this.$route.path,
+                    query: Object.assign({}, this.$route.query, { refreshId: Math.random().toString(36).substr(2) })
+                })
+            },
             load () {
-                FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' }))
+                this.setPlaying()
+            },
+            setPlaying () {
+                const songData = window.sessionStorage.getItem('song-url')
+                let song
+                if (songData) {
+                    try { song = JSON.parse(songData) } catch (e) {}
+                }
+                this.playingId = song && song.id ? song.id : null
+            },
+            fetchData (to, from) {
+                if (to && from && to.params.id === from.params.id) return this.setPlaying()
+                this.error = null
+                Util.request(`/api/albums/${this.$route.params.id}`, 'GET', null, (err, response) => {
+                    if (err || !response.results || response.results.length <= 0) return (this.error = 'An error occured while getting this album')
+                    this.album = response.results[0]
+                    this.album.artworkUrl30 = this.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$230x30$4')
+                    this.album.artworkUrl400 = this.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2400x400$4')
+                    this.album.collectionViewUrl = `${this.album.collectionViewUrl}&app=itunes`
+
+                    Util.request(`/api/albums/${this.$route.params.id}/tracks`, 'GET', null, (err, response) => {
+                        if (err || !response.results || response.results.length <= 0) return (this.error = 'An error occured while getting this album')
+                        this.tracks = response.results
+                        this.tracks.totalDuration = 0
+                        for (let i = 0; i < this.tracks.length; ++i) {
+                            this.tracks[i].duration = Util.secondsToTime(this.tracks[i].trackTimeMillis / 1000)
+                            this.tracks.totalDuration += this.tracks[i].trackTimeMillis / 1000
+                        }
+                        this.tracks.totalDuration = Math.ceil(this.tracks.totalDuration / 60)
+                    })
+                })
             }
         }
     }
 </script>
 
 <style>
-    td i {
+    td:not(.playing) i {
         visibility: hidden;
     }
 
@@ -105,6 +135,8 @@
     #albumArt {
         width: 50%;
         height: auto;
+        border: 1px solid #5b5b5b;
+        border-radius: 5px;
     }
 
     @media only screen and (max-width : 992px) {

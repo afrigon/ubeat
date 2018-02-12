@@ -15,7 +15,7 @@
         },
         mounted () {
             window.addEventListener('beforeunload', () => {
-                window.sessionStorage.removeItem('unload-timestamp', Date.now())
+                window.sessionStorage.removeItem('song-url')
             })
 
             window.addEventListener('load', () => {
@@ -24,20 +24,34 @@
         },
         methods: {
             init () {
+                const songData = window.sessionStorage.getItem('song-url')
+                if (songData) {
+                    let song
+                    try { song = JSON.parse(songData) } catch (e) {}
+                    if (song) {
+                        if (!this.song || song.id !== this.song.id) return this.startSong(song)
+                    }
+                    if (this.song) return
+                }
+
+                const stations = [
+                    { genre: 'pop', color: '#f06292' },
+                    { genre: 'classical', color: '#4caf50' },
+                    { genre: 'dance', color: '#5c6bc0' },
+                    { genre: 'rock', color: '#ffb74d' },
+                    { genre: 'metal', color: '#f44336' },
+                    { genre: 'rap', color: '#ba68c8' }
+                ]
+
                 let station = this.$route.query.station
-                if (!station) return
+                station = stations.filter(n => n.genre === station)[0]
 
-                const element = document.getElementById(station)
-                element && (station = {
-                    genre: station,
-                    color: element.getAttribute('data-color') || '#FFFFFF'
-                })
-
-                if (this.player && this.player.genre === station) return
+                if (!station) return this.stopStation()
                 this.startStation(station)
                 this.setLiveIcon()
             },
             startStation (station) {
+                this.song = null
                 if (this.player && this.player.genre === station.genre) return
                 this.player = new AudioPlayer({
                     visual: true,
@@ -73,12 +87,14 @@
                 FS.addComponent(this.player, '#player')
             },
             stopStation () {
-                this.player = undefined
+                this.song = null
+                this.player = null
                 let radio = document.getElementById('radio')
                 if (!radio) return
 
                 radio.style.backgroundColor = 'transparent'
                 radio.style.transform = 'translateY(100%)'
+                this.setLiveIcon()
                 setTimeout(() => {
                     const player = document.getElementById('player')
                     if (!player) return
@@ -93,6 +109,41 @@
                         ? playlist.classList.add('playing')
                         : playlist.classList.remove('playing')
                 })
+            },
+            startSong (song) {
+                this.song = song
+                this.player = new AudioPlayer(song.url, {
+                    visual: true,
+                    visualColor: '#BABABA',
+                    autoplay: true,
+                    barHeight: 30,
+                    meta: song.meta,
+                    createdCallback: () => {
+                        const radio = document.getElementById('radio')
+                        radio.style.backgroundColor = '#353535'
+                        radio.style.transform = 'translateY(0)'
+                    },
+                    stopCallback: () => {
+                        this.song = null
+                        window.sessionStorage.removeItem('song-url')
+                        const query = Object.assign({}, this.$route.query, { refreshId: Math.random().toString(36).substr(2) })
+                        // uncoment to top station at the same time
+                        // query.station = null
+                        this.$router.replace({
+                            path: this.$route.path,
+                            query: query
+                        })
+                    },
+                    clipEndCallback: () => {
+                        this.song = null
+                        window.sessionStorage.removeItem('song-url')
+                        this.$router.replace({
+                            path: this.$route.path,
+                            query: Object.assign({}, this.$route.query, { refreshId: Math.random().toString(36).substr(2) })
+                        })
+                    }
+                })
+                FS.addComponent(this.player, '#player')
             }
         }
     }

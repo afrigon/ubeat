@@ -6,9 +6,9 @@
         ul.margin-left-5.capitalize.hide-until-m
             router-link(:to="{ path: '/', query: $route.query }")
                 li.text-size-1 Home
-            router-link(:to="{ path: '/artist/123', query: $route.query }")
+            router-link(:to="{ path: '/artist/583126594', query: $route.query }")
                 li.text-size-1 Artist
-            router-link(:to="{ path: '/album/123', query: $route.query }")
+            router-link(:to="{ path: '/album/1255658593', query: $route.query }")
                 li.text-size-1 Album
 </template>
 

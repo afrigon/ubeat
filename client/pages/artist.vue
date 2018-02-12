@@ -87,9 +87,7 @@
 
 <script>
     export default {
-        mounted () {
-            FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' }))
-        }
+
     }
 </script>
 
