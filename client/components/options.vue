@@ -1,11 +1,11 @@
 <template lang="pug">
     #options-wrapper.grey.darken-5.scroll-animate.fadeInLeft.no-select(onclick="event.stopPropagation()")
         ul#options-list.hide-until-m
-            router-link.no-hover-decoration(onclick="document.getElementById('options-wrapper').classList.remove('active')" to="/playlists")
+            router-link.no-hover-decoration(onclick="document.getElementById('options-wrapper').classList.remove('active')" :to="{ path: '/playlists', query: $route.query }")
                 li.text-white.interactive.clickable
                     i.material-icons.s playlist_play
                     span Playlists
-            router-link.no-hover-decoration(onclick="document.getElementById('options-wrapper').classList.remove('active')" to="/settings")
+            router-link.no-hover-decoration(onclick="document.getElementById('options-wrapper').classList.remove('active')" :to="{ path: '/settings', query: $route.query }")
                 li.text-white.interactive.clickable
                     i.material-icons.s settings
                     span Settings

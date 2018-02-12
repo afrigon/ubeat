@@ -1,5 +1,5 @@
 <template lang="pug">
-    .playlist.clickable(v-bind:id="genre")
+    .playlist.clickable(v-bind:id="genre" v-bind:data-color="color")
         .filter.black
         i.play.material-icons.text-white play_circle_outline
         svg.live(version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve")
@@ -22,57 +22,9 @@
             this.createEvent(this.genre, this.color)
         },
         methods: {
-            hideLiveIcons () {
-                document.querySelectorAll('.playlist').forEach((playlist) => {
-                    playlist.classList.remove('playing')
-                })
-            },
-            showLiveIcon (element) {
-                this.hideLiveIcons()
-                element.classList.add('playing')
-            },
             createEvent (genre, color) {
                 document.getElementById(genre).addEventListener('click', (event) => {
-                    window.sessionStorage.setItem('radio-station', JSON.stringify({genre: genre, color: color}))
-                    const player = new AudioPlayer({
-                        visual: true,
-                        visualColor: color,
-                        autoplay: true,
-                        barHeight: 30,
-                        fetchCallback: (audioPlayer, callback) => {
-                            return Util.request(`/radio/${genre}`, 'get', null, (err, data) => {
-                                if (err) return callback(err)
-                                audioPlayer.options.startTime = data.time
-                                audioPlayer.setMeta(data.meta)
-                                return callback(null, data.url)
-                            })
-                        },
-                        createdCallback: (audioPlayer) => {
-                            const radio = document.getElementById('radio')
-                            radio.style.backgroundColor = '#353535'
-                            radio.style.transform = 'translateY(0)'
-                            this.showLiveIcon(event.target)
-                        },
-                        stopCallback: (audioPlayer) => {
-                            window.sessionStorage.removeItem('radio-station')
-                            let radio = document.getElementById('radio')
-                            radio.style.backgroundColor = 'transparent'
-                            radio.style.transform = 'translateY(100%)'
-                            this.hideLiveIcons()
-                            setTimeout(() => {
-                                while (audioPlayer.el.firstChild) audioPlayer.el.removeChild(audioPlayer.el.firstChild)
-                            }, 250)
-                        },
-                        clipEndCallback: (audioPlayer) => {
-                            return Util.request(`/radio/${genre}`, 'get', null, (err, data) => {
-                                if (err) return console.log(err)
-                                audioPlayer.audio.src = data.url
-                                return audioPlayer.setMeta(data.meta)
-                            })
-                        }
-                    })
-                    FS.addComponent(player, '#player')
-                    setTimeout(() => { player.audio.play() }, 500) // terrible safari hack
+                    this.$router.replace({ path: '/', query: { station: genre } })
                 })
             }
         }

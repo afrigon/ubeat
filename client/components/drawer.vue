@@ -10,22 +10,22 @@
         .divider.margin-down-10
         nav
             ul.capitalize
-                router-link.drawer-action(to="/")
+                router-link.drawer-action(:to="{ path: '/', query: $route.query }")
                     i.material-icons home
                     li Home
-                router-link.drawer-action(to="/artist")
+                router-link.drawer-action(:to="{ path: '/artist/123', query: $route.query }")
                     i.material-icons person
                     li Artist
-                router-link.drawer-action(to="/album")
+                router-link.drawer-action(:to="{ path: '/album/123', query: $route.query }")
                     i.material-icons album
                     li Album
         .divider.margin-up-10.margin-down-10
         nav
             ul.capitalize
-                router-link.drawer-action(to="/playlists")
+                router-link.drawer-action(:to="{ path: '/playlists', query: $route.query }")
                     i.material-icons playlist_play
                     li Playlists
-                router-link.drawer-action(to="/settings")
+                router-link.drawer-action(:to="{ path: '/settings', query: $route.query }")
                     i.material-icons settings
                     li Settings
                 a.drawer-action(href="/logout")

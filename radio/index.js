@@ -79,7 +79,7 @@ class Radio {
                     title: songData.trackName || '',
                     artist: songData.artistName || '',
                     album: songData.collectionName || '',
-                    pictureUrl: songData.artworkUrl30 || ''
+                    pictureUrl: songData.artworkUrl30.replace(/http:\/\/(is\d+)/, "https://$1-ssl") || ''
                 },
                 duration: songData.trackTimeMillis || this.timeout,
                 url: songData.previewUrl || ''

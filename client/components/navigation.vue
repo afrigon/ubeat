@@ -1,14 +1,14 @@
 <template lang="pug">
     nav.underline-animate.padding-0.margin-0.margin-left-25.margin-right-25.scroll-animate.fadeIn.text-left
-        a.block.clickable(href="/#/")
+        router-link.block.clickable(:to="{ path: '/', query: $route.query }")
             .logo.scroll-animate.fadeInScale
                 logo
         ul.margin-left-5.capitalize.hide-until-m
-            router-link(to="/")
+            router-link(:to="{ path: '/', query: $route.query }")
                 li.text-size-1 Home
-            router-link(to="/artist")
+            router-link(:to="{ path: '/artist/123', query: $route.query }")
                 li.text-size-1 Artist
-            router-link(to="/album")
+            router-link(:to="{ path: '/album/123', query: $route.query }")
                 li.text-size-1 Album
 </template>
 

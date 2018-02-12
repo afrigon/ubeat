@@ -1,14 +1,15 @@
 <template lang="pug">
     main.dark.no-scroll.flex.flex-center
         #playlists.container.scroll-animate-router.fadeInHalfScale
-            .section
+            .section.text-center.text-white.padding-0
+                .row.margin-0
+                    h1.text-size-5.margin-0 Ubeat 
+                        em.text-normal Radio
+                    h2.text-size-1.margin-10 How do you feel?
+            .section.padding-0
                 .row.text-center.no-select
-                    radio-playlist(genre="pop", color="#f06292")
-                    radio-playlist(genre="classical", color="#4caf50")
-                    radio-playlist(genre="dance", color="#5c6bc0")
-                    radio-playlist(genre="rock", color="#ffb74d")
-                    radio-playlist(genre="metal", color="#f44336")
-                    radio-playlist(genre="rap", color="#ba68c8")
+                    radio-playlist(v-for="station in stations" :color="station.color" :genre="station.genre" :key="station.genre")
+
 </template>
 
 <script>
@@ -18,34 +19,18 @@
         components: {
             'radio-playlist': RadioPlaylist
         },
+        data: () => ({
+            stations: [
+                { genre: 'pop', color: '#f06292' },
+                { genre: 'classical', color: '#4caf50' },
+                { genre: 'dance', color: '#5c6bc0' },
+                { genre: 'rock', color: '#ffb74d' },
+                { genre: 'metal', color: '#f44336' },
+                { genre: 'rap', color: '#ba68c8' }
+            ]
+        }),
         mounted () {
-            this.load()
-        },
-        methods: {
-            hideLiveIcons () {
-                document.querySelectorAll('.playlist').forEach((playlist) => {
-                    playlist.classList.remove('playing')
-                })
-            },
-            showLiveIcon (element) {
-                this.hideLiveIcons()
-                element.classList.add('playing')
-            },
-            initLiveIcon () {
-                // set the live icon if radio is playing (watch out for that catch)
-                let station = window.sessionStorage.getItem('radio-station')
-                try { station = JSON.parse(station) } catch (e) { return }
-                if (station && station.genre) {
-                    const target = document.getElementById(station.genre)
-                    target && this.showLiveIcon(target)
-                }
-            },
-            load () {
-                FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' }))
-
-                // the page was already loaded (mounting from router-link)
-                if (['interactive', 'complete'].includes(document.readyState)) this.initLiveIcon()
-            }
+            FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' }))
         }
     }
 </script>

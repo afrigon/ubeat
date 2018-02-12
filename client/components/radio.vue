@@ -10,47 +10,36 @@
 
 <script>
     export default {
+        watch: {
+            '$route': 'init'
+        },
         mounted () {
-            const stations = [
-                { genre: 'pop', color: '#f06292' },
-                { genre: 'classical', color: '#4caf50' },
-                { genre: 'dance', color: '#5c6bc0' },
-                { genre: 'rock', color: '#ffb74d' },
-                { genre: 'metal', color: '#f44336' },
-                { genre: 'rap', color: '#ba68c8' }
-            ]
-
             window.addEventListener('beforeunload', () => {
-                window.sessionStorage.setItem('unload-timestamp', Date.now())
+                window.sessionStorage.removeItem('unload-timestamp', Date.now())
             })
 
             window.addEventListener('load', () => {
-                // starts radio for query param ?station={station}
-                let station = Util.getQueryParam('station')
-                station = stations.filter(n => n.genre === station)[0]
-                if (station) {
-                    this.startStation(station)
-                    return window.history.pushState(null, null, window.location.href.replace(/\?.*/, ''))
-                }
-
-                // else check if is refreshing
-                station = window.sessionStorage.getItem('radio-station')
-                try { station = JSON.parse(station) } catch (e) { return }
-                if (station && station.genre) {
-                    // if reloading took more than 3s quit
-                    const unloadTimestamp = window.sessionStorage.getItem('unload-timestamp')
-                    if (unloadTimestamp < Date.now() - 3000) return
-                    !FS.hasComponentOfType(AudioPlayer.name) && this.startStation(station)
-                }
+                this.init()
             })
         },
         methods: {
-            startStation (station) {
-                const playlist = document.getElementById(station.genre)
-                playlist && playlist.classList.add('playing')
-                window.sessionStorage.setItem('radio-station', JSON.stringify(station))
+            init () {
+                let station = this.$route.query.station
+                if (!station) return
 
-                FS.addComponent(new AudioPlayer({
+                const element = document.getElementById(station)
+                element && (station = {
+                    genre: station,
+                    color: element.getAttribute('data-color') || '#FFFFFF'
+                })
+
+                if (this.player && this.player.genre === station) return
+                this.startStation(station)
+                this.setLiveIcon()
+            },
+            startStation (station) {
+                if (this.player && this.player.genre === station.genre) return
+                this.player = new AudioPlayer({
                     visual: true,
                     visualColor: station.color,
                     autoplay: true,
@@ -69,15 +58,8 @@
                         radio.style.transform = 'translateY(0)'
                     },
                     stopCallback: (audioPlayer) => {
-                        window.sessionStorage.removeItem('radio-station')
-                        let radio = document.getElementById('radio')
-                        radio.style.backgroundColor = 'transparent'
-                        radio.style.transform = 'translateY(100%)'
-                        const playlist = document.getElementById(station.genre)
-                        playlist && playlist.classList.remove('playing')
-                        setTimeout(() => {
-                            while (audioPlayer.el.firstChild) audioPlayer.el.removeChild(audioPlayer.el.firstChild)
-                        }, 250)
+                        this.stopStation()
+                        this.$router.replace({ path: this.$route.path })
                     },
                     clipEndCallback: (audioPlayer) => {
                         return Util.request(`/radio/${station.genre}`, 'get', null, (err, data) => {
@@ -86,7 +68,31 @@
                             return audioPlayer.setMeta(data.meta)
                         })
                     }
-                }), '#player')
+                })
+                this.player.genre = station.genre
+                FS.addComponent(this.player, '#player')
+            },
+            stopStation () {
+                this.player = undefined
+                let radio = document.getElementById('radio')
+                if (!radio) return
+
+                radio.style.backgroundColor = 'transparent'
+                radio.style.transform = 'translateY(100%)'
+                setTimeout(() => {
+                    const player = document.getElementById('player')
+                    if (!player) return
+                    while (player.firstChild) player.removeChild(player.firstChild)
+                }, 250)
+            },
+            setLiveIcon () {
+                let genre = false
+                if (this.player) genre = this.player.genre
+                document.querySelectorAll('.playlist').forEach(playlist => {
+                    playlist.id === genre
+                        ? playlist.classList.add('playing')
+                        : playlist.classList.remove('playing')
+                })
             }
         }
     }

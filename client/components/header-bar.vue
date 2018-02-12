@@ -4,8 +4,8 @@
             i.material-icons.m.text-white.margin-left-25 menu
         drawer
         navigation
-        search
-        search(v-bind:mobile="true")
+        search()
+        search(mobile)
         options
 </template>
 
