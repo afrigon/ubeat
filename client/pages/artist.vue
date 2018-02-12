@@ -1,93 +1,102 @@
 <template lang="pug">
     main.dark.no-scroll
-        .banner.dance
-        #banner-text-wrapper.container.scroll-animate-router.fadeIn
+        .text-center.error.text-red(v-if="error") {{ error }}
+        .banner.dance(v-if="artist && artist.genre" v-bind:class="artist.genre")
+        #banner-text-wrapper.container.scroll-animate-router.fadeIn(v-if="artist && artist.genre")
             .inline-block
-                h2#artistName.margin-0.text-white.text-light.text-size-6.text-shadow-5 Conro
+                h2#artistName.margin-0.text-white.text-light.text-size-6.text-shadow-5(v-if="artist.artistName") {{ artist.artistName }}
             .inline-block.right
-                h3#primaryGenreName.margin-0.text-primary-light.text-light.text-size-3.text-shadow-5 Dance
-        .section.container.albums
-            .row
-                .scroll-animate-router.fadeIn.margin-up-40
+                h3#primaryGenreName.margin-0.text-primary-light.text-light.text-size-3.text-shadow-5(v-if="artist.primaryGenreName") {{ artist.primaryGenreName }}
+        .section.container.albums(v-if="albums")
+            .row(v-if="latestAlbums")
+                .scroll-animate-router.fadeIn.margin-up-40(v-if="artist")
                     h4.text-white.text-size-3.text-light.inline-block Latest Releases
-                    a#itunes-button.right(target="_blank" rel="noopener" href="https://geo.itunes.apple.com/ca/artist/conro/583126594?app=itunes")
+                    a#itunes-button.right(target="_blank" rel="noopener" v-bind:href="artist.artistLinkUrl")
                     .divider
                 #latestReleases.column.s12.padding-0
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.l6.scroll-animate-router.fadeInRight
-                            img.center(alt="Album art" src="https://is3-ssl.mzstatic.com/image/thumb/Music128/v4/71/41/36/714136b9-4d03-e710-d40d-f3c8f2869fd9/source/600x600bb.jpg")
-                            h5.text-white.text-thin.text-size-1.truncate.text-center.margin-down-5 Lay Low (Acoustic) - Single
-                            h6.text-primary-light.text-thin.text-size-small-9.truncate.margin-0.text-center David Benjamin & Conro
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.l6.scroll-animate-router.fadeInLeft
-                            img.center(alt="Album art" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/d4/da/52/d4da52cb-524e-5995-232c-d2485fcdf5a4/source/600x600bb.jpg")
-                            h5.text-white.text-thin.text-size-1.truncate.text-center.margin-down-5 Connecting the Dots EP
-                            h6.text-primary-light.text-thin.text-size-small-9.truncate.margin-0.text-center Conro
-            .row
+                    album(v-for="album in latestAlbums" :id="album.collectionId" :title="album.collectionName" :artist="album.artistName" :pictureUrl="album.artworkUrl400" :key="album.collectionId" highlight)
+            .row(v-if="albums")
                 .scroll-animate-router.fadeIn
                     h4.text-white.text-size-3.text-light Albums
                     .divider
                 #albums.column.s12.padding-0
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is1-ssl.mzstatic.com/image/thumb/Music127/v4/70/56/62/705662e9-925b-854f-ab8e-86dbee9f37fd/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 Like You Love Me (feat. Alice France) - Single
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Conro & Disero
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is5-ssl.mzstatic.com/image/thumb/Music117/v4/ac/d9/bf/acd9bfa9-f035-301a-eafe-86d33f2c2ffb/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 Lay Low (feat. David Benjamin) - Single
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Conro
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is2-ssl.mzstatic.com/image/thumb/Music122/v4/a0/a4/d7/a0a4d784-7886-619c-f5e9-ccde6bc23d57/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 Chardonnay (feat. Karra) - Single
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Conro
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/97/30/5a/97305a4a-9f15-b71a-ce30-db266d7d78f2/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 I Wanna Know - Single
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Conro
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is1-ssl.mzstatic.com/image/thumb/Music60/v4/c4/2e/ee/c42eeec4-4118-791c-0fa8-74b52a79519e/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 Unique (feat. Clara Mae) - Single
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Headhunterz & Conro
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is4-ssl.mzstatic.com/image/thumb/Music18/v4/da/68/8e/da688e24-2d80-6b38-9414-854b98737012/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 The Saint - Single
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Conro
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is2-ssl.mzstatic.com/image/thumb/Music49/v4/fb/97/e9/fb97e910-b42f-8ea2-77f5-3ee7baaaac13/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 Dark Nights - Single
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Conro
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is3-ssl.mzstatic.com/image/thumb/Music49/v4/35/68/82/356882b4-286a-d5d5-6d9e-be8242056d36/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 City Lights (feat. Royal) - Single
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Conro
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is1-ssl.mzstatic.com/image/thumb/Music69/v4/74/87/b7/7487b723-fe12-5272-f7f6-6ad05ef0ff54/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 On My Way Up - Single
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Conro
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is4-ssl.mzstatic.com/image/thumb/Music7/v4/7b/1f/c7/7b1fc7f2-0570-a8ff-7c98-8021db6a5462/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 Nosehorn - Single
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Conro & Bali Bandits
-                    a(href="/#/album?id=1255658593")
-                        .column.s12.m6.l4.xl3.text-center.scroll-animate-router.fadeInUp
-                            img(alt="Album art" src="https://is3-ssl.mzstatic.com/image/thumb/Music5/v4/e1/99/ec/e199ec74-d9f2-7c59-282e-2ce3296f108d/source/200x200bb.jpg")
-                            h5.text-white.text-thin.text-size-small-8.truncate.margin-down-5 Bittersweet (feat. Envy Monroe) - Single"
-                            h6.text-primary-light.text-thin.text-size-small-7.truncate.margin-0 Dyro & Conro
+                    album(v-for="album in albums" :id="album.collectionId" :title="album.collectionName" :artist="album.artistName" :pictureUrl="album.artworkUrl200" :key="album.collectionId" )
 </template>
 
 <script>
-    export default {
+    import Album from '@/components/album'
 
+    export default {
+        components: {
+            'album': Album
+        },
+        data: () => ({
+            artist: null,
+            albums: null,
+            latestAlbums: null,
+            error: null
+        }),
+        created () { this.fetchData() },
+        watch: {
+            '$route': 'fetchData'
+        },
+        methods: {
+            fetchData (to, from) {
+                if (to && from && to.params.id === from.params.id) return
+                this.error = null
+                Util.request(`/api/artists/${this.$route.params.id}`, 'GET', null, (err, response) => {
+                    if (err || !response.results || response.results.length <= 0) return (this.error = 'An error occured while getting this album')
+                    this.artist = response.results[0]
+
+                    switch (this.artist.primaryGenreName.toLowerCase()) {
+                    case 'dance':
+                        this.artist.genre = 'dance'
+                        break
+                    case 'classical':
+                        this.artist.genre = 'classical'
+                        break
+                    case 'country':
+                        this.artist.genre = 'country'
+                        break
+                    case 'metal':
+                        this.artist.genre = 'metal'
+                        break
+                    case 'rock':
+                        this.artist.genre = 'rock'
+                        break
+                    case 'songwriter':
+                        this.artist.genre = 'songwriter'
+                        break
+                    case 'hip-hop/rap':
+                        this.artist.genre = 'rap'
+                        break
+                    default:
+                        this.artist.genre = 'dance'
+                        console.log(this.artist.primaryGenreName.toLowerCase())
+                        break
+                    }
+
+                    Util.request(`/api/artists/${this.$route.params.id}/albums?limit=15`, 'GET', null, (err, response) => {
+                        if (err || !response.results || response.results.length <= 0) return (this.error = 'An error occured while searching for this album')
+                        this.albums = response.results
+
+                        for (let i = 0; i < this.albums.length; ++i) {
+                            this.albums[i].artworkUrl400 = this.albums[i].artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2400x400$4')
+                            this.albums[i].artworkUrl200 = this.albums[i].artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2200x200$4')
+                        }
+
+                        this.albums.sort((a, b) => {
+                            const timeSinceA = Date.now() - new Date(a.releaseDate).getTime()
+                            const timeSinceB = Date.now() - new Date(b.releaseDate).getTime()
+                            if (timeSinceA === timeSinceB) return 0
+                            return timeSinceA > timeSinceB ? 1 : -1
+                        })
+
+                        this.latestAlbums = this.albums.splice(0, 2)
+                    })
+                })
+            }
+        }
     }
 </script>
 
