@@ -1,5 +1,5 @@
 <template lang="pug">
-    main.dark.no-scroll.flex.flex-center
+    div.flex.flex-center
         #playlists.container.scroll-animate-router.fadeInHalfScale
             .section.text-center.text-white.padding-0
                 .row.margin-0
@@ -36,6 +36,10 @@
 </script>
 
 <style lang="scss">
+    div.flex.flex-center {
+        height: calc(100vh - 70px);
+    }
+
     #playlists {
         margin-top: -100px;
         max-width: 775px;

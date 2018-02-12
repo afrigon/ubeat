@@ -1,8 +1,9 @@
 <template lang="pug">
-    main.dark.no-scroll
+    div
+        error(:message="error" v-if="error")
+
         .section
             .row
-                .text-center.error.text-red(v-if="error") {{ error }}
                 .column.s12(v-if="album")
                     .column.s12.l5.text-center.scroll-animate-router.fadeInRight
                         .column.s12.m6.l12.padding-0.relative
@@ -49,7 +50,12 @@
 </template>
 
 <script type="text/javascript">
+    import ErrorBox from '@/components/error'
+
     export default {
+        components: {
+            'error': ErrorBox
+        },
         data: () => ({
             album: null,
             tracks: null,
@@ -92,7 +98,7 @@
                 if (to && from && to.params.id === from.params.id) return this.setPlaying()
                 this.error = null
                 Util.request(`/api/albums/${this.$route.params.id}`, 'GET', null, (err, response) => {
-                    if (err || !response.results || response.results.length <= 0) return (this.error = 'An error occured while getting this album')
+                    if (err || !response.results || response.results.length <= 0) return ((this.error = 'An error occured while getting this album') & (this.album = null) & (this.tracks = null))
                     this.album = response.results[0]
                     this.album.artworkUrl30 = this.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$230x30$4')
                     this.album.artworkUrl400 = this.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2400x400$4')

@@ -1,6 +1,7 @@
 <template lang="pug">
-    main.dark.no-scroll
-        .text-center.error.text-red(v-if="error") {{ error }}
+    div
+        error(:message="error" v-if="error")
+
         .banner.dance(v-if="artist && artist.genre" v-bind:class="artist.genre")
         #banner-text-wrapper.container.scroll-animate-router.fadeIn(v-if="artist && artist.genre")
             .inline-block
@@ -25,10 +26,12 @@
 
 <script>
     import Album from '@/components/album'
+    import ErrorBox from '@/components/error'
 
     export default {
         components: {
-            'album': Album
+            'album': Album,
+            'error': ErrorBox
         },
         data: () => ({
             artist: null,
@@ -45,7 +48,7 @@
                 if (to && from && to.params.id === from.params.id) return
                 this.error = null
                 Util.request(`/api/artists/${this.$route.params.id}`, 'GET', null, (err, response) => {
-                    if (err || !response.results || response.results.length <= 0) return (this.error = 'An error occured while getting this album')
+                    if (err || !response.results || response.results.length <= 0) return ((this.error = 'An error occured while getting this album') & (this.artist = null) & (this.albums = null) & (this.latestAlbums = null))
                     this.artist = response.results[0]
 
                     switch (this.artist.primaryGenreName.toLowerCase()) {
