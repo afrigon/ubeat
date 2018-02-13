@@ -46,11 +46,13 @@
                 let station = this.$route.query.station
                 station = stations.filter(n => n.genre === station)[0]
 
-                if (!station) return this.stopStation()
+                if (!station) return // this.stopStation()
                 this.startStation(station)
                 this.setLiveIcon()
             },
             startStation (station) {
+                console.log('startStation')
+                console.log(station)
                 this.song = null
                 if (this.player && this.player.genre === station.genre) return
                 this.player = new AudioPlayer({
@@ -87,6 +89,7 @@
                 FS.addComponent(this.player, '#player')
             },
             stopStation () {
+                console.log('stopRadio')
                 this.song = null
                 this.player = null
                 let radio = document.getElementById('radio')
@@ -155,7 +158,7 @@
         position: fixed;
         width: 100%;
         bottom: 0px;
-        z-index: 1000;
+        z-index: 3000;
         transform: translateY(100%);
         will-change: transform;
         transition: transform 200ms ease-out;

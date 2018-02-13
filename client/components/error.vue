@@ -18,7 +18,7 @@
         transform: translateY(-100%);
         transition: transform 250ms ease-out;
         background-color: #c64d47;
-        border-radius: 4px;
+        border-radius: 0 0 4px 4px;
         padding: 10px 30px;
         border: 1px solid #993a35;
         margin: auto;

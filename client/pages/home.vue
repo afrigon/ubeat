@@ -1,5 +1,7 @@
 <template lang="pug">
-    div.flex.flex-center
+    main.dark.no-scroll.flex.flex-center
+        loading(v-if="loading" color="#b29adb")
+
         #playlists.container.scroll-animate-router.fadeInHalfScale
             .section.text-center.text-white.padding-0
                 .row.margin-0
@@ -14,10 +16,12 @@
 
 <script>
     import RadioPlaylist from '@/components/radio-playlist'
+    import Loading from '@/components/loading'
 
     export default {
         components: {
-            'radio-playlist': RadioPlaylist
+            'radio-playlist': RadioPlaylist,
+            'loading': Loading
         },
         data: () => ({
             stations: [
@@ -27,19 +31,17 @@
                 { genre: 'rock', color: '#ffb74d' },
                 { genre: 'metal', color: '#f44336' },
                 { genre: 'rap', color: '#ba68c8' }
-            ]
+            ],
+            loading: null
         }),
-        mounted () {
-            FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' }))
+        beforeRouteLeave (to, from, next) {
+            this.loading = true
+            return next()
         }
     }
 </script>
 
 <style lang="scss">
-    div.flex.flex-center {
-        height: calc(100vh - 70px);
-    }
-
     #playlists {
         margin-top: -100px;
         max-width: 775px;

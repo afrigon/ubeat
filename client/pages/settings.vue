@@ -4,20 +4,3 @@
             .section
                 .row
 </template>
-
-<script>
-    export default {
-        mounted () {
-            this.load()
-        },
-        methods: {
-            load () {
-                FS.addComponent(new AutoScrollAnimator({ selector: 'scroll-animate-router' }))
-            }
-        }
-    }
-</script>
-
-<style lang="scss">
-
-</style>

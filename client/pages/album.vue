@@ -1,6 +1,7 @@
 <template lang="pug">
-    div
+    main.dark.no-scroll
         error(:message="error" v-if="error")
+        loading(v-if="loading" color="#b29adb")
 
         .section
             .row
@@ -51,20 +52,27 @@
 
 <script type="text/javascript">
     import ErrorBox from '@/components/error'
+    import Loading from '@/components/loading'
 
     export default {
         components: {
-            'error': ErrorBox
+            'error': ErrorBox,
+            'loading': Loading
         },
         data: () => ({
             album: null,
             tracks: null,
             error: null,
-            playingId: null
+            playingId: null,
+            loading: null
         }),
         created () { this.fetchData() },
         mounted () { this.load() },
         beforeDestroy () { this.playingId = null },
+        beforeRouteLeave (to, from, next) {
+            this.loading = true
+            return next()
+        },
         watch: {
             '$route': 'fetchData'
         },

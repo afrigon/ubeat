@@ -21,9 +21,6 @@
             'drawer': Drawer,
             'search': Search,
             'options': Options
-        },
-        mounted () {
-            FS.addComponent(new AutoScrollAnimator())
         }
     }
 </script>
