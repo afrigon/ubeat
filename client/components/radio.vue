@@ -51,8 +51,6 @@
                 this.setLiveIcon()
             },
             startStation (station) {
-                console.log('startStation')
-                console.log(station)
                 this.song = null
                 if (this.player && this.player.genre === station.genre) return
                 this.player = new AudioPlayer({
@@ -89,7 +87,6 @@
                 FS.addComponent(this.player, '#player')
             },
             stopStation () {
-                console.log('stopRadio')
                 this.song = null
                 this.player = null
                 let radio = document.getElementById('radio')
@@ -117,7 +114,7 @@
                 this.song = song
                 this.player = new AudioPlayer(song.url, {
                     visual: true,
-                    visualColor: '#BABABA',
+                    visualColor: '#999999',
                     autoplay: true,
                     barHeight: 30,
                     meta: song.meta,
@@ -130,7 +127,7 @@
                         this.song = null
                         window.sessionStorage.removeItem('song-url')
                         const query = Object.assign({}, this.$route.query, { refreshId: Math.random().toString(36).substr(2) })
-                        // uncoment to top station at the same time
+                        // uncomment to stop station at the same time
                         // query.station = null
                         this.$router.replace({
                             path: this.$route.path,

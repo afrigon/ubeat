@@ -54,6 +54,31 @@
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
 
+    function fetchData (to, callback) {
+        let data = {}
+        Util.request(`/api/albums/${to.params.id}`, 'GET', null, (err, response) => {
+            if (err || !response.results || response.results.length <= 0) return callback(new Error('An error occured while searching for this album'))
+
+            data.album = response.results[0]
+            data.album.artworkUrl30 = data.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$230x30$4')
+            data.album.artworkUrl400 = data.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2400x400$4')
+            data.album.collectionViewUrl = `${data.album.collectionViewUrl}&app=itunes`
+
+            Util.request(`/api/albums/${to.params.id}/tracks`, 'GET', null, (err, response) => {
+                if (err || !response.results || response.results.length <= 0) return callback(new Error('An error occured while searching for this album'))
+
+                data.tracks = response.results
+                data.tracks.totalDuration = 0
+                for (let i = 0; i < data.tracks.length; ++i) {
+                    data.tracks[i].duration = Util.secondsToTime(data.tracks[i].trackTimeMillis / 1000)
+                    data.tracks.totalDuration += data.tracks[i].trackTimeMillis / 1000
+                }
+                data.tracks.totalDuration = Math.ceil(data.tracks.totalDuration / 60)
+                return callback(null, data)
+            })
+        })
+    }
+
     export default {
         components: {
             'error': ErrorBox,
@@ -66,17 +91,37 @@
             playingId: null,
             loading: null
         }),
-        created () { this.fetchData() },
-        mounted () { this.load() },
+        watch: {
+            '$route': 'setPlayingSong'
+        },
         beforeDestroy () { this.playingId = null },
+        beforeRouteEnter (to, from, next) {
+            return fetchData(to, (err, data) => {
+                return next(vm => vm.setData(err, data))
+            })
+        },
+        beforeRouteUpdate (to, from, next) {
+            return fetchData(to, (err, data) => {
+                this.setData(err, data)
+                return next()
+            })
+        },
         beforeRouteLeave (to, from, next) {
             this.loading = true
             return next()
         },
-        watch: {
-            '$route': 'fetchData'
-        },
         methods: {
+            setData (err, data) {
+                this.loading = false
+                if (err) {
+                    this.album = this.tracks = null
+                    return (this.error = err.message)
+                }
+
+                this.error = null
+                this.album = data.album
+                this.tracks = data.tracks
+            },
             play (id, meta, url) {
                 if (this.playingId === id) {
                     this.playingId = null
@@ -91,38 +136,13 @@
                     query: Object.assign({}, this.$route.query, { refreshId: Math.random().toString(36).substr(2) })
                 })
             },
-            load () {
-                this.setPlaying()
-            },
-            setPlaying () {
+            setPlayingSong () {
                 const songData = window.sessionStorage.getItem('song-url')
-                let song
+                let song = {}
                 if (songData) {
                     try { song = JSON.parse(songData) } catch (e) {}
                 }
-                this.playingId = song && song.id ? song.id : null
-            },
-            fetchData (to, from) {
-                if (to && from && to.params.id === from.params.id) return this.setPlaying()
-                this.error = null
-                Util.request(`/api/albums/${this.$route.params.id}`, 'GET', null, (err, response) => {
-                    if (err || !response.results || response.results.length <= 0) return ((this.error = 'An error occured while getting this album') & (this.album = null) & (this.tracks = null))
-                    this.album = response.results[0]
-                    this.album.artworkUrl30 = this.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$230x30$4')
-                    this.album.artworkUrl400 = this.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2400x400$4')
-                    this.album.collectionViewUrl = `${this.album.collectionViewUrl}&app=itunes`
-
-                    Util.request(`/api/albums/${this.$route.params.id}/tracks`, 'GET', null, (err, response) => {
-                        if (err || !response.results || response.results.length <= 0) return (this.error = 'An error occured while getting this album')
-                        this.tracks = response.results
-                        this.tracks.totalDuration = 0
-                        for (let i = 0; i < this.tracks.length; ++i) {
-                            this.tracks[i].duration = Util.secondsToTime(this.tracks[i].trackTimeMillis / 1000)
-                            this.tracks.totalDuration += this.tracks[i].trackTimeMillis / 1000
-                        }
-                        this.tracks.totalDuration = Math.ceil(this.tracks.totalDuration / 60)
-                    })
-                })
+                this.playingId = song.id || null
             }
         }
     }
