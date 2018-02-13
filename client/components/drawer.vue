@@ -33,6 +33,15 @@
                     li Logout
 </template>
 
+<script>
+    export default {
+        mounted () {
+            FS.addComponent(new Drawer())
+        }
+    }
+</script>
+
+
 <style lang="scss">
     .drawer {
         background-color: #454545 !important;

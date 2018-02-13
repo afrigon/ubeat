@@ -163,8 +163,6 @@ class FS {
 
     static init () {
         this.components = []
-        FS.addComponent(new MaterialInput())
-        FS.addComponent(new Drawer())
     }
 }
 

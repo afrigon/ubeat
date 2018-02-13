@@ -1,8 +1,8 @@
 <template lang="pug">
     div#app.body
-        header-bar
+        header-bar(v-if="!public")
         router-view
-        radio
+        radio(v-if="!public")
 </template>
 
 <script>
@@ -14,6 +14,14 @@
         components: {
             'header-bar': HeaderBar,
             'radio': Radio
+        },
+        data: () => ({
+            public: null
+        }),
+        watch: {
+            $route () {
+                this.public = this.$route.meta.public
+            }
         },
         mounted () {
             Util.addEvent(window, 'resize', () => {

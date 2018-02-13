@@ -45,6 +45,8 @@
             })
 
             if (!this.mobile) return
+            FS.addComponent(new MaterialInput())
+
             const button = document.getElementById('search-action')
             if (!button) return
 

@@ -12,6 +12,8 @@ module.exports = {
         FS: true,
         Util: true,
         AudioPlayer: true,
-        AutoScrollAnimator: true
+        AutoScrollAnimator: true,
+        MaterialInput: true,
+        Drawer: true
     }
 }
