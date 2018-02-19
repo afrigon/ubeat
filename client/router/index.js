@@ -8,8 +8,7 @@ import Artist from '@/pages/artist'
 import Playlists from '@/pages/playlists'
 import Settings from '@/pages/settings'
 
-import Login from '@/pages/login'
-// import Signup from '@/pages/signup'
+import AuthPage from '@/pages/auth'
 
 Vue.use(Router)
 
@@ -38,12 +37,12 @@ const router = new Router({
     }, {
         path: '/login',
         name: 'Login',
-        component: Login,
+        component: AuthPage,
         meta: { public: true }
     }, {
         path: '/signup',
         name: 'Signup',
-        component: Login,
+        component: AuthPage,
         meta: { public: true }
     }, {
         path: '/logout',

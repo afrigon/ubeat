@@ -115,22 +115,39 @@
             },
             register () {
                 let params = new URLSearchParams()
+                let error = false
                 const name = document.getElementById('name').value
-                if (!name) return this.toast.show('Error', 'A valid name must be provided', { type: 'warn' })
-                params.append('name', name)
+                if (!name) {
+                    error = true
+                    this.toast.show('Error', 'A valid name must be provided', { type: 'error' })
+                } else {
+                    params.append('name', name)
+                }
 
                 const email = document.getElementById('email').value.toLowerCase()
                 const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-                if (!email || !emailRegex.test(email)) return this.toast.show('Error', 'A valid email adress must be provided', { type: 'warn' })
-                params.append('email', email)
+                if (!email || !emailRegex.test(email)) {
+                    error = true
+                    this.toast.show('Error', 'A valid email adress must be provided', { type: 'error' })
+                } else {
+                    params.append('email', email)
+                }
 
                 const password = document.getElementById('password').value
-                if (!password) return this.toast.show('Error', 'A password must be provided', { type: 'warn' })
+                if (!password) {
+                    error = true
+                    this.toast.show('Error', 'A password must be provided', { type: 'error' })
+                }
 
                 const confirm = document.getElementById('confirm').value
-                if (!confirm || password !== confirm) return this.toast.show('Error', 'Password confirmation must be the same as password', { type: 'warn' })
-                params.append('password', password)
+                if (!confirm || password !== confirm) {
+                    error = true
+                    this.toast.show('Error', 'Password confirmation must be the same as password', { type: 'error' })
+                } else {
+                    params.append('password', password)
+                }
 
+                if (error) return
                 Util.requestJSON('/api/signup', {
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     method: 'POST',
