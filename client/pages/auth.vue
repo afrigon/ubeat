@@ -157,6 +157,8 @@
                         return this.toast.show('Error', 'Could not create account, try again later', { type: 'error' })
                     }
 
+                    if (data && data.name) window.localStorage.setItem('name', data.name)
+
                     Util.requestJSON('/api/login', {
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         method: 'POST',
