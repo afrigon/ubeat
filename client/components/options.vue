@@ -29,11 +29,15 @@
         }),
         watch: {
             '$route' () {
-                this.name = window.localStorage.getItem('name') || ''
+                this.name = window.localStorage.getItem('name') ||
+                    window.localStorage.getItem('email') ||
+                    ''
             }
         },
         created () {
-            this.name = window.localStorage.getItem('name') || ''
+            this.name = window.localStorage.getItem('name') ||
+                window.localStorage.getItem('email') ||
+                ''
         }
     }
 </script>

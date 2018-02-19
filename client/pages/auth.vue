@@ -109,6 +109,7 @@
                     if (err || !data || !data.token) {
                         return this.toast.show('Error', 'Email and password don\'t match any of our records', { type: 'error' })
                     }
+                    if (data.name) window.localStorage.setItem('name', data.name)
                     window.localStorage.setItem('access_token', data.token)
                     return this.$router.push(this.$route.query.redirect || '/')
                 })
@@ -156,8 +157,6 @@
                     if (err) {
                         return this.toast.show('Error', 'Could not create account, try again later', { type: 'error' })
                     }
-
-                    if (data && data.name) window.localStorage.setItem('name', data.name)
 
                     Util.requestJSON('/api/login', {
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
