@@ -58,7 +58,7 @@ class Radio {
         const cachedSong = this.cache.filter(n => n.id === id)
         if (cachedSong.length > 0) return callback(null, cachedSong[0])
 
-        return request(`${config.api}tracks/${id}`, (err, response, data) => {
+        return request(`${config.api}unsecure/tracks/${id}`, (err, response, data) => {
             if (err || response.statusCode >= 400) return callback(new Error('Failed to download song data'))
             let obj
             try {

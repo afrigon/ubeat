@@ -64,36 +64,11 @@ class Util {
         try { return callback(null, JSON.parse(str)) } catch (e) { return callback(e) }
     }
 
-    // static request (url, method, data, callback) {
-    //     const request = new XMLHttpRequest()
-    //     request.onreadystatechange = () => {
-    //         if (request.readyState === 4) {
-    //             if (request.status >= 400) {
-    //                 return callback(new Error('Could not complete ajax request'))
-    //             }
-
-    //             if (!request.responseText) return callback()
-    //             let json
-    //             try {
-    //                 json = JSON.parse(request.responseText)
-    //             } catch (e) {
-    //                 return callback(new Error(e.message))
-    //             }
-    //             return callback(null, json)
-    //         }
-    //     }
-    //     request.open(method, url)
-    //     if (data) {
-    //         data = JSON.stringify(data)
-    //         request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-    //     }
-    //     request.send(data)
-    // }
-
     static request (url, options, callback) {
         const defaults = {
             method: 'GET',
-            headers: {}
+            headers: {},
+            redirect: 'follow'
         }
 
         if (Util.isObject(options)) {
@@ -112,7 +87,8 @@ class Util {
     static requestJSON (url, options, callback) {
         const defaults = {
             method: 'GET',
-            headers: {}
+            headers: {},
+            redirect: 'follow'
         }
 
         if (Util.isObject(options)) {
@@ -213,13 +189,18 @@ class MaterialInput extends Component {
     init () {
         const selector = 'input[type=text], input[type=password], input[type=email], input[type=url], input[type=tel], input[type=number], input[type=search], textarea'
         document.querySelectorAll(selector).forEach((element) => {
+            const label = element.parentNode.getElementsByTagName('label')[0]
+            if (!label) return
+            if (element.value) {
+                label.classList.add('active')
+            } else {
+                label.classList.remove('active')
+            }
             Util.addEvent(element, 'focus', (event) => {
-                const label = event.target.parentNode.getElementsByTagName('label')[0]
-                label && label.classList.add('active')
+                label.classList.add('active')
             })
             Util.addEvent(element, 'blur', (event) => {
-                const label = event.target.parentNode.getElementsByTagName('label')[0]
-                label && !element.value && label.classList.remove('active')
+                !element.value && label.classList.remove('active')
             })
         })
     }
@@ -966,6 +947,94 @@ class AudioPlayer extends Component {
         }
 
         return window.requestAnimationFrame(this.loopVisual.bind(this))
+    }
+}
+
+class Toast {
+    constructor (options) {
+        this.options = {
+            type: 'info',
+            delay: 0,
+            duration: 5000,
+            position: 'toast-top-right',
+            onclick: null,
+            animationTime: 300
+        }
+
+        this.options = Util.extends(options || {}, this.options)
+        this.createToaster()
+    }
+
+    createToast (title, message) {
+        const toast = document.createElement('div')
+        toast.classList.add('toast')
+
+        const titleElement = document.createElement('p')
+        titleElement.classList.add('toast-title')
+        titleElement.innerHTML = title
+        toast.appendChild(titleElement)
+
+        const messageElement = document.createElement('p')
+        messageElement.classList.add('toast-message')
+        messageElement.innerHTML = message
+        toast.appendChild(messageElement)
+
+        return toast
+    }
+
+    createToaster () {
+        this.toaster = document.createElement('div')
+        this.toaster.classList.add('toast-toaster')
+        document.body.appendChild(this.toaster)
+    }
+
+    clearToasterPosition () {
+        this.toaster.classList.remove('toast-top-right')
+        this.toaster.classList.remove('toast-top-left')
+        this.toaster.classList.remove('toast-bottom-right')
+        this.toaster.classList.remove('toast-bottom-left')
+    }
+
+    show (title, message, options) {
+        options = Util.extends(options || {}, this.options)
+
+        this.clearToasterPosition()
+        this.toaster.classList.add(options.position)
+        
+        const toast = this.createToast(title, message)
+        toast.classList.add(`toast-${options.type}`)
+        toast.style.transitionDuration = `${options.animationTime}ms`
+
+        // custom user defined click action
+        if (Util.isFunction(options.onclick)) {
+            toast.addEventListener('click', () => {
+                options.onclick()
+            })
+        }
+
+        // remove toast on any click
+        toast.addEventListener('click', () => {
+            this.popToast(toast, options.animationTime)
+        })
+
+        // wait for delay option
+        setTimeout(() => {
+            this.toaster.appendChild(toast)
+            toast.style.opacity = 1
+
+            // wait until duration has passed + fade in animation time
+            setTimeout(() => {
+                this.popToast(toast, options.animationTime)
+            }, options.duration + options.animationTime);
+
+        }, options.delay);
+    }
+
+    popToast (toast, animationTime) {
+        toast.style.opacity = 0
+
+        // remove the toast after it faded out
+        setTimeout(() => { this.toaster.removeChild(toast) }, animationTime);
     }
 }
 

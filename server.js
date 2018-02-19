@@ -2,7 +2,6 @@ const path = require('path')
 const express = require('express')
 const app = express()
 const server = require('http').createServer(app)
-const bodyParser = require('body-parser')
 const favicon = require('serve-favicon')
 const proxy = require('http-proxy-middleware')
 const radio = require('./radio')
@@ -38,7 +37,6 @@ if (process.argv.indexOf('-p') !== -1) {
 }
 
 app.disable('x-powered-by')
-app.use(bodyParser.urlencoded({ extended: false }))
 app.use(favicon(path.join(__dirname, 'assets', 'favicon.ico')))
 app.use('/radio', radio)
 app.use('/static', express.static(path.join('.', 'static')))
@@ -48,21 +46,5 @@ app.use('/api', proxy({
     pathRewrite: { '^/api': '' },
     logLevel: 'warn'
 }))
-
-app.get('/album', (req, res) => { return res.redirect('/#/album') })
-app.get('/artist', (req, res) => { return res.redirect('/#/artist') })
-
-app.get('/login', (req, res) => {
-    return res.send('login')
-})
-
-// res.cookie('access_token', 'abc', {
-//     maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
-//     // secure: true
-// })
-
-app.get('/logout', (req, res) => {
-    return res.clearCookie('access_token') & res.redirect('/login')
-})
 
 server.listen(config.port, config.ip)

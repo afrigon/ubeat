@@ -9,7 +9,7 @@ import Playlists from '@/pages/playlists'
 import Settings from '@/pages/settings'
 
 import Login from '@/pages/login'
-import Signup from '@/pages/signup'
+// import Signup from '@/pages/signup'
 
 Vue.use(Router)
 
@@ -43,19 +43,29 @@ const router = new Router({
     }, {
         path: '/signup',
         name: 'Signup',
-        component: Signup,
+        component: Login,
         meta: { public: true }
+    }, {
+        path: '/logout',
+        name: 'Logout',
+        component: Vue.component('logout', {})
     }]
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.public) return next()
+    let query = { redirect: to.fullPath }
+    if (to.name === 'Logout') {
+        window.localStorage.removeItem('access_token')
+        query = {}
+    }
+
     return Auth.checkAuth((err) => {
-        if (!err) return next()
-        return next({
-            path: '/login',
-            query: { redirect: to.fullPath }
-        })
+        if (err) {
+            if (!to.meta.public) return next({ path: '/login', query: query })
+        } else {
+            if (to.meta.public) return next({ path: '/' })
+        }
+        return next()
     })
 })
 
