@@ -10,7 +10,10 @@ class Radio {
         this.playlist = []
         this.cache = []
         this.songs = require(`./${genre}`)
-        this.nextSong()
+        this.login((err) => {
+            if (err) return console.log(err.message)
+            this.nextSong()
+        })
     }
 
     getSong () {
@@ -54,12 +57,44 @@ class Radio {
         })
     }
 
+    login (callback) {
+        return request({
+            url: `${config.api}login`,
+            method: 'POST',
+            headers: { 'Content-Type': 'x-www-form-urlencoded' },
+            form: {
+                email: config.auth.username,
+                password: config.auth.password
+            }
+        }, (err, response, data) => {
+            if (err || response.statusCode >= 400) return callback(new Error('Failed to login into the api'))
+            let obj
+            try {
+                obj = JSON.parse(data)
+            } catch (e) {
+                return callback(new Error('Failed to parse song data'))
+            }
+            if (!obj || !obj.token) return callback(new Error('Failed to login into the api'))
+            this.token = obj.token
+            return callback()
+        })
+    }
+
     fetchSong (id, callback) {
         const cachedSong = this.cache.filter(n => n.id === id)
         if (cachedSong.length > 0) return callback(null, cachedSong[0])
 
-        return request(`${config.api}unsecure/tracks/${id}`, (err, response, data) => {
-            if (err || response.statusCode >= 400) return callback(new Error('Failed to download song data'))
+        return request({
+            url: `${config.api}tracks/${id}`,
+            headers: { 'Authorization': this.token }
+        }, (err, response, data) => {
+            if (err || response.statusCode >= 400) {
+                if (response.statusCode === 403) return this.login((err) => {
+                    if (err) return callback(err)
+                    return this.fetchSong(id, callback)
+                })
+                return callback(new Error('Failed to download song data'))
+            }
             let obj
             try {
                 obj = JSON.parse(data)

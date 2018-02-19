@@ -8,6 +8,10 @@ module.exports = {
         port: 8080
     },
     shared: {
-        api: 'https://ubeat.herokuapp.com/'
+        api: 'https://ubeat.herokuapp.com/',
+        auth: {
+            username: 'ubeatradio@frigstudio.com',
+            password: 'radio10-20'
+        }
     }
 }
