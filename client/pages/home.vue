@@ -34,6 +34,9 @@
             ],
             loading: null
         }),
+        mounted () {
+            this.loading = false
+        },
         beforeRouteLeave (to, from, next) {
             this.loading = true
             return next()

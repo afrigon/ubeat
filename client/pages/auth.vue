@@ -99,7 +99,10 @@
             login (form) {
                 const email = document.getElementById('email').value.toLowerCase()
                 const password = document.getElementById('password').value
-                if (!email || !password) return this.toast.show('Error', 'Email and password don\'t match any of our records', { type: 'error' })
+                if (!email || !password) {
+                    window.scroll({ top: 0, left: 0, behavior: 'smooth' })
+                    return this.toast.show('Error', 'Email and password don\'t match any of our records', { type: 'error' })
+                }
 
                 Util.requestJSON('/api/login', {
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -107,6 +110,7 @@
                     body: new URLSearchParams(new FormData(form))
                 }, (err, data) => {
                     if (err || !data || !data.token) {
+                        window.scroll({ top: 0, left: 0, behavior: 'smooth' })
                         return this.toast.show('Error', 'Email and password don\'t match any of our records', { type: 'error' })
                     }
                     if (data.name) window.localStorage.setItem('name', data.name)
@@ -148,13 +152,14 @@
                     params.append('password', password)
                 }
 
-                if (error) return
+                if (error) return window.scroll({ top: 0, left: 0, behavior: 'smooth' })
                 Util.requestJSON('/api/signup', {
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     method: 'POST',
                     body: params
                 }, (err, data) => {
                     if (err) {
+                        window.scroll({ top: 0, left: 0, behavior: 'smooth' })
                         return this.toast.show('Error', 'Could not create account, try again later', { type: 'error' })
                     }
 
@@ -164,6 +169,7 @@
                         body: params
                     }, (err, data) => {
                         if (err || !data || !data.token) {
+                            window.scroll({ top: 0, left: 0, behavior: 'smooth' })
                             this.toast.show('Error', 'Could not login after account creation for some obscure reason', { type: 'error' })
                             return this.$router.push('/login')
                         }
@@ -186,7 +192,8 @@
     }
 
     #auth-background {
-        position: absolute;
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
         background-image: url('/static/img/login.jpg');
         background-repeat: no-repeat;
         background-size: cover;
@@ -194,8 +201,12 @@
         transform-origin: 50% 50%;
         transform: scale(1.1);
         will-change: transform;
-        height: 100vh;
-        width: 100vw;
+    }
+
+    @media only screen and (max-width : 600px) {
+        .auth-main { justify-content: flex-start; overflow-y: scroll; }
+        .wrapper { margin: 50px auto; }
+        #auth-background { transform: scale(1) translate(0, 0) !important; }
     }
 
     .logo-login {
@@ -219,6 +230,7 @@
         box-sizing: border-box;
         text-align: center;
         max-width: 500px;
+        margin: auto;
     }
     .button {
         display: block;
