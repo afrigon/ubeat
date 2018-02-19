@@ -1,10 +1,18 @@
 let flags = 0
-function setFilter (event, value) { // eslint-disable-line no-unused-vars
+function toggleFilter (event, value) { // eslint-disable-line no-unused-vars
     event && event.preventDefault()
     value || (value = flags)
     // add or remove value from flags
     if ((flags & value) !== 0) { flags &= ~value } else { flags |= value }
+    return applyFilter()
+}
 
+function setFilter (value) { // eslint-disable-line no-unused-vars
+    flags = value
+    return applyFilter()
+}
+
+function applyFilter () {
     const filter = document.getElementById('search-filter')
     filter && (filter.value = Util.getBitwiseArray(4).map((n) => {
         const buttons = document.querySelectorAll(`.filter-button-${n}`)

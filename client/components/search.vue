@@ -12,16 +12,20 @@
             .notch-left.absolute
             .notch-right.absolute
             ul.capitalize.clickable.text-white.margin-0.padding-left-15.padding-right-15
-                li.filter-button-1.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="setFilter(event, 1)") artist
-                li.filter-button-2.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="setFilter(event, 2)") album
-                li.filter-button-4.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="setFilter(event, 4)") song                                    
-                li.filter-button-8.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="setFilter(event, 8)") user
+                li.filter-button-1.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="toggleFilter(event, 1)") artist
+                li.filter-button-2.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="toggleFilter(event, 2)") album
+                li.filter-button-4.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="toggleFilter(event, 4)") song                                    
+                li.filter-button-8.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="toggleFilter(event, 8)") user
 </template>
 
 <script>
     export default {
         props: ['mobile'],
         mounted () {
+            if (!this.mobile) {
+                setFilter(window.sessionStorage.getItem('search-flags') || 7) // eslint-disable-line no-undef
+            }
+
             const form = document.getElementById(`form-search${this.mobile ? '-mobile' : ''}`)
             if (!form) return console.log('could not find search form')
 

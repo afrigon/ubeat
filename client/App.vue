@@ -35,7 +35,6 @@
                 const element = document.getElementById('options-wrapper')
                 return element && element.classList.remove('active')
             })
-            setFilter(null, window.sessionStorage.getItem('search-flags') || 7) // eslint-disable-line no-undef
         }
     }
 </script>
