@@ -89,12 +89,14 @@ class Radio {
             headers: { 'Authorization': this.token }
         }, (err, response, data) => {
             if (err || response.statusCode >= 400) {
-                if (response.statusCode === 403) return this.login((err) => {
-                    if (err) return callback(err)
-                    return this.fetchSong(id, callback)
-                })
                 return callback(new Error('Failed to download song data'))
             }
+
+            if (response && response.statusCode === 403) return this.login((err) => {
+                if (err) return callback(err)
+                return this.fetchSong(id, callback)
+            })
+            
             let obj
             try {
                 obj = JSON.parse(data)

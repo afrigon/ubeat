@@ -4,12 +4,12 @@
         .wrapper
             .section.text-center.text-white.padding-0.margin-down-100
                 .row.margin-0(v-if="signup")
-                    h1.text-size-7.margin-0.text-regular Punch line
-                    h2.text-size-2.margin-10.text-regular Find YOUR beat
+                    h1.text-size-7.margin-0.text-regular Create an account
+                    h2.text-size-2.margin-10.text-regular Make a good life choice for once
 
                 .row.margin-0(v-else)
                     h1.text-size-7.margin-0.text-regular Good music this way!
-                    h2.text-size-2.margin-10.text-regular Find YOUR beat
+                    h2.text-size-2.margin-10.text-regular Login and find YOUR beat
             form#auth-form.box.dark(v-bind:class="signup ? 'signup' : 'login'")
                 logo.logo-login.dark
                 .input-wrapper(v-if="signup")
