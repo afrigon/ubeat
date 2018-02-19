@@ -60,30 +60,73 @@ class Util {
         return `${h > 0 ? `${h.substr(h.length - 2)}:` : ''}${m.substr(m.length - 2)}:${s.substr(s.length - 2)}`
     }
 
-    static request (url, method, data, callback) {
-        const request = new XMLHttpRequest()
-        request.onreadystatechange = () => {
-            if (request.readyState === 4) {
-                if (request.status >= 400) {
-                    return callback(new Error('Could not complete ajax request'))
-                }
+    static jsonParse (str, callback) {
+        try { return callback(null, JSON.parse(str)) } catch (e) { return callback(e) }
+    }
 
-                if (!request.responseText) return callback()
-                let json
-                try {
-                    json = JSON.parse(request.responseText)
-                } catch (e) {
-                    return callback(new Error(e.message))
-                }
-                return callback(null, json)
-            }
+    // static request (url, method, data, callback) {
+    //     const request = new XMLHttpRequest()
+    //     request.onreadystatechange = () => {
+    //         if (request.readyState === 4) {
+    //             if (request.status >= 400) {
+    //                 return callback(new Error('Could not complete ajax request'))
+    //             }
+
+    //             if (!request.responseText) return callback()
+    //             let json
+    //             try {
+    //                 json = JSON.parse(request.responseText)
+    //             } catch (e) {
+    //                 return callback(new Error(e.message))
+    //             }
+    //             return callback(null, json)
+    //         }
+    //     }
+    //     request.open(method, url)
+    //     if (data) {
+    //         data = JSON.stringify(data)
+    //         request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+    //     }
+    //     request.send(data)
+    // }
+
+    static request (url, options, callback) {
+        const defaults = {
+            method: 'GET',
+            headers: {}
         }
-        request.open(method, url)
-        if (data) {
-            data = JSON.stringify(data)
-            request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+
+        if (Util.isObject(options)) {
+            options = Util.extends(options, defaults)
+        } else if (Util.isFunction(options)) {
+            callback = options
+        } else {
+            return console.log('no callback provided in request')
         }
-        request.send(data)
+        
+        return fetch(url, options)
+          .then(res => callback(null, res))
+          .catch(callback)
+    }
+
+    static requestJSON (url, options, callback) {
+        const defaults = {
+            method: 'GET',
+            headers: {}
+        }
+
+        if (Util.isObject(options)) {
+            options = Util.extends(options, defaults)
+        } else if (Util.isFunction(options)) {
+            callback = options
+        } else {
+            return console.log('no callback provided in request')
+        }
+
+        return fetch(url, options)
+          .then(res => res.json())
+          .then(data => callback(null, data))
+          .catch(callback)
     }
 
     static getQueryParam (name) {

@@ -59,7 +59,7 @@
                     autoplay: true,
                     barHeight: 30,
                     fetchCallback: (audioPlayer, callback) => {
-                        return Util.request(`/radio/${station.genre}`, 'get', null, (err, data) => {
+                        return Util.requestJSON(`/radio/${station.genre}`, (err, data) => {
                             if (err) return callback(err)
                             audioPlayer.options.startTime = data.time
                             audioPlayer.setMeta(data.meta)
@@ -76,7 +76,7 @@
                         this.$router.replace({ path: this.$route.path })
                     },
                     clipEndCallback: (audioPlayer) => {
-                        return Util.request(`/radio/${station.genre}`, 'get', null, (err, data) => {
+                        return Util.requestJSON(`/radio/${station.genre}`, (err, data) => {
                             if (err) return console.log(err)
                             audioPlayer.audio.src = data.url
                             return audioPlayer.setMeta(data.meta)

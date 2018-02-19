@@ -1,5 +1,5 @@
 <template lang="pug">
-    main.dark.no-scroll.flex.flex-center
+    main#home.dark.no-scroll.flex.flex-center
         loading(v-if="loading" color="#b29adb")
 
         #playlists.container.scroll-animate-router.fadeInHalfScale
@@ -42,14 +42,6 @@
 </script>
 
 <style lang="scss">
-    #playlists {
-        margin-top: -100px;
-        max-width: 775px;
-    }    
-
-    @media only screen and (max-width : 450px) {
-        #playlists {
-            margin-top: 0;
-        }
-    }
+    #home { padding-top: 30px; margin-bottom: 150px; }
+    #playlists { max-width: 775px; }
 </style>

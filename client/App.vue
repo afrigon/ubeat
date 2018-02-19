@@ -18,6 +18,9 @@
         data: () => ({
             public: null
         }),
+        created () {
+            this.public = this.$route.meta.public
+        },
         watch: {
             $route () {
                 this.public = this.$route.meta.public

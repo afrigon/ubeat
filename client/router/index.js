@@ -50,10 +50,12 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
     if (to.meta.public) return next()
-    if (Auth.checkAuth()) return next()
-    return next({
-        path: '/login',
-        query: { redirect: to.fullPath }
+    return Auth.checkAuth((err) => {
+        if (!err) return next()
+        return next({
+            path: '/login',
+            query: { redirect: to.fullPath }
+        })
     })
 })
 

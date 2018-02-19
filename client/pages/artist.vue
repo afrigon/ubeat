@@ -32,7 +32,7 @@
 
     function fetchData (to, callback) {
         let data = {}
-        Util.request(`/api/artists/${to.params.id}`, 'GET', null, (err, response) => {
+        Util.requestJSON(`/api/artists/${to.params.id}`, (err, response) => {
             if (err || !response.results || response.results.length <= 0) return callback(new Error('An error occured while searching for this artist'))
 
             data.artist = response.results[0]
@@ -50,7 +50,7 @@
                 break
             }
 
-            Util.request(`/api/artists/${to.params.id}/albums?limit=15`, 'GET', null, (err, response) => {
+            Util.requestJSON(`/api/artists/${to.params.id}/albums?limit=15`, (err, response) => {
                 if (err || !response.results || response.results.length <= 0) return callback(new Error('An error occured while searching for this artist'))
 
                 data.albums = response.results

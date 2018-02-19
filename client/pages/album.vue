@@ -56,7 +56,7 @@
 
     function fetchData (to, callback) {
         let data = {}
-        Util.request(`/api/albums/${to.params.id}`, 'GET', null, (err, response) => {
+        Util.requestJSON(`/api/albums/${to.params.id}`, (err, response) => {
             if (err || !response.results || response.results.length <= 0) return callback(new Error('An error occured while searching for this album'))
 
             data.album = response.results[0]
@@ -64,7 +64,7 @@
             data.album.artworkUrl400 = data.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2400x400$4')
             data.album.collectionViewUrl = `${data.album.collectionViewUrl}&app=itunes`
 
-            Util.request(`/api/albums/${to.params.id}/tracks`, 'GET', null, (err, response) => {
+            Util.requestJSON(`/api/albums/${to.params.id}/tracks`, (err, response) => {
                 if (err || !response.results || response.results.length <= 0) return callback(new Error('An error occured while searching for this album'))
 
                 data.tracks = response.results
