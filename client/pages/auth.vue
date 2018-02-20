@@ -43,7 +43,13 @@
     export default {
         data: () => ({
             signup: null,
-            toast: new Toast() // eslint-disable-line no-undef
+            toast: new Toast(), // eslint-disable-line no-undef
+            background: {
+                beta: null,
+                gamma: null,
+                x: 0,
+                y: 0
+            }
         }),
         components: {
             'logo': Logo
@@ -71,12 +77,39 @@
                 document.getElementById('email').value = ''
             }
             FS.addComponent(new MaterialInput())
-            window.addEventListener('mousemove', (event) => {
-                const translateX = event.clientX * 2 / window.innerWidth - 1
-                const translateY = event.clientY * 2 / window.innerHeight - 1
-                const background = document.getElementById('auth-background')
-                return background && (background.style.transform = `scale(1.1) translate(${translateX}%, ${translateY}%)`)
-            })
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', (event) => {
+                    const gamma = (Util.clamp(event.gamma, -90, 90) + 90) * 200 / 180
+                    const beta = Util.clamp(event.beta, -50, 150) + 50
+
+                    if (!this.background.gamma || !this.background.beta) {
+                        this.background.gamma = gamma
+                        this.background.beta = beta
+                    }
+
+                    const deltaX = this.background.gamma - gamma
+                    const deltaY = this.background.beta - beta
+
+                    this.background.gamma = gamma
+                    this.background.beta = beta
+
+                    const translateX = Util.clamp((this.background.x - deltaX / 10), -4, 4)
+                    const translateY = Util.clamp((this.background.y - deltaY / 10), -4, 4)
+
+                    this.background.x = translateX
+                    this.background.y = translateY
+
+                    const background = document.getElementById('auth-background')
+                    return background && (background.style.transform = `scale(1.1) translate(${translateX}%, ${translateY}%)`)
+                })
+            } else {
+                window.addEventListener('mousemove', (event) => {
+                    const translateX = event.clientX * 2 / window.innerWidth - 1
+                    const translateY = event.clientY * 2 / window.innerHeight - 1
+                    const background = document.getElementById('auth-background')
+                    return background && (background.style.transform = `scale(1.1) translate(${translateX}%, ${translateY}%)`)
+                })
+            }
 
             const form = document.getElementById('auth-form')
             form && form.addEventListener('submit', (event) => {
@@ -206,7 +239,6 @@
     @media only screen and (max-width : 600px) {
         .auth-main { justify-content: flex-start; overflow-y: scroll; }
         .wrapper { margin: 50px auto; }
-        #auth-background { transform: scale(1) translate(0, 0) !important; }
     }
 
     .logo-login {

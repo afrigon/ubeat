@@ -37,6 +37,10 @@ class Util {
         return array
     }
 
+    static clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max)
+    }
+
     static clone (instance) {
         return Object.assign(Object.create(Object.getPrototypeOf(instance)), instance)
     }
