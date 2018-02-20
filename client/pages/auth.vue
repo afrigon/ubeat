@@ -77,7 +77,7 @@
                 document.getElementById('email').value = ''
             }
             FS.addComponent(new MaterialInput())
-            if (window.DeviceOrientationEvent) {
+            if (window.DeviceOrientationEvent && Util.isTouch()) {
                 window.addEventListener('deviceorientation', (event) => {
                     const gamma = (Util.clamp(event.gamma, -90, 90) + 90) * 200 / 180
                     const beta = Util.clamp(event.beta, -50, 150) + 50
