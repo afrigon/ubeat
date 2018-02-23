@@ -15,6 +15,8 @@ module.exports = {
         AutoScrollAnimator: true,
         MaterialInput: true,
         Drawer: true,
-        Toast: true
+        Toast: true,
+        Particle: true,
+        HttpError: true
     }
 }

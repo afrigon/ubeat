@@ -44,7 +44,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     #home { padding-top: 30px; margin-bottom: 150px; }
     #playlists { max-width: 775px; }
 </style>

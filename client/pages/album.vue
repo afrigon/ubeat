@@ -38,7 +38,7 @@
                                             th time
                                             th
                                     tbody#tracks.clickable
-                                        tr(v-for="(track, i) in tracks" :key="track.trackId" v-on:click="play(track.trackId, { title: track.trackName, artist: album.artistName, pictureUrl: album.artworkUrl30 }, track.previewUrl)" v-bind:class="playingId === track.trackId ? 'active': ''")
+                                        tr(v-for="(track, i) in tracks.list" :key="track.trackId" v-on:click="play(track.trackId, { title: track.trackName, artist: album.artistName, pictureUrl: album.artworkUrl30 }, track.previewUrl)" v-bind:class="playingId === track.trackId ? 'active': ''")
                                             td.text-center {{ i + 1 }}
                                             td {{ track.trackName }}
                                             td {{ track.duration }}
@@ -54,34 +54,7 @@
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
 
-    function fetchData (to, callback) {
-        let data = {}
-        Util.requestJSON(`/api/albums/${to.params.id}`, {
-            headers: { Authorization: window.localStorage.getItem('access_token') }
-        }, (err, response) => {
-            if (err || !response.results || response.results.length <= 0) return callback(new Error('An error occured while searching for this album'))
-
-            data.album = response.results[0]
-            data.album.artworkUrl30 = data.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$230x30$4')
-            data.album.artworkUrl400 = data.album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2400x400$4')
-            data.album.collectionViewUrl = `${data.album.collectionViewUrl}&app=itunes`
-
-            Util.requestJSON(`/api/albums/${to.params.id}/tracks`, {
-                headers: { Authorization: window.localStorage.getItem('access_token') }
-            }, (err, response) => {
-                if (err || !response.results || response.results.length <= 0) return callback(new Error('An error occured while searching for this album'))
-
-                data.tracks = response.results
-                data.tracks.totalDuration = 0
-                for (let i = 0; i < data.tracks.length; ++i) {
-                    data.tracks[i].duration = Util.secondsToTime(data.tracks[i].trackTimeMillis / 1000)
-                    data.tracks.totalDuration += data.tracks[i].trackTimeMillis / 1000
-                }
-                data.tracks.totalDuration = Math.ceil(data.tracks.totalDuration / 60)
-                return callback(null, data)
-            })
-        })
-    }
+    import Api from '@/script/api'
 
     export default {
         components: {
@@ -100,26 +73,25 @@
         },
         beforeDestroy () { this.playingId = null },
         beforeRouteEnter (to, from, next) {
-            return fetchData(to, (err, data) => {
-                return next(vm => vm.setData(err, data))
-            })
+            try {
+                return next(async vm => vm.setData(await Api.getFullAlbum(to.params.id)))
+            } catch (err) { return next(vm => vm.setData(null)) }
         },
-        beforeRouteUpdate (to, from, next) {
-            return fetchData(to, (err, data) => {
-                this.setData(err, data)
-                return next()
-            })
+        async beforeRouteUpdate (to, from, next) {
+            try {
+                return this.setData(await Api.getFullAlbum(to.params.id)) & next()
+            } catch (err) { return this.setData(null) & next() }
         },
         beforeRouteLeave (to, from, next) {
             this.loading = true
             return next()
         },
         methods: {
-            setData (err, data) {
+            setData (data) {
                 this.loading = false
-                if (err) {
+                if (!data) {
                     this.album = this.tracks = null
-                    return (this.error = err.message)
+                    return (this.error = 'An error occured while searching for this album.')
                 }
 
                 this.error = null
@@ -152,7 +124,7 @@
     }
 </script>
 
-<style>
+<style lang="scss" scoped>
     td:not(.playing) i {
         visibility: hidden;
     }

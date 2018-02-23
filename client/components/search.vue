@@ -62,7 +62,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .form-search {
         height: 100%;
         min-width: 330px;

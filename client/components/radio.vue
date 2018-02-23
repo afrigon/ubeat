@@ -9,6 +9,8 @@
 </template>
 
 <script>
+    import Api from '@/script/api'
+
     export default {
         watch: {
             '$route': 'init'
@@ -46,7 +48,7 @@
                 let station = this.$route.query.station
                 station = stations.filter(n => n.genre === station)[0]
 
-                if (!station) return // this.stopStation()
+                if (!station) return this.stopStation() // this was commented but song won't stop if it ain't stack on top of radio (needs vuex love)
                 this.startStation(station)
                 this.setLiveIcon()
             },
@@ -58,13 +60,13 @@
                     visualColor: station.color,
                     autoplay: true,
                     barHeight: 30,
-                    fetchCallback: (audioPlayer, callback) => {
-                        return Util.requestJSON(`/radio/${station.genre}`, (err, data) => {
-                            if (err) return callback(err)
-                            audioPlayer.options.startTime = data.time
-                            audioPlayer.setMeta(data.meta)
-                            return callback(null, data.url)
-                        })
+                    fetchCallback: async (audioPlayer, callback) => {
+                        try {
+                            const radioData = await Api.fetchRadio(station.genre)
+                            audioPlayer.options.startTime = radioData.time
+                            audioPlayer.setMeta(radioData.meta)
+                            return callback(null, radioData.url)
+                        } catch (err) { return callback(err) }
                     },
                     createdCallback: (audioPlayer) => {
                         const radio = document.getElementById('radio')
@@ -75,12 +77,12 @@
                         this.stopStation()
                         this.$router.replace({ path: this.$route.path })
                     },
-                    clipEndCallback: (audioPlayer) => {
-                        return Util.requestJSON(`/radio/${station.genre}`, (err, data) => {
-                            if (err) return console.log(err)
-                            audioPlayer.audio.src = data.url
-                            return audioPlayer.setMeta(data.meta)
-                        })
+                    clipEndCallback: async (audioPlayer) => {
+                        try {
+                            const radioData = await Api.fetchRadio(station.genre)
+                            audioPlayer.audio.src = radioData.url
+                            return audioPlayer.setMeta(radioData.meta)
+                        } catch (err) { return console.log(err) }
                     }
                 })
                 this.player.genre = station.genre

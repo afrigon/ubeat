@@ -28,7 +28,7 @@
                 router-link.drawer-action(:to="{ path: '/settings', query: $route.query }")
                     i.material-icons settings
                     li Settings
-                a.drawer-action(href="/logout")
+                router-link.drawer-action(:to="{ path: '/logout' }")
                     i.material-icons exit_to_app
                     li Logout
 </template>
@@ -42,7 +42,7 @@
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
     .drawer {
         background-color: #454545 !important;
     }

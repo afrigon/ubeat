@@ -43,7 +43,7 @@
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
     #options-wrapper {
         border-bottom-left-radius: 15px;
         transition: margin-bottom 300ms ease;

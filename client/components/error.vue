@@ -19,7 +19,7 @@
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
     .error-wrapper {
         background-color: #c64d47;
         border-radius: 0 0 4px 4px;

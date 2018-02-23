@@ -33,7 +33,7 @@
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
     .playlist {
         position: relative;
         $size: 150;

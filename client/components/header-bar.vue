@@ -25,7 +25,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     header nav.underline-animate li::after {
         opacity: 0.75;
     }

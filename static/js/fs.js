@@ -1,3 +1,13 @@
+class HttpError extends Error {
+    constructor(status, url, options, ...params) {
+        super(...params)
+        if (Error.captureStackTrace) Error.captureStackTrace(this, HttpError)
+        this.status = status
+        this.url = url
+        this.options = options
+    }
+}
+
 class Util {
     static extends (object, defaults) {
         if (!Util.isObject(object)) object = {}
@@ -68,45 +78,21 @@ class Util {
         try { return callback(null, JSON.parse(str)) } catch (e) { return callback(e) }
     }
 
-    static request (url, options, callback) {
+    static async requestJSON (url, options) {
         const defaults = {
             method: 'GET',
             headers: {},
             redirect: 'follow'
         }
 
-        if (Util.isObject(options)) {
-            options = Util.extends(options, defaults)
-        } else if (Util.isFunction(options)) {
-            callback = options
-        } else {
-            return console.log('no callback provided in request')
-        }
-        
-        return fetch(url, options)
-          .then(res => callback(null, res))
-          .catch(callback)
-    }
-
-    static requestJSON (url, options, callback) {
-        const defaults = {
-            method: 'GET',
-            headers: {},
-            redirect: 'follow'
-        }
-
-        if (Util.isObject(options)) {
-            options = Util.extends(options, defaults)
-        } else if (Util.isFunction(options)) {
-            callback = options
-        } else {
-            return console.log('no callback provided in request')
-        }
-
-        return fetch(url, options)
-          .then(res => res.json())
-          .then(data => callback(null, data))
-          .catch(callback)
+        if (!options) options = {}
+        options = Util.extends(options, defaults)
+    
+        const res = await fetch(url, options)
+        if (res.status === 204) return
+        if (res.status >= 400) throw new HttpError(res.status, url, options, 'Error while fetching the world wide web')
+        const json = await res.json()
+        return json
     }
 
     static getQueryParam (name) {
@@ -142,7 +128,7 @@ class FS {
     static addComponent (component, selector) {
         const initComponent = () => {
             if (!component || !(component instanceof Component)) {
-                return this.logError(new Error('invalid component passed to FrigStudio.addComponent'))
+                return Util.logError(new Error('invalid component passed to FrigStudio.addComponent'))
             }
 
             this.components.push(component)
@@ -150,7 +136,7 @@ class FS {
             if (!selector) {
                 return component.init()
             } else if (selector.constructor !== String) {
-                return this.logError(new Error('invalid selector passed to FrigStudio.addComponent'))
+                return Util.logError(new Error('invalid selector passed to FrigStudio.addComponent'))
             }
 
             const elements = document.querySelectorAll(selector)
@@ -1043,6 +1029,104 @@ class Toast {
 
         // remove the toast after it faded out
         setTimeout(() => { this.toaster.removeChild(toast) }, animationTime);
+    }
+}
+
+class Particle extends Component {
+    constructor (options) {
+        super()
+        const defaults = {
+            count: 300,
+            radius: 2,
+            speed: 0.05,
+            color: '#FFFFFF',
+            threshold: 60
+        }
+        this.options = Util.extends(options, defaults)
+    }
+
+    init (el) {
+        this.canvas = document.createElement('canvas')
+        this.canvas.width = el.offsetWidth
+        this.canvas.height = el.offsetHeight
+        this.canvas.style.width = '100%'
+        this.canvas.style.height = '100%'
+        el.appendChild(this.canvas)
+
+        this.context = this.canvas.getContext('2d')
+        this.createParticles()
+
+        this.lastUpdate = Date.now()
+        this.loop()
+    }
+
+    createParticles() {
+        this.particles = [];
+        for (let i = 0; i < this.options.count; ++i) {
+            this.particles.push({
+                x: Math.random(),
+                y: Math.random(),
+                radius: this.options.radius + (Math.random() * 2 - 1),
+                speed: this.options.speed * (Math.random() * 2),
+                direction: Math.round(Math.random() * 360)
+            })
+        }
+    }
+    
+    loop () {
+        const now = Date.now()
+        this.update(now - this.lastUpdate)
+        this.lastUpdate = now
+        this.draw()
+        return requestAnimationFrame(this.loop.bind(this))
+    }
+
+    update (deltaTime) {
+        for (let i = 0; i < this.particles.length; i++) {
+            const radians = (Math.PI / 180) * (this.particles[i].direction - 90)
+            this.particles[i].x += deltaTime * Math.cos(radians) * this.particles[i].speed / this.canvas.width
+            this.particles[i].y += deltaTime * Math.sin(radians) * this.particles[i].speed / this.canvas.width
+
+            this.particles[i].x >= 1 && (this.particles[i].x -= 1)
+            this.particles[i].x < 0 && (this.particles[i].x += 1)
+            this.particles[i].y >= 1 && (this.particles[i].y -= 1)
+            this.particles[i].y < 0 && (this.particles[i].y += 1)
+        }
+    }
+
+    draw () {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+        this.context.fillStyle = this.options.color
+        this.context.strokeStyle = this.options.color
+
+        for (let i = 0; i < this.particles.length; ++i) {
+            this.context.beginPath();
+
+            this.context.arc(this.particles[i].x * this.canvas.width, this.particles[i].y * this.canvas.height, this.particles[i].radius, 0, 2 * Math.PI);
+            
+            this.context.closePath()
+            this.context.fill()
+
+            for (let j = i + 1; j < this.particles.length; ++j) {
+                this.link(this.particles[i], this.particles[j])
+            }
+        }
+    }
+
+    link (p1, p2) {
+        const distance = Math.sqrt(Math.pow(p2.x * this.canvas.width - p1.x * this.canvas.width, 2) + Math.pow(p2.y * this.canvas.height - p1.y * this.canvas.height, 2))
+        const thresholdOffset = 20;
+        const farThreshold = this.options.threshold + thresholdOffset
+        if (distance < farThreshold) {
+            this.context.globalAlpha = 1 - (distance / farThreshold)
+            this.context.beginPath()
+            this.context.lineWidth = 1
+            this.context.moveTo(p1.x * this.canvas.width, p1.y * this.canvas.height)
+            this.context.lineTo(p2.x * this.canvas.width, p2.y * this.canvas.height)
+            this.context.stroke()
+            this.context.closePath()
+            this.context.globalAlpha = 1
+        }
     }
 }
 

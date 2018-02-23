@@ -22,7 +22,7 @@
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
     #logo-letter {
         transform: translateY(-300px);
     }

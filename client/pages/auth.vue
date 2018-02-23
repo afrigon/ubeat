@@ -1,6 +1,6 @@
 <template lang="pug">
-    main.primary-dark.no-scroll.flex.flex-center.flex-vertical.auth-main
-        #auth-background
+    main.primary-dark.no-scroll.flex.flex-center.flex-vertical
+        #auth-background.background
         .wrapper
             .section.text-center.text-white.padding-0.margin-down-100
                 .row.margin-0(v-if="signup")
@@ -39,11 +39,12 @@
 
 <script>
     import Logo from '@/components/logo'
-    
+    import Api from '@/script/api'
+
     export default {
         data: () => ({
             signup: null,
-            toast: new Toast(), // eslint-disable-line no-undef
+            toast: new Toast(),
             background: {
                 beta: null,
                 gamma: null,
@@ -129,7 +130,7 @@
             })
         },
         methods: {
-            login (form) {
+            async login (form) {
                 const email = document.getElementById('email').value.toLowerCase()
                 const password = document.getElementById('password').value
                 if (!email || !password) {
@@ -137,29 +138,24 @@
                     return this.toast.show('Error', 'Email and password don\'t match any of our records', { type: 'error' })
                 }
 
-                Util.requestJSON('/api/login', {
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    method: 'POST',
-                    body: new URLSearchParams(new FormData(form))
-                }, (err, data) => {
-                    if (err || !data || !data.token) {
-                        window.scroll({ top: 0, left: 0, behavior: 'smooth' })
-                        return this.toast.show('Error', 'Email and password don\'t match any of our records', { type: 'error' })
+                try {
+                    const data = await Api.login(email, password)
+                    if (data) {
+                        if (data.token) window.localStorage.setItem('access_token', data.token)
+                        if (data.name) window.localStorage.setItem('name', data.name)
                     }
-                    if (data.name) window.localStorage.setItem('name', data.name)
-                    window.localStorage.setItem('access_token', data.token)
                     return this.$router.push(this.$route.query.redirect || '/')
-                })
+                } catch (err) {
+                    window.scroll({ top: 0, left: 0, behavior: 'smooth' })
+                    return this.toast.show('Error', 'Email and password don\'t match any of our records', { type: 'error' })
+                }
             },
-            register () {
-                let params = new URLSearchParams()
+            async register () {
                 let error = false
                 const name = document.getElementById('name').value
                 if (!name) {
                     error = true
                     this.toast.show('Error', 'A valid name must be provided', { type: 'error' })
-                } else {
-                    params.append('name', name)
                 }
 
                 const email = document.getElementById('email').value.toLowerCase()
@@ -167,8 +163,6 @@
                 if (!email || !emailRegex.test(email)) {
                     error = true
                     this.toast.show('Error', 'A valid email adress must be provided', { type: 'error' })
-                } else {
-                    params.append('email', email)
                 }
 
                 const password = document.getElementById('password').value
@@ -181,42 +175,27 @@
                 if (!confirm || password !== confirm) {
                     error = true
                     this.toast.show('Error', 'Password confirmation must be the same as password', { type: 'error' })
-                } else {
-                    params.append('password', password)
                 }
 
                 if (error) return window.scroll({ top: 0, left: 0, behavior: 'smooth' })
-                Util.requestJSON('/api/signup', {
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    method: 'POST',
-                    body: params
-                }, (err, data) => {
-                    if (err) {
-                        window.scroll({ top: 0, left: 0, behavior: 'smooth' })
-                        return this.toast.show('Error', 'Could not create account, try again later', { type: 'error' })
+                try {
+                    const data = await Api.register(email, name, password)
+                    if (data) {
+                        if (data.token) window.localStorage.setItem('access_token', data.token)
+                        if (data.name) window.localStorage.setItem('name', data.name)
                     }
-
-                    Util.requestJSON('/api/login', {
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        method: 'POST',
-                        body: params
-                    }, (err, data) => {
-                        if (err || !data || !data.token) {
-                            window.scroll({ top: 0, left: 0, behavior: 'smooth' })
-                            this.toast.show('Error', 'Could not login after account creation for some obscure reason', { type: 'error' })
-                            return this.$router.push('/login')
-                        }
-                        window.localStorage.setItem('access_token', data.token)
-                        return this.$router.push(this.$route.query.redirect || '/')
-                    })
-                })
+                    return this.$router.push(this.$route.query.redirect || '/')
+                } catch (err) {
+                    window.scroll({ top: 0, left: 0, behavior: 'smooth' })
+                    return this.toast.show('Error', 'Could not create account, try again later', { type: 'error' })
+                }
             }
         }
     }
 </script>
 
-<style lang="scss">
-    .auth-main {
+<style lang="scss" scoped>
+    main {
         position: relative;
         overflow: hidden;
         height: 100vh;
@@ -224,7 +203,7 @@
         box-sizing: border-box;
     }
 
-    #auth-background {
+    .background {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
         background-image: url('/static/img/login.jpg');
@@ -237,7 +216,7 @@
     }
 
     @media only screen and (max-width : 600px) {
-        .auth-main { justify-content: flex-start; overflow-y: scroll; }
+        main { justify-content: flex-start; overflow-y: scroll; }
         .wrapper { margin: 50px auto; }
     }
 

@@ -4,6 +4,7 @@ const webpack = require('webpack')
 
 module.exports = {
     entry: [
+        'babel-polyfill',
         'webpack-hot-middleware/client',
         path.join(__dirname, 'main-dev.js')
     ],

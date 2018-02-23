@@ -30,51 +30,7 @@
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
 
-    function fetchData (to, callback) {
-        let data = {}
-        Util.requestJSON(`/api/artists/${to.params.id}`, {
-            headers: { Authorization: window.localStorage.getItem('access_token') }
-        }, (err, response) => {
-            if (err || !response.results || response.results.length <= 0) return callback(new Error('An error occured while searching for this artist'))
-
-            data.artist = response.results[0]
-            switch (data.artist.primaryGenreName.toLowerCase()) {
-            case 'dance': data.artist.genre = 'dance'; break
-            case 'classical': data.artist.genre = 'classical'; break
-            case 'country': data.artist.genre = 'country'; break
-            case 'metal': data.artist.genre = 'metal'; break
-            case 'rock': data.artist.genre = 'rock'; break
-            case 'songwriter': data.artist.genre = 'songwriter'; break
-            case 'hip-hop/rap': data.artist.genre = 'rap'; break
-            default:
-                data.artist.genre = 'dance'
-                console.log(this.artist.primaryGenreName.toLowerCase())
-                break
-            }
-
-            Util.requestJSON(`/api/artists/${to.params.id}/albums?limit=15`, {
-                headers: { Authorization: window.localStorage.getItem('access_token') }
-            }, (err, response) => {
-                if (err || !response.results || response.results.length <= 0) return callback(new Error('An error occured while searching for this artist'))
-
-                data.albums = response.results
-                for (let i = 0; i < data.albums.length; ++i) {
-                    data.albums[i].artworkUrl400 = data.albums[i].artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2400x400$4')
-                    data.albums[i].artworkUrl200 = data.albums[i].artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2200x200$4')
-                }
-
-                data.albums.sort((a, b) => {
-                    const timeSinceA = Date.now() - new Date(a.releaseDate).getTime()
-                    const timeSinceB = Date.now() - new Date(b.releaseDate).getTime()
-                    if (timeSinceA === timeSinceB) return 0
-                    return timeSinceA > timeSinceB ? 1 : -1
-                })
-
-                data.latestAlbums = data.albums.splice(0, 2)
-                return callback(null, data)
-            })
-        })
-    }
+    import Api from '@/script/api'
 
     export default {
         components: {
@@ -90,26 +46,25 @@
             loading: null
         }),
         beforeRouteEnter (to, from, next) {
-            return fetchData(to, (err, data) => {
-                return next(vm => vm.setData(err, data))
-            })
+            try {
+                return next(async vm => vm.setData(await Api.getFullArtist(to.params.id)))
+            } catch (err) { return next(vm => vm.setData(null)) }
         },
-        beforeRouteUpdate (to, from, next) {
-            return fetchData(to, (err, data) => {
-                this.setData(err, data)
-                return next()
-            })
+        async beforeRouteUpdate (to, from, next) {
+            try {
+                return this.setData(await Api.getFullArtist(to.params.id)) & next()
+            } catch (err) { return this.setData(null) & next() }
         },
         beforeRouteLeave (to, from, next) {
             this.loading = true
             return next()
         },
         methods: {
-            setData (err, data) {
+            setData (data) {
                 this.loading = false
-                if (err) {
+                if (!data) {
                     this.artist = this.albums = this.latestAlbums = null
-                    return (this.error = err.message)
+                    return (this.error = 'An error occured while searching for this artist.')
                 }
 
                 this.error = null
@@ -121,7 +76,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .banner.dance {
         background-image: url('/static/img/genre/dance.jpg');
         background-position: center 70%;
@@ -156,17 +111,6 @@
         }
     }
 
-    .albums {
-        img {
-            width: 75%;
-            height: auto;
-        }
-
-        p {
-            width: 100%;
-        }
-    }
-
     #itunes-button {
         margin: 8.46px 0px;
         display: inline-block;
@@ -175,9 +119,5 @@
         width: 110px;
         height :40px;
         background-size: contain
-    }
-
-    .loading {
-        filter: blur(50%);
     }
 </style>

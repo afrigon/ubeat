@@ -11,9 +11,9 @@
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
     .loading {
-        position: absolute;
+        position: fixed;
         top: 0;
         bottom: 0;
         left: 0;
