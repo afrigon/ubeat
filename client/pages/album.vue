@@ -145,7 +145,6 @@
     #albumArt {
         width: 50%;
         height: auto;
-        border: 1px solid #5b5b5b;
         border-radius: 5px;
     }
 

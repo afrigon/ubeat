@@ -67,6 +67,10 @@ class Util {
         return typeof target === 'function'
     }
 
+    static isString (target) {
+        return target.constructor === String
+    }
+
     static secondsToTime (seconds) {
         const h = '0' + Math.floor(seconds / 3600)
         const m = '0' + Math.floor((seconds - (h * 3600)) / 60)
@@ -106,6 +110,13 @@ class Util {
     static isTouch () {
         return 'ontouchstart' in document.documentElement
     }
+
+    static onReady (callback) {
+        if (!['interactive', 'complete'].includes(document.readyState)) {
+            return Util.addEvent(document, 'DOMContentLoaded', callback)
+        }
+        return callback()
+    }
 }
 
 class Component {
@@ -126,16 +137,14 @@ class Component {
 
 class FS {
     static addComponent (component, selector) {
-        const initComponent = () => {
+        return Util.onReady(() => {
             if (!component || !(component instanceof Component)) {
                 return Util.logError(new Error('invalid component passed to FrigStudio.addComponent'))
             }
 
             this.components.push(component)
-
-            if (!selector) {
-                return component.init()
-            } else if (selector.constructor !== String) {
+            if (!selector) { return component.init() }
+            if (!Util.isString(selector)) {
                 return Util.logError(new Error('invalid selector passed to FrigStudio.addComponent'))
             }
 
@@ -143,14 +152,8 @@ class FS {
             for (let i = 0; i < elements.length; i++) {
                 component.init(elements[i])
             }
-            return undefined
-        }
-
-        if (['interactive', 'complete'].includes(document.readyState)) {
-            initComponent()
-        } else {
-            Util.addEvent(document, 'DOMContentLoaded', initComponent)
-        }
+            return
+        })
     }
 
     static removeComponent (component) {

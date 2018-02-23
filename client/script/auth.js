@@ -11,6 +11,14 @@ class Auth {
         }
         return token
     }
+
+    static async getUserId () {
+        try {
+            const id = (await Api.getTokenInfo()).id
+            return id
+        } catch (err) { return null }
+    }
+
     static async checkAuth () {
         try {
             await Api.getTokenInfo()

@@ -20,6 +20,5 @@
 
 <style lang="scss" scoped>
     img { width: 80%; height: auto; }
-    p { width: 100%; }
 </style>
 

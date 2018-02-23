@@ -38,7 +38,8 @@ export default class Api {
     }
 
     static async getTokenInfo () {
-        await authRequest('/api/tokeninfo')
+        const info = await authRequest('/api/tokeninfo')
+        return info
     }
 
     // unsecure (may remain this way)
@@ -146,11 +147,12 @@ export default class Api {
     }
 
     static async createPlaylist (name) {
-        await authRequest(`/api/playlists`, {
+        const playlist = await authRequest(`/api/playlists`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: name })
         })
+        return playlist
     }
 
     static async updatePlaylist (id, name) {
@@ -172,7 +174,13 @@ export default class Api {
 
     static async getUsersPlaylists (id) {
         const playlists = await Api.getPlaylists()
-        return playlists.filter((n) => { return n.owner.id === id })
+        return playlists.filter(n => n.owner && n.owner.id === id)
+    }
+
+    static async getPersonalPlaylists () {
+        const userId = await Auth.getUserId()
+        const playlists = await Api.getUsersPlaylists(userId)
+        return playlists
     }
 
     static async addTrackToPlaylist (id, trackId) {
