@@ -105,7 +105,7 @@ class Radio {
         })
     }
 
-    parseSong (songData, callback) {
+    parseSong (data, callback) {
         let obj
         try {
             obj = JSON.parse(data)

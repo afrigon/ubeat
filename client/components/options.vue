@@ -1,11 +1,11 @@
 <template lang="pug">
-    #options-wrapper.grey.darken-5.scroll-animate.fadeInLeft.no-select(onclick="event.stopPropagation()")
+    #options-wrapper.grey.darken-5.scroll-animate.fadeInLeft.no-select(:class="{ active: opened }")
         ul#options-list.hide-until-m
-            router-link.no-hover-decoration(onclick="document.getElementById('options-wrapper').classList.remove('active')" :to="{ path: '/playlists', query: $route.query }")
+            router-link.no-hover-decoration(:to="{ path: '/playlists', query: $route.query }")
                 li.text-white.interactive.clickable
                     i.material-icons.s playlist_play
                     span Playlists
-            router-link.no-hover-decoration(onclick="document.getElementById('options-wrapper').classList.remove('active')" :to="{ path: '/settings', query: $route.query }")
+            router-link.no-hover-decoration(:to="{ path: '/settings', query: $route.query }")
                 li.text-white.interactive.clickable
                     i.material-icons.s settings
                     span Settings
@@ -17,7 +17,7 @@
         #avatar.text-right.flex.flex-right.clickable.margin-left-25.margin-right-25
             i#search-action.material-icons.m.text-white.clickable.hide-after-m.margin-right-20 search
             p#username.text-white.inline-block.margin-0.margin-right-20.truncate.hide-until-l {{ name }}
-            .flex.flex-center.clickable(onclick="toggleOptionsMenu();")
+            .flex.flex-center.clickable(@click.stop="this.opened = !this.opened")
                 img.circle.primary-border.hide-until-m(src="/static/img/card.jpg")
                 i#options-button.material-icons.s.text-white.margin-left-5.hide-until-m keyboard_arrow_down
 </template>
@@ -25,7 +25,8 @@
 <script>
     export default {
         data: () => ({
-            name: null
+            name: null,
+            opened: false
         }),
         watch: {
             '$route' () {
@@ -38,6 +39,19 @@
             this.name = window.localStorage.getItem('name') ||
                 window.localStorage.getItem('email') ||
                 ''
+        },
+        mounted () {
+            document.body.addEventListener('click', this.closeOptions)
+            document.body.addEventListener('resize', this.closeOptions)
+        },
+        destroyed () {
+            document.body.removeEventListener('click', this.closeOptions)
+            document.body.removeEventListener('resize', this.closeOptions)
+        },
+        methods: {
+            closeOptions (event) {
+                this.opened = false
+            }
         }
     }
 </script>

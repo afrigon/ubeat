@@ -1,4 +1,4 @@
-import Api from '@/script/api'
+import Api from '@/api'
 
 class Auth {
     static getToken () {

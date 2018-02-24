@@ -25,16 +25,6 @@
             $route () {
                 this.public = this.$route.meta.public
             }
-        },
-        mounted () {
-            Util.addEvent(window, 'resize', () => {
-                const element = document.getElementById('options-wrapper')
-                return element && element.classList.remove('active')
-            })
-            Util.addEvent(document.getElementById('app'), 'click', () => {
-                const element = document.getElementById('options-wrapper')
-                return element && element.classList.remove('active')
-            })
         }
     }
 </script>

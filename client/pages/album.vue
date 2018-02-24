@@ -8,12 +8,12 @@
                 .column.s12(v-if="album")
                     .column.s12.l5.text-center.scroll-animate-router.fadeInRight
                         .column.s12.m6.l12.padding-0.relative
-                            img#albumArt.hoverable-pop.no-select(v-bind:alt="`${album.collectionName} Album Art`" v-bind:src="album.artworkUrl400")
+                            img#albumArt.hoverable-pop.no-select(:alt="`${album.collectionName} Album Art`" :src="album.artworkUrl400")
                             .row(v-if="album.releaseDate")
                                 p#releaseDate.text-grey.text-center.text-size-small-5.margin-0 Released: {{ new Date(album.releaseDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}
                         .column.s12.m6.l12.padding-0.scroll-animate-router.fadeInRight(v-if="album.collectionViewUrl")
                             .row
-                                a.itunes-button(target="_blank" rel="noopener" v-bind:href="album.collectionViewUrl")
+                                a.itunes-button(target="_blank" rel="noopener" :href="album.collectionViewUrl")
                     .column.s12.l7.padding-0
                         .scroll-animate-router.fadeInLeft
                             h2#collectionName.text-light-color.text-size-5.margin-down-0.scroll-animate-router.fadeInLeft(v-if="album.collectionName") {{ album.collectionName }}
@@ -38,11 +38,11 @@
                                             th time
                                             th
                                     tbody#tracks.clickable
-                                        tr(v-for="(track, i) in tracks.list" :key="track.trackId" v-on:click="play(track.trackId, { title: track.trackName, artist: album.artistName, pictureUrl: album.artworkUrl30 }, track.previewUrl)" v-bind:class="playingId === track.trackId ? 'active': ''")
+                                        tr(v-for="(track, i) in tracks.list" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: album.artistName, pictureUrl: album.artworkUrl30 }, track.previewUrl)" :class="playingId === track.trackId ? 'active': ''")
                                             td.text-center {{ i + 1 }}
                                             td {{ track.trackName }}
                                             td {{ track.duration }}
-                                            td(v-bind:class="playingId === track.trackId ? 'playing': ''")
+                                            td(:class="playingId === track.trackId ? 'playing': ''")
                                                 i.material-icons.no-select {{ playingId === track.trackId ? 'pause_circle_outline': 'play_circle_outline' }}
                             .row.margin-0.margin-left-20
                                 p.text-grey.text-size-small-5.margin-0 {{ tracks.length }} songs, {{ tracks.totalDuration }} minutes
@@ -54,7 +54,7 @@
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
 
-    import { AlbumApi } from '@/script/api'
+    import { AlbumApi } from '@/api'
 
     export default {
         components: {

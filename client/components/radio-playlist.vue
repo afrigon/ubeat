@@ -1,5 +1,5 @@
 <template lang="pug">
-    .playlist.clickable(v-bind:id="genre" v-bind:data-color="color")
+    .playlist.clickable(:id="genre" :data-color="color")
         .filter.black
         i.play.material-icons.text-white play_circle_outline
         svg.live(version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve")

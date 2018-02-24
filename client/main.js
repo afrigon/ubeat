@@ -1,12 +1,17 @@
 import 'babel-polyfill'
 import Vue from 'vue'
-import App from './App'
-import router from './script/router'
+import App from '@/App'
+import router from '@/script/router'
 
-/* eslint-disable no-new */
-new Vue({
+import Vuex from 'vuex'
+import store from '@/store'
+Vue.use(Vuex)
+const store = new Vuex.Store(Store)
+
+new Vue({ // eslint-disable-line no-new
     el: '#app',
-    router,
+    components: { App },
     template: '<App/>',
-    components: { App }
+    store,
+    router
 })

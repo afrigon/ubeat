@@ -10,7 +10,7 @@
                 .row.margin-0(v-else)
                     h1.text-size-7.margin-0.text-regular Good music this way!
                     h2.text-size-2.margin-10.text-regular Login and find YOUR beat
-            form#auth-form.box.dark(v-bind:class="signup ? 'signup' : 'login'")
+            form#auth-form.box.dark(:class="signup ? 'signup' : 'login'")
                 logo.logo-login.dark
                 .input-wrapper(v-if="signup")
                     input(type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="name" id="name")
@@ -39,7 +39,7 @@
 
 <script>
     import Logo from '@/components/logo'
-    import Api from '@/script/api'
+    import Api from '@/api'
 
     export default {
         data: () => ({

@@ -1,13 +1,13 @@
 <template lang="pug">
     div
         router-link.no-hover-decoration(:to="{ path: `/playlist/${id}`, query: $route.query }")
-            img.center.hoverable-pop(v-if="!images" v-bind:alt="`${name} Playlist Art`" src="/static/img/empty-playlist.jpg")
-            img.center.hoverable-pop(v-else-if="!tracks.length" v-bind:alt="`${name} Playlist Art`" v-bind:src="images")
+            img.center.hoverable-pop(v-if="!images" :alt="`${name} Playlist Art`" src="/static/img/empty-playlist.jpg")
+            img.center.hoverable-pop(v-else-if="!tracks.length" :alt="`${name} Playlist Art`" :src="images")
             .tiled(v-else)
-                img.center.hoverable-pop(v-bind:alt="`${name} Playlist Art 1`" v-bind:src="images[0]")
-                img.center(v-bind:alt="`${name} Playlist Art 2`" v-bind:src="images[1]")
-                img.center(v-bind:alt="`${name} Playlist Art 3`" v-bind:src="images[2]")
-                img.center(v-bind:alt="`${name} Playlist Art 4`" v-bind:src="images[3]")
+                img.center.hoverable-pop(:alt="`${name} Playlist Art 1`" :src="images[0]")
+                img.center(:alt="`${name} Playlist Art 2`" :src="images[1]")
+                img.center(:alt="`${name} Playlist Art 3`" :src="images[2]")
+                img.center(:alt="`${name} Playlist Art 4`" :src="images[3]")
             h5.text-white.text-thin.text-size-1.truncate.text-center {{ name }}
 </template>
 

@@ -3,7 +3,7 @@
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
 
-        .banner.dance(v-if="artist && artist.genre" v-bind:class="artist.genre")
+        .banner.dance(v-if="artist && artist.genre" :class="artist.genre")
         #banner-text-wrapper.container.scroll-animate-router.fadeIn(v-if="artist && artist.genre")
             .inline-block
                 h2#artistName.margin-0.text-white.text-light.text-size-6.text-shadow-5(v-if="artist.artistName") {{ artist.artistName }}
@@ -13,7 +13,7 @@
             .row(v-if="latestAlbums")
                 .scroll-animate-router.fadeIn.margin-up-40(v-if="artist")
                     h4.text-white.text-size-3.text-light.inline-block Latest Releases
-                    a#itunes-button.right(target="_blank" rel="noopener" v-bind:href="artist.artistLinkUrl")
+                    a#itunes-button.right(target="_blank" rel="noopener" :href="artist.artistLinkUrl")
                     .divider
                 #latestReleases.column.s12.padding-0
                     album(v-for="album in latestAlbums" :id="album.collectionId" :title="album.collectionName" :artist="album.artistName" :pictureUrl="album.artworkUrl400" :key="album.collectionId" highlight)
@@ -30,7 +30,7 @@
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
 
-    import { ArtistApi } from '@/script/api'
+    import { ArtistApi } from '@/api'
 
     export default {
         components: {

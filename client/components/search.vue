@@ -1,10 +1,10 @@
 <template lang="pug">
-    form.form-search.padding-0.flex.flex-center(v-bind:id="mobile ? 'form-search-mobile' : 'form-search'" v-bind:class="{ mobile: mobile, 'hide-after-m': mobile, 'hide-until-l': !mobile }" method="GET" action="/api/search")
+    form.form-search.padding-0.flex.flex-center(:id="mobile ? 'form-search-mobile' : 'form-search'" :class="{ mobile: mobile, active: opened, 'hide-after-m': mobile, 'hide-until-l': !mobile }" method="GET" action="/api/search")
         .input-wrapper.margin-0.margin-up-5.grey.darken-5
             input.search-input(type="search" name="q" autocomplete="off")
             label Search
         div.search-filter-wrapper.grey.darken-5
-            select#search-filter.gone(name="filter" multiple="" v-if="!mobile")
+            select#search-filter.gone(v-model="$store.getters.getFilterFlags" name="filter" multiple v-if="!mobile")
                 option(value="1")
                 option(value="2")
                 option(value="4")
@@ -12,20 +12,27 @@
             .notch-left.absolute
             .notch-right.absolute
             ul.capitalize.clickable.text-white.margin-0.padding-left-15.padding-right-15
-                li.filter-button-1.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="toggleFilter(event, 1)") artist
-                li.filter-button-2.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="toggleFilter(event, 2)") album
-                li.filter-button-4.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="toggleFilter(event, 4)") song                                    
-                li.filter-button-8.inline-block.text-thin.text-size-small-8.padding-left-15.padding-right-15.padding-up-10.padding-down-5.primary-border(onmousedown="toggleFilter(event, 8)") user
+                li.text-size-small-8.primary-border(:class="{ active: (flags & 1) !== 0 }" @click.stop="toggleFilter(1)") artist
+                li.text-size-small-8.primary-border(:class="{ active: (flags & 2) !== 0 }" @click.stop="toggleFilter(2)") album
+                li.text-size-small-8.primary-border(:class="{ active: (flags & 4) !== 0 }" @click.stop="toggleFilter(4)") song                                    
+                li.text-size-small-8.primary-border(:class="{ active: (flags & 8) !== 0 }" @click.stop="toggleFilter(8)") user
 </template>
 
 <script>
+    import { mapState, mapMutations } from 'vuex'
+    import { TOGGLE_FILTER_FLAGS } from '@/store/mutation-types'
+
     export default {
         props: ['mobile'],
+        data: () => ({
+            opened: false
+        }),
+        computed: {
+            ...mapState({
+                flags: state => state.search.filterFlags
+            })
+        },
         mounted () {
-            if (!this.mobile) {
-                setFilter(window.sessionStorage.getItem('search-flags') || 7) // eslint-disable-line no-undef
-            }
-
             const form = document.getElementById(`form-search${this.mobile ? '-mobile' : ''}`)
             if (!form) return console.log('could not find search form')
 
@@ -36,16 +43,13 @@
             if (!filter) return console.log('could not find search filter')
 
             input.addEventListener('focus', () => {
-                filter.style.transform = 'translateY(0)'
-                // show search form on mobile
-                return this.mobile && (form.style.transform = 'translateY(0)')
+                return (this.opened = true)
             })
 
             input.addEventListener('blur', () => {
-                filter.style.transform = 'translateY(-100%)'
                 input.value = ''
-                // hide form on mobile
-                return this.mobile && (form.style.transform = 'translateY(-100%)')
+                console.log('blur')
+                // return (this.opened = false)
             })
 
             if (!this.mobile) return
@@ -56,16 +60,29 @@
 
             button.addEventListener('click', () => {
                 input.focus()
-                return (form.style.transform = 'translateY(0)')
+                return (this.opened = true)
+            })
+        },
+        methods: {
+            ...mapMutations({
+                toggleFilter: TOGGLE_FILTER_FLAGS
             })
         }
     }
 </script>
 
 <style lang="scss" scoped>
+    li {
+        display: inline-block;
+        font-weight: 200;
+        padding: 10px 15px 5px 15px;
+    }
+
     .form-search {
         height: 100%;
         min-width: 330px;
+
+        &.active .search-filter-wrapper { transform: translateY(0); }
 
         .input-wrapper label.active { transform: translateY(-8px) scale(.8); }
         .input-wrapper {
@@ -134,6 +151,8 @@
             will-change: transform;
             transition: transform 300ms ease-out;
             transform: translateY(-100%);
+
+            &.active { transform: translateY(0); }
 
             .input-wrapper {
                 padding: 0 5%;

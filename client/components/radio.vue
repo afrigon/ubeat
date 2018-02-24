@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import { RadioApi } from '@/script/api'
+    import { RadioApi } from '@/api'
 
     export default {
         watch: {

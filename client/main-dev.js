@@ -3,14 +3,19 @@ import Vue from 'vue'
 import App from './App'
 import router from './script/router'
 
+import Vuex from 'vuex'
+import Store from '@/store'
+Vue.use(Vuex)
+const store = new Vuex.Store(Store)
+
 Vue.config.productionTip = false
 
-/* eslint-disable no-new */
-new Vue({
+new Vue({ // eslint-disable-line no-new
     el: '#app',
-    router,
+    components: { App },
     template: '<App/>',
-    components: { App }
+    store,
+    router
 })
 
 require('eventsource-polyfill')

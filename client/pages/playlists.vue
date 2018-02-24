@@ -4,7 +4,7 @@
             .section
                 .row
                     playlist.item.playlist(v-for="playlist in playlists" :id="playlist.id" :key="playlist.id" :name="playlist.name" :tracks="playlist.tracks")
-                    .item.item-add.text-center.clickable(v-on:click="createPlaylist")
+                    .item.item-add.text-center.clickable(@click="createPlaylist")
                         p.text-white.margin-0.text-size-2
                             i.material-icons add
                             span Add
@@ -16,7 +16,7 @@
     import Loading from '@/components/loading'
     import Playlist from '@/components/playlist'
 
-    import { PlaylistApi } from '@/script/api'
+    import { PlaylistApi } from '@/api'
 
     export default {
         components: {
