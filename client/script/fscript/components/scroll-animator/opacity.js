@@ -1,4 +1,5 @@
 import ScrollAnimator from './scroll-animator'
+import Util from '../../tools/util'
 
 export default class OpacityScrollAnimator extends ScrollAnimator {
     init (el) {
@@ -6,15 +7,12 @@ export default class OpacityScrollAnimator extends ScrollAnimator {
         el.style.animation = 'none'
         el.style.opacity = this.options.startValue
         setTimeout(() => {
-            el.style.transition = `${el.style.transition
-                ? ', '
-                : ''}${this.options.animationEaseTime}ms ease opacity`
+            this.addTransition(`${this.options.animationEaseTime}ms ease opacity`)
         }, 100)
     }
 
     animate (percent) {
         this.element.style.visibility = 'visible'
-        const value = (100 - percent) * (this.options.endValue - this.options.startValue) / 100 + this.options.startValue
-        this.element.style.opacity = value
+        this.element.style.opacity = Util.getValuesAt(percent, this.options.startValue, this.options.endValue)
     }
 }

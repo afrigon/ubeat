@@ -83,6 +83,24 @@ export default class AudioPlayer extends Component {
         audio.autoplay = this.options.autoplay
         audio.loop = this.options.loop
 
+        const button = document.createElement('i')
+        player.appendChild(button)
+        button.classList.add('button')
+        button.innerHTML = 'play_arrow'
+        button.classList.add('material-icons')
+        button.style.color = this.options.color
+
+        this.createEvents(audio, button)
+        this.createProgress(player)
+        
+        this.isCreated = true
+        if (this.options.createdCallback && Util.isFunction(this.options.createdCallback)) {
+            this.options.createdCallback(this)
+        }
+        return player
+    }
+
+    createEvents (audio, button) {
         Util.addEvent(audio, 'ended', () => {
             if (Util.safeCallback(this.options.clipEndCallback, this)) return
             if (Util.safeCallback(this.options.stopCallback, this)) return
@@ -98,12 +116,6 @@ export default class AudioPlayer extends Component {
             return (button.innerHTML = 'pause')
         })
 
-        const button = document.createElement('i')
-        player.appendChild(button)
-        button.classList.add('button')
-        button.innerHTML = 'play_arrow'
-        button.classList.add('material-icons')
-        button.style.color = this.options.color
         if (!this.options.disabled) {
             Util.addEvent(button, 'click', () => {
                 if (!this.audio.paused) {
@@ -116,7 +128,9 @@ export default class AudioPlayer extends Component {
         } else {
             button.classList.add('disabled')
         }
+    }
 
+    createProgress (player) {
         const timeline = document.createElement('div')
         player.appendChild(timeline)
         timeline.classList.add('progress-bar')
@@ -145,12 +159,6 @@ export default class AudioPlayer extends Component {
         time.classList.add('time')
         time.style.color = this.options.color
         time.innerHTML = '00:00 / 00:00'
-
-        this.isCreated = true
-        if (this.options.createdCallback && Util.isFunction(this.options.createdCallback)) {
-            this.options.createdCallback(this)
-        }
-        return player
     }
 
     createMeta () {

@@ -88,15 +88,18 @@ export default class Particle extends Component {
     }
 
     link (p1, p2) {
-        const distance = Math.sqrt(Math.pow(p2.x * this.canvas.width - p1.x * this.canvas.width, 2) + Math.pow(p2.y * this.canvas.height - p1.y * this.canvas.height, 2))
+        const distance = Util.distance2D(Util.magnifyTo(this.canvas.width, p1.x),
+            Util.magnifyTo(this.canvas.width, p2.x),
+            Util.magnifyTo(this.canvas.height, p1.y),
+            Util.magnifyTo(this.canvas.height, p2.y))
         const thresholdOffset = 20
         const farThreshold = this.options.threshold + thresholdOffset
         if (distance < farThreshold) {
             this.context.globalAlpha = 1 - (distance / farThreshold)
             this.context.beginPath()
             this.context.lineWidth = 1
-            this.context.moveTo(p1.x * this.canvas.width, p1.y * this.canvas.height)
-            this.context.lineTo(p2.x * this.canvas.width, p2.y * this.canvas.height)
+            this.context.moveTo(Util.magnifyTo(this.canvas.width, p1.x), Util.magnifyTo(this.canvas.height, p1.y))
+            this.context.lineTo(Util.magnifyTo(this.canvas.width, p2.x), Util.magnifyTo(this.canvas.height, p2.y))
             this.context.stroke()
             this.context.closePath()
             this.context.globalAlpha = 1

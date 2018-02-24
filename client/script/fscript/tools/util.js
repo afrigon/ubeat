@@ -41,6 +41,27 @@ export default class Util {
         return Math.min(Math.max(value, min), max)
     }
 
+    static getValueAt (percent, start, end) {
+        return (100 - percent) * (end - start) / 100 + start
+    }
+
+    static pythagore (x, y) {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
+    }
+
+    static slope (x1, y1, x2, y2) {
+        return (y2 - y1) / (x2 - x1)
+    }
+
+    static distance2D (x1, y1, x2, y2) {
+        return Util.pythagore(x2 - x1, y2 - y1)
+    }
+
+    // not sure if magnification is the right name for this operation
+    static magnifyTo (fullSize, value) {
+        return value * fullSize
+    }
+
     static clone (instance) {
         return Object.assign(Object.create(Object.getPrototypeOf(instance)), instance)
     }

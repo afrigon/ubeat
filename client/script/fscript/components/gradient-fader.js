@@ -18,21 +18,13 @@ export default class GradientFader extends Component {
             angle: options.angle || defaultAngle,
             colors: options.colors || ['#FFFFFF'],
             duration: options.duration || options.colors.length * defaultDurationPerColor, // ms
-            position: options.position || 'start' // 'start', 'end', 'middle', 'random'
+            position: options.random || false
         }
     }
 
     init (el) {
         el.style.animation = `GradientFader ${this.options.duration}ms ease-in infinite`
-        switch (this.options.position) {
-        case 'end': el.style.animationDelay = `-${this.options.duration / 1000 / 2}s`
-            break
-        case 'middle': el.style.animationDelay = `-${this.options.duration / 1000 / 4}s`
-            break
-        case 'random': el.style.animationDelay = `-${Math.floor(Math.random() * this.options.duration / 1000) / 2}s`
-            break
-        default: el.style.animationDelay = '0s'
-        }
+        el.style.animationDelay = this.options.random ? `-${Math.floor(Math.random() * this.options.duration / 1000) / 2}s` : '0s'
         el.style.backgroundColor = '#FFFFFF'
         el.style.backgroundImage = `linear-gradient(${this.options.angle}deg, ${this.options.colors.join(',')})`
         el.style.backgroundSize = `${this.options.colors.length}00%`

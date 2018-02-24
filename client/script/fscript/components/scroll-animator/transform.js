@@ -1,4 +1,5 @@
 import ScrollAnimator from './scroll-animator'
+import Util from '../../tools/util'
 
 export default class Transform extends ScrollAnimator {
     constructor (options) {
@@ -23,14 +24,12 @@ export default class Transform extends ScrollAnimator {
     init (el) {
         super.init(el)
         setTimeout(() => {
-            el.style.transition = `${el.style.transition
-                ? ', '
-                : ''}${this.options.animationEaseTime}ms ease transform`
+            this.addTransition(`${this.options.animationEaseTime}ms ease transform`)
         }, 100)
     }
 
     animate (percent) {
-        const value = (100 - percent) * (this.options.endValue - this.options.startValue) / 100 + this.options.startValue
+        const value = Util.getValuesAt(percent, this.options.startValue, this.options.endValue)
         let regex = ''
         let transformValues = ''
 

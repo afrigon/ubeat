@@ -66,6 +66,10 @@ export default class ScrollAnimator extends Component {
         }
     }
 
+    addTransition (transition) {
+        this.element.style.transition = [this.element.style.transition, transition].filter(n => n).join(', ')
+    }
+
     didScroll () {
         ScrollAnimator.hasScroll = true
     }
