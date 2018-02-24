@@ -54,7 +54,7 @@
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
 
-    import Api from '@/script/api'
+    import { AlbumApi } from '@/script/api'
 
     export default {
         components: {
@@ -74,12 +74,12 @@
         beforeDestroy () { this.playingId = null },
         beforeRouteEnter (to, from, next) {
             try {
-                return next(async vm => vm.setData(await Api.getFullAlbum(to.params.id)))
+                return next(async vm => vm.setData(await AlbumApi.getFullAlbum(to.params.id)))
             } catch (err) { return next(vm => vm.setData(null)) }
         },
         async beforeRouteUpdate (to, from, next) {
             try {
-                return this.setData(await Api.getFullAlbum(to.params.id)) & next()
+                return this.setData(await AlbumApi.getFullAlbum(to.params.id)) & next()
             } catch (err) { return this.setData(null) & next() }
         },
         beforeRouteLeave (to, from, next) {

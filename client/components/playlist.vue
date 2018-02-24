@@ -20,7 +20,6 @@
         },
         computed: {
             images () {
-                console.log('test')
                 if (!this.tracks || this.tracks.length <= 0) return null
                 if (this.tracks.length < 4) return this.tracks[0].replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2150x150$4')
                 return [

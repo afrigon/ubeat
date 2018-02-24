@@ -30,7 +30,7 @@
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
 
-    import Api from '@/script/api'
+    import { ArtistApi } from '@/script/api'
 
     export default {
         components: {
@@ -47,12 +47,12 @@
         }),
         beforeRouteEnter (to, from, next) {
             try {
-                return next(async vm => vm.setData(await Api.getFullArtist(to.params.id)))
+                return next(async vm => vm.setData(await ArtistApi.getFullArtist(to.params.id)))
             } catch (err) { return next(vm => vm.setData(null)) }
         },
         async beforeRouteUpdate (to, from, next) {
             try {
-                return this.setData(await Api.getFullArtist(to.params.id)) & next()
+                return this.setData(await ArtistApi.getFullArtist(to.params.id)) & next()
             } catch (err) { return this.setData(null) & next() }
         },
         beforeRouteLeave (to, from, next) {

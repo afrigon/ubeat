@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import Api from '@/script/api'
+    import { RadioApi } from '@/script/api'
 
     export default {
         watch: {
@@ -62,7 +62,7 @@
                     barHeight: 30,
                     fetchCallback: async (audioPlayer, callback) => {
                         try {
-                            const radioData = await Api.fetchRadio(station.genre)
+                            const radioData = await RadioApi.fetchRadio(station.genre)
                             audioPlayer.options.startTime = radioData.time
                             audioPlayer.setMeta(radioData.meta)
                             return callback(null, radioData.url)
@@ -79,7 +79,7 @@
                     },
                     clipEndCallback: async (audioPlayer) => {
                         try {
-                            const radioData = await Api.fetchRadio(station.genre)
+                            const radioData = await RadioApi.fetchRadio(station.genre)
                             audioPlayer.audio.src = radioData.url
                             return audioPlayer.setMeta(radioData.meta)
                         } catch (err) { return console.log(err) }
@@ -175,14 +175,14 @@
         .timeline {
             width: 60%;
         }
-        .meta {
+        .audio-player-meta {
             width: 40%;
         }
     }
 
     @media only screen and (max-width : 800px) {
         #player {
-            .timeline, .meta {
+            .timeline, .audio-player-meta {
                 width: 100%;
             }
             flex-direction: column;

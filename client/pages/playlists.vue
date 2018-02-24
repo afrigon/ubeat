@@ -16,7 +16,7 @@
     import Loading from '@/components/loading'
     import Playlist from '@/components/playlist'
 
-    import Api from '@/script/api'
+    import { PlaylistApi } from '@/script/api'
 
     export default {
         components: {
@@ -31,12 +31,12 @@
         }),
         beforeRouteEnter (to, from, next) {
             try {
-                return next(async vm => vm.setData(await Api.getPersonalPlaylists()))
+                return next(async vm => vm.setData(await PlaylistApi.getPersonalPlaylists()))
             } catch (err) { return next(vm => vm.setData(null)) }
         },
         async beforeRouteUpdate (to, from, next) {
             try {
-                return this.setData(await Api.getPersonalPlaylists()) & next()
+                return this.setData(await PlaylistApi.getPersonalPlaylists()) & next()
             } catch (err) { return this.setData(null) & next() }
         },
         beforeRouteLeave (to, from, next) {
@@ -56,7 +56,7 @@
             },
             async createPlaylist () {
                 try {
-                    const playlist = await Api.createPlaylist('Empty Playlist')
+                    const playlist = await PlaylistApi.createPlaylist('Empty Playlist')
                     return this.playlists.push(playlist)
                 } catch (err) { }// TODO: show user their shit failed }
             }

@@ -106,9 +106,7 @@ class Radio {
 
             if (!obj.results || !obj.results.length > 0) return callback(new Error('Invalid song data'))
             const songData = obj.results[0]
-
-            if (songData.kind !== 'song') return callback(new Error('Song is not a song, wat'))
-            if (!songData.previewUrl) return callback(new Error(`Song ${songData.trackId} does not have a preview, might not be released`))
+            if (songData.kind !== 'song' || !songData.previewUrl) return callback(new Error('Song is not a song or haz no preview, wat'))
 
             const song = {
                 id: songData.trackId,

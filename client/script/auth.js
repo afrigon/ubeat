@@ -25,6 +25,16 @@ class Auth {
             return true
         } catch (err) { return false }
     }
+
+    static async authRequest (url, options) {
+        const token = Auth.getToken()
+        if (!token) throw new HttpError(401, url, options, 'Token was invalid before request so simulating a 401')
+        if (!options) options = {}
+        if (!options.headers) options.headers = {}
+        options.headers['Authorization'] = token
+        const data = await Util.requestJSON(url, options)
+        return data
+    }
 }
 
 export default Auth

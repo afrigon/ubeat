@@ -67,6 +67,14 @@ class Util {
         return typeof target === 'function'
     }
 
+    static safeCallback (callback, ...params) {
+        if (callback && Util.isFunction(callback)) {
+            callback(...params)
+            return true
+        }
+        return false
+    }
+
     static isString (target) {
         return target.constructor === String
     }
@@ -717,7 +725,8 @@ class AudioPlayer extends Component {
     createPlayer () {
         const player = document.createElement('div')
         this.player = player
-        player.classList.add('timeline') & player.classList.add('audio-player')
+        player.classList.add('timeline')
+        player.classList.add('audio-player')
         player.style.paddingTop = `${this.options.barHeight - 12}px` // 12 == half the timeline's height
 
         const audio = document.createElement('audio')
@@ -729,14 +738,8 @@ class AudioPlayer extends Component {
         audio.loop = this.options.loop
 
         Util.addEvent(audio, 'ended', () => {
-            if (this.options.clipEndCallback && Util.isFunction(this.options.clipEndCallback)) {
-                return this.options.clipEndCallback(this)
-            }
-
-            if (this.options.stopCallback && Util.isFunction(this.options.stopCallback)) {
-                return this.options.stopCallback(this)
-            }
-
+            if (Util.safeCallback(this.options.clipEndCallback, this)) return
+            if (Util.safeCallback(this.options.stopCallback, this)) return
             return audio.pause()
         })
         Util.addEvent(audio, 'pause', () => (button.innerHTML = 'play_arrow'))
@@ -749,15 +752,14 @@ class AudioPlayer extends Component {
 
         const button = document.createElement('i')
         player.appendChild(button)
+        button.classList.add('button')
         button.innerHTML = 'play_arrow'
+        button.classList.add('material-icons')
         button.style.color = this.options.color
         if (!this.options.disabled) {
             Util.addEvent(button, 'click', () => {
                 if (!this.audio.paused) {
-                    if (this.options.stopCallback && Util.isFunction(this.options.stopCallback)) {
-                        return this.options.stopCallback(this)
-                    }
-                    
+                    if (Util.safeCallback(this.options.stopCallback, this)) return                     
                     return this.audio.pause()
                 }
                 
@@ -768,7 +770,8 @@ class AudioPlayer extends Component {
         }
 
         const timeline = document.createElement('div')
-        player.appendChild(timeline) & timeline.classList.add('progress-bar')
+        player.appendChild(timeline)
+        timeline.classList.add('progress-bar')
         timeline.style.backgroundColor = this.options.color
 
         const progress = document.createElement('div')
@@ -777,7 +780,8 @@ class AudioPlayer extends Component {
 
         if (this.options.visual) {
             const canvas = document.createElement('canvas')
-            timeline.appendChild(canvas) & (this.canvas = canvas)
+            timeline.appendChild(canvas)
+            this.canvas = canvas
             canvas.style.height = `${this.options.barHeight}px`
             canvas.width = this.el.clientWidth - 120 // terrible hack -> 120 == full width - controls
             canvas.height = this.options.barHeight
@@ -786,7 +790,9 @@ class AudioPlayer extends Component {
         this.initVisual()
 
         const time = document.createElement('div')
-        timeline.appendChild(time) & (this.time = time) & time.classList.add('time')
+        timeline.appendChild(time)
+        this.time = time
+        time.classList.add('time')
         time.style.color = this.options.color
         time.innerHTML = '00:00 / 00:00'
 
@@ -799,21 +805,26 @@ class AudioPlayer extends Component {
 
     createMeta () {
         const meta = document.createElement('div')
-        this.el.appendChild(meta) & (this.meta = meta)
-        meta.classList.add('meta')
+        this.el.appendChild(meta)
+        this.meta = meta
+        meta.classList.add('audio-player-meta')
         
         const art = document.createElement('img')
-        meta.appendChild(art) & (this.metaArt = art)
+        meta.appendChild(art)
+        this.metaArt = art
 
         const text = document.createElement('div')
-        meta.appendChild(text) & meta.classList.add('text')
+        meta.appendChild(text)
+        text.classList.add('text')
         text.style.color = this.options.color
 
         const title = document.createElement('p')
-        text.appendChild(title) & (this.metaTitle = title)
+        text.appendChild(title)
+        this.metaTitle = title
 
         const artist = document.createElement('p')
-        text.appendChild(artist) & (this.metaArtist = artist)
+        text.appendChild(artist)
+        this.metaArtist = artist
         artist.style.color = this.options.visualColor
 
         return this.setMeta()
