@@ -117,6 +117,14 @@ class Util {
         }
         return callback()
     }
+
+    static getRGBFromHex (hex) {
+        return {
+            red: (hex & 0xFF0000) >> 16,
+            green: (hex & 0x00FF00) >> 8,
+            blue: hex & 0x0000FF
+        }
+    }
 }
 
 class Component {
@@ -401,28 +409,23 @@ class AutoScrollAnimator extends Component {
         this.hasScroll = true
     }
 
+    removeEvents () {
+        Util.removeEvent(this.options.scrollContainer, 'scroll', this.didScroll)
+        Util.removeEvent(this.options.scrollContainer, 'resize', this.didScroll)
+        if (this.timer) clearInterval(this.timer)
+    }
+
     scrollCallback () {
-        if (this.hasScroll) {
-            this.hasScroll = false
-            if (!this.elements.length) {
-                Util.removeEvent(this.options.scrollContainer, 'scroll', this.didScroll)
-                Util.removeEvent(this.options.scrollContainer, 'resize', this.didScroll)
-                if (this.timer) {
-                    clearInterval(this.timer)
-                }
-                return
-            }
+        if (!this.hasScroll) return
+        this.hasScroll = false
+        if (!this.elements.length) return this.removeEvents()
 
-            this.elements = Array.from(this.elements).filter((element) => {
-                if (this.isElementOnScreen(element)) {
-                    this.setVisibility(element, true)
-                    element.className += ` ${this.options.trigger}`
-                    return false
-                }
-
-                return true
-            })
-        }
+        this.elements = Array.from(this.elements).filter((element) => {
+            if (!this.isElementOnScreen(element)) return true
+            this.setVisibility(element, true)
+            element.className += ` ${this.options.trigger}`
+            return false
+        })
     }
 }
 
@@ -591,17 +594,8 @@ class ColorScrollAnimator extends ScrollAnimator {
             this.options.type = options.type
         }
 
-        this.startColor = {
-            'red': (this.options.startValue & 0xFF0000) >> 16,
-            'green': (this.options.startValue & 0x00FF00) >> 8,
-            'blue': this.options.startValue & 0x0000FF
-        }
-
-        this.endColor = {
-            'red': (this.options.endValue & 0xFF0000) >> 16,
-            'green': (this.options.endValue & 0x00FF00) >> 8,
-            'blue': this.options.endValue & 0x0000FF
-        }
+        this.startColor = Util.getRGBFromHex(this.options.startValue)
+        this.endColor = Util.getRGBFromHex(this.options.endValue)
     }
 
     init (el) {
@@ -613,10 +607,14 @@ class ColorScrollAnimator extends ScrollAnimator {
         }, 100)
     }
 
+    getPercentValue (component, percent) {
+        return Math.round((100 - percent) * (this.endColor[component] - this.startColor[component]) / 100 + this.startColor[component])
+    }
+
     animate (percent) {
-        const redValue = Math.round((100 - percent) * (this.endColor.red - this.startColor.red) / 100 + this.startColor.red)
-        const greenValue = Math.round((100 - percent) * (this.endColor.green - this.startColor.green) / 100 + this.startColor.green)
-        const blueValue = Math.round((100 - percent) * (this.endColor.blue - this.startColor.blue) / 100 + this.startColor.blue)
+        const redValue = this.getPercentValue('red', percent)
+        const greenValue = this.getPercentValue('green', percent)
+        const blueValue = this.getPercentValue('blue', percent)
 
         switch (this.options.type) {
         case 'background':
@@ -651,15 +649,8 @@ class OpacityScrollAnimator extends ScrollAnimator {
 
 // eslint-disable-next-line no-unused-vars
 class AudioPlayer extends Component {
-    constructor (source, options) {
-        super()
-        if (Util.isObject(source)) {
-            options = source
-        } else {
-            this.source = source
-        }
-
-        this.options = Util.extends(options, {
+    get defaults() {
+        return {
             visual: false,
             visualColor: '#2196f3',
             color: '#FFFFFF',
@@ -680,7 +671,18 @@ class AudioPlayer extends Component {
             createdCallback: null,
             stopCallback: null,
             clipEndCallback: null
-        })
+        }
+    }
+
+    constructor (source, options) {
+        super()
+        if (Util.isObject(source)) {
+            options = source
+        } else {
+            this.source = source
+        }
+
+        this.options = Util.extends(options, this.defaults)
         this.resize = this.resize.bind(this)
     }
 
@@ -715,18 +717,13 @@ class AudioPlayer extends Component {
     createPlayer () {
         const player = document.createElement('div')
         this.player = player
-        player.classList.add('timeline')
-        player.style.display = 'flex'
-        player.style.justifyContent = 'center'
-        player.style.alignItems = 'center'
+        player.classList.add('timeline') & player.classList.add('audio-player')
         player.style.paddingTop = `${this.options.barHeight - 12}px` // 12 == half the timeline's height
-        player.classList.add('no-select')
 
         const audio = document.createElement('audio')
         this.audio = audio
         player.appendChild(audio)
         audio.crossOrigin = 'anonymous'
-        audio.style.display = 'none'
         audio.src = this.source
         audio.autoplay = this.options.autoplay
         audio.loop = this.options.loop
@@ -742,69 +739,46 @@ class AudioPlayer extends Component {
 
             return audio.pause()
         })
-        Util.addEvent(audio, 'pause', () => {
-            return (button.innerHTML = 'play_arrow')
-        })
+        Util.addEvent(audio, 'pause', () => (button.innerHTML = 'play_arrow'))
         Util.addEvent(audio, 'play', () => {
             // stupid hack for safari
-            audio.currentTime = this.options.startTime
-            this.options.startTime = 0
-
-            if (this.options.stopCallback) {
-                return (button.innerHTML = 'stop')
-            }
-
+            (audio.currentTime = this.options.startTime) & (this.options.startTime = 0)
+            if (this.options.stopCallback) { return (button.innerHTML = 'stop') }
             return (button.innerHTML = 'pause')
         })
 
         const button = document.createElement('i')
-        button.classList.add('material-icons')
+        player.appendChild(button)
         button.innerHTML = 'play_arrow'
         button.style.color = this.options.color
-        button.style.lineHeight = '24px'
         if (!this.options.disabled) {
-            button.style.cursor = 'pointer'
             Util.addEvent(button, 'click', () => {
                 if (!this.audio.paused) {
                     if (this.options.stopCallback && Util.isFunction(this.options.stopCallback)) {
                         return this.options.stopCallback(this)
                     }
-
+                    
                     return this.audio.pause()
                 }
-
+                
                 return this.audio.play()
             })
         } else {
-            button.style.cursor = 'not-allowed'
-            button.style.opacity = '.4'
+            button.classList.add('disabled')
         }
-        player.appendChild(button)
 
         const timeline = document.createElement('div')
-        timeline.style.margin = '0 10px'
-        timeline.style.width = '100%'
-        timeline.style.height = '4px'
-        timeline.style.position = 'relative'
+        player.appendChild(timeline) & timeline.classList.add('progress-bar')
         timeline.style.backgroundColor = this.options.color
-        player.appendChild(timeline)
 
         const progress = document.createElement('div')
-        this.progress = progress
-        progress.style.width = '0%'
-        progress.style.height = '100%'
+        timeline.appendChild(progress) & (this.progress = progress) & progress.classList.add('progress-indicator')
         progress.style.backgroundColor = this.options.visualColor
-        timeline.appendChild(progress)
 
         if (this.options.visual) {
             const canvas = document.createElement('canvas')
-            this.canvas = canvas
-            canvas.style.width = '100%'
+            timeline.appendChild(canvas) & (this.canvas = canvas)
             canvas.style.height = `${this.options.barHeight}px`
-            canvas.style.bottom = '4px'
-            canvas.style.position = 'absolute'
-            this.canvas = canvas
-            timeline.appendChild(canvas)
             canvas.width = this.el.clientWidth - 120 // terrible hack -> 120 == full width - controls
             canvas.height = this.options.barHeight
             Util.addEvent(window, 'resize', this.resize)
@@ -812,14 +786,9 @@ class AudioPlayer extends Component {
         this.initVisual()
 
         const time = document.createElement('div')
-        this.time = time
+        timeline.appendChild(time) & (this.time = time) & time.classList.add('time')
         time.style.color = this.options.color
-        time.style.fontSize = '9px'
-        time.style.whiteSpace = 'nowrap'
-        time.style.width = '76px'
         time.innerHTML = '00:00 / 00:00'
-        time.style.margin = '3px 0 0 5px'
-        timeline.appendChild(time)
 
         this.isCreated = true
         if (this.options.createdCallback && Util.isFunction(this.options.createdCallback)) {
@@ -830,44 +799,22 @@ class AudioPlayer extends Component {
 
     createMeta () {
         const meta = document.createElement('div')
-        this.el.appendChild(meta)
-        this.meta = meta
+        this.el.appendChild(meta) & (this.meta = meta)
         meta.classList.add('meta')
-        meta.style.margin = '13px 0 0 20px'
-        meta.style.height = '30px'
-
+        
         const art = document.createElement('img')
-        this.metaArt = art
-        art.style.width = '30px'
-        art.style.height = '30px'
-        meta.appendChild(art)
+        meta.appendChild(art) & (this.metaArt = art)
 
         const text = document.createElement('div')
-        text.style.display = 'inline-block'
+        meta.appendChild(text) & meta.classList.add('text')
         text.style.color = this.options.color
-        text.style.margin = '0 10px'
-        text.style.lineHeight = '15px'
-        text.style.fontSize = '10px'
-        text.style.verticalAlign = 'top'
-        text.style.width = 'calc(100% - 94px)'
-        meta.appendChild(text)
 
         const title = document.createElement('p')
-        this.metaTitle = title
-        title.style.margin = 0
-        title.style.textOverflow = 'ellipsis'
-        title.style.whiteSpace = 'nowrap'
-        title.style.overflow = 'hidden'
-        text.appendChild(title)
+        text.appendChild(title) & (this.metaTitle = title)
 
         const artist = document.createElement('p')
-        this.metaArtist = artist
+        text.appendChild(artist) & (this.metaArtist = artist)
         artist.style.color = this.options.visualColor
-        artist.style.margin = 0
-        artist.style.textOverflow = 'ellipsis'
-        artist.style.whiteSpace = 'nowrap'
-        artist.style.overflow = 'hidden'
-        text.appendChild(artist)
 
         return this.setMeta()
     }
@@ -907,40 +854,40 @@ class AudioPlayer extends Component {
     }
 
     loopVisual () {
-        if (this.options.visual) {
-            let data = new Uint8Array(this.analyser.frequencyBinCount)
-            this.analyser.getByteFrequencyData(data)
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-            this.context.fillStyle = this.options.visualColor
-
-            const margin = 2
-            const minBarWidth = 0.75
-            let barCount = this.options.barCount
-            const totalMargin = margin * barCount
-            let barWidth = (this.canvas.width - totalMargin) / barCount
-
-            // if the requested barCount doesn't fit player width
-            if (barWidth < minBarWidth) {
-                // number of bars with minWidth that will fit screen
-                barCount = Math.floor((this.canvas.width) / (minBarWidth + margin))
-
-                // extra bar is the remaining modulo after bars have been removed
-                const extraBar = (this.canvas.width) % (minBarWidth + margin)
-
-                // new width is the minimum barWidth + the extra bar size distributed to each bar
-                barWidth = minBarWidth + extraBar * (minBarWidth + margin) / barCount
-            }
-
-            for (let i = 0; i < this.options.barCount; ++i) {
-                const percent = data[Math.floor(data.length / this.options.barCount * i)] / 255
-                this.context.globalAlpha = Math.min(percent + 0.2, 1) // 0.2 is the initial value in f(x) = ax + b
-                this.context.fillRect(i * barWidth + i * margin, this.canvas.height, barWidth, -(percent * (this.canvas.height - margin)))
-            }
-        }
-
         if (this.isCreated) {
             this.progress.style.width = `${this.audio.currentTime / this.audio.duration * 100}%`
             this.time.innerHTML = `${Util.secondsToTime(this.audio.currentTime || 0)} / ${Util.secondsToTime(this.audio.duration || 0)}`
+        }
+
+        if (!this.options.visual) return window.requestAnimationFrame(this.loopVisual.bind(this))
+
+        let data = new Uint8Array(this.analyser.frequencyBinCount)
+        this.analyser.getByteFrequencyData(data)
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+        this.context.fillStyle = this.options.visualColor
+
+        const margin = 2
+        const minBarWidth = 0.75
+        let barCount = this.options.barCount
+        const totalMargin = margin * barCount
+        let barWidth = (this.canvas.width - totalMargin) / barCount
+
+        // if the requested barCount doesn't fit player width
+        if (barWidth < minBarWidth) {
+            // number of bars with minWidth that will fit screen
+            barCount = Math.floor((this.canvas.width) / (minBarWidth + margin))
+
+            // extra bar is the remaining modulo after bars have been removed
+            const extraBar = (this.canvas.width) % (minBarWidth + margin)
+
+            // new width is the minimum barWidth + the extra bar size distributed to each bar
+            barWidth = minBarWidth + extraBar * (minBarWidth + margin) / barCount
+        }
+
+        for (let i = 0; i < this.options.barCount; ++i) {
+            const percent = data[Math.floor(data.length / this.options.barCount * i)] / 255
+            this.context.globalAlpha = Math.min(percent + 0.2, 1) // 0.2 is the initial value in f(x) = ax + b aka minimal alpha
+            this.context.fillRect(i * barWidth + i * margin, this.canvas.height, barWidth, -(percent * (this.canvas.height - margin)))
         }
 
         return window.requestAnimationFrame(this.loopVisual.bind(this))
@@ -1087,8 +1034,9 @@ class Particle extends Component {
     update (deltaTime) {
         for (let i = 0; i < this.particles.length; i++) {
             const radians = (Math.PI / 180) * (this.particles[i].direction - 90)
-            this.particles[i].x += deltaTime * Math.cos(radians) * this.particles[i].speed / this.canvas.width
-            this.particles[i].y += deltaTime * Math.sin(radians) * this.particles[i].speed / this.canvas.width
+            const delta = this.particles[i].speed * deltaTime
+            this.particles[i].x += Math.cos(radians) * delta / this.canvas.width
+            this.particles[i].y += Math.sin(radians) * delta / this.canvas.height
 
             this.particles[i].x >= 1 && (this.particles[i].x -= 1)
             this.particles[i].x < 0 && (this.particles[i].x += 1)

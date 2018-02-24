@@ -16,7 +16,6 @@ module.exports = {
         MaterialInput: true,
         Drawer: true,
         Toast: true,
-        Particle: true,
         HttpError: true
     }
 }
