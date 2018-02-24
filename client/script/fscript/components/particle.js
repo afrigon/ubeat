@@ -98,11 +98,20 @@ export default class Particle extends Component {
             this.context.globalAlpha = 1 - (distance / farThreshold)
             this.context.beginPath()
             this.context.lineWidth = 1
-            this.context.moveTo(Util.magnifyTo(this.canvas.width, p1.x), Util.magnifyTo(this.canvas.height, p1.y))
-            this.context.lineTo(Util.magnifyTo(this.canvas.width, p2.x), Util.magnifyTo(this.canvas.height, p2.y))
+            const mp1 = this.magnifyCoords(p1)
+            const mp2 = this.magnifyCoords(p2)
+            this.context.moveTo(mp1.x, mp1.y)
+            this.context.lineTo(mp2.x, mp2.y)
             this.context.stroke()
             this.context.closePath()
             this.context.globalAlpha = 1
+        }
+    }
+
+    magnifyCoords (p) {
+        return {
+            x: Util.magnifyTo(this.canvas.width, p.x),
+            y: Util.magnifyTo(this.canvas.height, p.y)
         }
     }
 }
