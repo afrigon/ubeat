@@ -97,30 +97,36 @@ class Radio {
                 return this.fetchSong(id, callback)
             })
             
-            let obj
-            try {
-                obj = JSON.parse(data)
-            } catch (e) {
-                return callback(new Error('Failed to parse song data'))
-            }
+            return this.parseSong(data, (err, song) => {
+                if (err) return callback(err)
+                this.cache.push(song)
+                return callback(null, song)
+            })
+        })
+    }
 
-            if (!obj.results || !obj.results.length > 0) return callback(new Error('Invalid song data'))
-            const songData = obj.results[0]
-            if (songData.kind !== 'song' || !songData.previewUrl) return callback(new Error('Song is not a song or haz no preview, wat'))
+    parseSong (songData, callback) {
+        let obj
+        try {
+            obj = JSON.parse(data)
+        } catch (e) {
+            return callback(new Error('Failed to parse song data'))
+        }
 
-            const song = {
-                id: songData.trackId,
-                meta: {
-                    title: songData.trackName || '',
-                    artist: songData.artistName || '',
-                    album: songData.collectionName || '',
-                    pictureUrl: songData.artworkUrl30.replace(/http:\/\/(is\d+)/, "https://$1-ssl") || ''
-                },
-                duration: songData.trackTimeMillis || this.timeout,
-                url: songData.previewUrl || ''
-            }
-            this.cache.push(song)
-            return callback(null, song)
+        if (!obj.results || !obj.results.length > 0) return callback(new Error('Invalid song data'))
+        const songData = obj.results[0]
+        if (songData.kind !== 'song' || !songData.previewUrl) return callback(new Error('Song is not a song or haz no preview, wat'))
+
+        return callback(null, {
+            id: songData.trackId,
+            meta: {
+                title: songData.trackName || '',
+                artist: songData.artistName || '',
+                album: songData.collectionName || '',
+                pictureUrl: songData.artworkUrl30.replace(/http:\/\/(is\d+)/, "https://$1-ssl") || ''
+            },
+            duration: songData.trackTimeMillis || this.timeout,
+            url: songData.previewUrl || ''
         })
     }
 }
