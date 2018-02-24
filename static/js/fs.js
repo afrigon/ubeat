@@ -1,5 +1,5 @@
 class HttpError extends Error {
-    constructor(status, url, options, ...params) {
+    constructor (status, url, options, ...params) {
         super(...params)
         if (Error.captureStackTrace) Error.captureStackTrace(this, HttpError)
         this.status = status
@@ -47,7 +47,7 @@ class Util {
         return array
     }
 
-    static clamp(value, min, max) {
+    static clamp (value, min, max) {
         return Math.min(Math.max(value, min), max)
     }
 
@@ -69,7 +69,7 @@ class Util {
 
     static safeCallback (callback, ...params) {
         if (callback && Util.isFunction(callback)) {
-            callback(...params)
+            callback(...params) // eslint-disable-line standard/no-callback-literal
             return true
         }
         return false
@@ -99,7 +99,7 @@ class Util {
 
         if (!options) options = {}
         options = Util.extends(options, defaults)
-    
+
         const res = await fetch(url, options)
         if (res.status === 204) return
         if (res.status >= 400) throw new HttpError(res.status, url, options, 'Error while fetching the world wide web')
@@ -168,7 +168,7 @@ class FS {
             for (let i = 0; i < elements.length; i++) {
                 component.init(elements[i])
             }
-            return
+            return null
         })
     }
 
@@ -198,6 +198,7 @@ class FS {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 class MaterialInput extends Component {
     init () {
         const selector = 'input[type=text], input[type=password], input[type=email], input[type=url], input[type=tel], input[type=number], input[type=search], textarea'
@@ -219,6 +220,7 @@ class MaterialInput extends Component {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 class Drawer extends Component {
     init () {
         this.initDrawers()
@@ -657,7 +659,7 @@ class OpacityScrollAnimator extends ScrollAnimator {
 
 // eslint-disable-next-line no-unused-vars
 class AudioPlayer extends Component {
-    get defaults() {
+    get defaults () {
         return {
             visual: false,
             visualColor: '#2196f3',
@@ -745,7 +747,9 @@ class AudioPlayer extends Component {
         Util.addEvent(audio, 'pause', () => (button.innerHTML = 'play_arrow'))
         Util.addEvent(audio, 'play', () => {
             // stupid hack for safari
-            (audio.currentTime = this.options.startTime) & (this.options.startTime = 0)
+            audio.currentTime = this.options.startTime
+            this.options.startTime = 0
+
             if (this.options.stopCallback) { return (button.innerHTML = 'stop') }
             return (button.innerHTML = 'pause')
         })
@@ -759,10 +763,10 @@ class AudioPlayer extends Component {
         if (!this.options.disabled) {
             Util.addEvent(button, 'click', () => {
                 if (!this.audio.paused) {
-                    if (Util.safeCallback(this.options.stopCallback, this)) return                     
+                    if (Util.safeCallback(this.options.stopCallback, this)) return null
                     return this.audio.pause()
                 }
-                
+
                 return this.audio.play()
             })
         } else {
@@ -775,7 +779,9 @@ class AudioPlayer extends Component {
         timeline.style.backgroundColor = this.options.color
 
         const progress = document.createElement('div')
-        timeline.appendChild(progress) & (this.progress = progress) & progress.classList.add('progress-indicator')
+        timeline.appendChild(progress)
+        this.progress = progress
+        progress.classList.add('progress-indicator')
         progress.style.backgroundColor = this.options.visualColor
 
         if (this.options.visual) {
@@ -808,7 +814,7 @@ class AudioPlayer extends Component {
         this.el.appendChild(meta)
         this.meta = meta
         meta.classList.add('audio-player-meta')
-        
+
         const art = document.createElement('img')
         meta.appendChild(art)
         this.metaArt = art
@@ -905,6 +911,7 @@ class AudioPlayer extends Component {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 class Toast {
     constructor (options) {
         this.options = {
@@ -955,7 +962,7 @@ class Toast {
 
         this.clearToasterPosition()
         this.toaster.classList.add(options.position)
-        
+
         const toast = this.createToast(title, message)
         toast.classList.add(`toast-${options.type}`)
         toast.style.transitionDuration = `${options.animationTime}ms`
@@ -980,19 +987,19 @@ class Toast {
             // wait until duration has passed + fade in animation time
             setTimeout(() => {
                 this.popToast(toast, options.animationTime)
-            }, options.duration + options.animationTime);
-
-        }, options.delay);
+            }, options.duration + options.animationTime)
+        }, options.delay)
     }
 
     popToast (toast, animationTime) {
         toast.style.opacity = 0
 
         // remove the toast after it faded out
-        setTimeout(() => { this.toaster.removeChild(toast) }, animationTime);
+        setTimeout(() => { this.toaster.removeChild(toast) }, animationTime)
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 class Particle extends Component {
     constructor (options) {
         super()
@@ -1021,8 +1028,8 @@ class Particle extends Component {
         this.loop()
     }
 
-    createParticles() {
-        this.particles = [];
+    createParticles () {
+        this.particles = []
         for (let i = 0; i < this.options.count; ++i) {
             this.particles.push({
                 x: Math.random(),
@@ -1033,7 +1040,7 @@ class Particle extends Component {
             })
         }
     }
-    
+
     loop () {
         const now = Date.now()
         this.update(now - this.lastUpdate)
@@ -1062,10 +1069,14 @@ class Particle extends Component {
         this.context.strokeStyle = this.options.color
 
         for (let i = 0; i < this.particles.length; ++i) {
-            this.context.beginPath();
+            this.context.beginPath()
 
-            this.context.arc(this.particles[i].x * this.canvas.width, this.particles[i].y * this.canvas.height, this.particles[i].radius, 0, 2 * Math.PI);
-            
+            this.context.arc(this.particles[i].x * this.canvas.width,
+                this.particles[i].y * this.canvas.height,
+                this.particles[i].radius,
+                0,
+                2 * Math.PI)
+
             this.context.closePath()
             this.context.fill()
 
@@ -1077,7 +1088,7 @@ class Particle extends Component {
 
     link (p1, p2) {
         const distance = Math.sqrt(Math.pow(p2.x * this.canvas.width - p1.x * this.canvas.width, 2) + Math.pow(p2.y * this.canvas.height - p1.y * this.canvas.height, 2))
-        const thresholdOffset = 20;
+        const thresholdOffset = 20
         const farThreshold = this.options.threshold + thresholdOffset
         if (distance < farThreshold) {
             this.context.globalAlpha = 1 - (distance / farThreshold)

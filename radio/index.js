@@ -92,11 +92,13 @@ class Radio {
                 return callback(new Error('Failed to download song data'))
             }
 
-            if (response && response.statusCode === 403) return this.login((err) => {
-                if (err) return callback(err)
-                return this.fetchSong(id, callback)
-            })
-            
+            if (response && response.statusCode === 403) {
+                return this.login((err) => {
+                    if (err) return callback(err)
+                    return this.fetchSong(id, callback)
+                })
+            }
+
             return this.parseSong(data, (err, song) => {
                 if (err) return callback(err)
                 this.cache.push(song)
@@ -123,7 +125,7 @@ class Radio {
                 title: songData.trackName || '',
                 artist: songData.artistName || '',
                 album: songData.collectionName || '',
-                pictureUrl: songData.artworkUrl30.replace(/http:\/\/(is\d+)/, "https://$1-ssl") || ''
+                pictureUrl: songData.artworkUrl30.replace(/http:\/\/(is\d+)/, 'https://$1-ssl') || ''
             },
             duration: songData.trackTimeMillis || this.timeout,
             url: songData.previewUrl || ''

@@ -4,7 +4,7 @@ import App from '@/App'
 import router from '@/script/router'
 
 import Vuex from 'vuex'
-import store from '@/store'
+import Store from '@/store'
 Vue.use(Vuex)
 const store = new Vuex.Store(Store)
 
