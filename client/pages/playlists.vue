@@ -8,7 +8,6 @@
                         p.text-white.margin-0.text-size-2
                             i.material-icons add
                             span Add
-
 </template>
 
 <script>
@@ -17,6 +16,7 @@
     import Playlist from '@/components/playlist'
 
     import { PlaylistApi } from '@/api'
+    import { FScript, Banner } from '@/script/fscript'
 
     export default {
         components: {
@@ -58,7 +58,12 @@
                 try {
                     const playlist = await PlaylistApi.createPlaylist('Empty Playlist')
                     return this.playlists.push(playlist)
-                } catch (err) { }// TODO: show user their shit failed }
+                } catch (err) {
+                    FScript.addComponent(new Banner({
+                        title: 'Error',
+                        message: 'An error occured while creating your playlist'
+                    }))
+                }
             }
         }
     }

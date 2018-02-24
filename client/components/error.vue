@@ -21,6 +21,8 @@
 
 <style lang="scss" scoped>
     .error-wrapper {
+        position: fixed;
+        top: 70px; left: 0; right: 0;
         background-color: #c64d47;
         border-radius: 0 0 4px 4px;
         padding: 10px 30px;

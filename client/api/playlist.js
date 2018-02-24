@@ -39,6 +39,11 @@ export default class PlaylistApi {
         return playlists
     }
 
+    static async getPlaylist (id) {
+        const playlist = await Auth.authRequest(`/api/playlists/${id}`)
+        return playlist
+    }
+
     static async addTrackToPlaylist (id, trackId) {
         await Auth.authRequest(`/api/playlists/${id}/tracks`, {
             method: 'POST',

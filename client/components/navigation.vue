@@ -21,3 +21,8 @@
         }
     }
 </script>
+
+<style lang="scss" scoped>
+    @media only screen and (max-width : 992px) { li { font-size: 1.3rem; margin: 10px; } }
+</style>
+

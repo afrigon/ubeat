@@ -1,7 +1,7 @@
 <template lang="pug">
     form.form-search.padding-0.flex.flex-center(:id="mobile ? 'form-search-mobile' : 'form-search'" :class="{ mobile: mobile, active: opened, 'hide-after-m': mobile, 'hide-until-l': !mobile }" method="GET" action="/api/search")
         .input-wrapper.margin-0.margin-up-5.grey.darken-5
-            input.search-input(type="search" name="q" autocomplete="off")
+            input.search-input(@click.stop="" type="search" name="q" autocomplete="off")
             label Search
         div.search-filter-wrapper.grey.darken-5
             select#search-filter.gone(v-model="$store.getters.getFilterFlags" name="filter" multiple v-if="!mobile")
@@ -43,15 +43,10 @@
             const filter = form.querySelectorAll('.search-filter-wrapper')[0]
             if (!filter) return console.log('could not find search filter')
 
-            input.addEventListener('focus', () => {
+            input.addEventListener('focus', (event) => {
                 return (this.opened = true)
             })
-
-            input.addEventListener('blur', () => {
-                input.value = ''
-                console.log('blur')
-                // return (this.opened = false)
-            })
+            document.body.addEventListener('click', this.closeForm)
 
             if (!this.mobile) return
             FScript.addComponent(new MaterialInput())
@@ -64,10 +59,20 @@
                 return (this.opened = true)
             })
         },
+        destroyed () {
+            document.body.removeEventListener('click', this.closeForm)
+        },
         methods: {
             ...mapMutations({
                 toggleFilter: TOGGLE_FILTER_FLAGS
-            })
+            }),
+            closeForm () {
+                const form = document.getElementById(`form-search${this.mobile ? '-mobile' : ''}`)
+                if (!form) return
+                const input = form.querySelectorAll('.search-input')[0]
+                input && (input.value = '')
+                return (this.opened = false)
+            }
         }
     }
 </script>

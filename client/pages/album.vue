@@ -125,14 +125,9 @@
 </script>
 
 <style lang="scss" scoped>
-    td:not(.playing) i {
-        visibility: hidden;
-    }
-
-    tr:hover td i {
-        visibility: visible;
-    }
-
+    @media only screen and (max-width : 992px) { #albumArt { width: 75%; } }
+    td:not(.playing) i { visibility: hidden; }
+    tr:hover td i { visibility: visible; }
     .itunes-button {
         display: inline-block;
         overflow: hidden;
@@ -146,11 +141,5 @@
         width: 50%;
         height: auto;
         border-radius: 5px;
-    }
-
-    @media only screen and (max-width : 992px) {
-        #albumArt {
-            width: 75%;
-        }   
     }
 </style>

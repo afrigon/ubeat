@@ -6,6 +6,7 @@ import Home from '@/pages/home'
 import Album from '@/pages/album'
 import Artist from '@/pages/artist'
 import Playlists from '@/pages/playlists'
+import Playlist from '@/pages/playlist'
 import Settings from '@/pages/settings'
 
 import AuthPage from '@/pages/auth'
@@ -30,6 +31,10 @@ const router = new Router({
         path: '/playlists',
         name: 'Playlists',
         component: Playlists
+    }, {
+        path: '/playlist/:id',
+        name: 'Playlist',
+        component: Playlist
     }, {
         path: '/settings',
         name: 'Settings',

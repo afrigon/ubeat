@@ -15,9 +15,9 @@
                     span Logout
         #options-divider.divider.hide-until-m
         #avatar.text-right.flex.flex-right.clickable.margin-left-25.margin-right-25
-            i#search-action.material-icons.m.text-white.clickable.hide-after-m.margin-right-20 search
+            i#search-action.material-icons.m.text-white.clickable.hide-after-m.margin-right-20(@click.stop="") search
             p#username.text-white.inline-block.margin-0.margin-right-20.truncate.hide-until-l {{ name }}
-            .flex.flex-center.clickable(@click.stop="this.opened = !this.opened")
+            .flex.flex-center.clickable(@click.stop="opened = !opened")
                 img.circle.primary-border.hide-until-m(src="/static/img/card.jpg")
                 i#options-button.material-icons.s.text-white.margin-left-5.hide-until-m keyboard_arrow_down
 </template>

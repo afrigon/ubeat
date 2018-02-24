@@ -3,8 +3,8 @@
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
 
-        .banner.dance(v-if="artist && artist.genre" :class="artist.genre")
-        #banner-text-wrapper.container.scroll-animate-router.fadeIn(v-if="artist && artist.genre")
+        .poster(v-if="artist && artist.genre" :class="artist.genre")
+        #poster-text-wrapper.container.scroll-animate-router.fadeIn(v-if="artist && artist.genre")
             .inline-block
                 h2#artistName.margin-0.text-white.text-light.text-size-6.text-shadow-5(v-if="artist.artistName") {{ artist.artistName }}
             .inline-block.right
@@ -77,32 +77,32 @@
 </script>
 
 <style lang="scss" scoped>
-    .banner.dance {
+    .poster.dance {
         background-image: url('/static/img/genre/dance.jpg');
         background-position: center 70%;
     }
-    .banner.rock {
+    .poster.rock {
         background-image: url('/static/img/genre/rock.jpg');
         background-position: center 10%;
     }
-    .banner.classical {
+    .poster.classical {
         background-image: url('/static/img/genre/classical.jpg');
         background-position: center 40%;
     }
-    .banner.country {
+    .poster.country {
         background-image: url('/static/img/genre/country.jpg');
         background-position: center 45%;
     }
-    .banner.songwriter {
+    .poster.songwriter {
         background-image: url('/static/img/genre/songwriter.jpg');
         background-position: center 40%;
     }
-    .banner.metal {
+    .poster.metal {
         background-image: url('/static/img/genre/metal.jpg');
         background-position: center 70%;
     }
 
-    #banner-text-wrapper {
+    #poster-text-wrapper {
         margin-top: -50px;
 
         h2, h3 {

@@ -7,6 +7,7 @@ export { default as Color } from './tools/color'
 export { default as Toast } from './tools/toast'
 
 export { default as AudioPlayer } from './components/audio-player'
+export { default as Banner } from './components/banner'
 export { default as Drawer } from './components/drawer'
 export { default as GradientFader } from './components/gradient-fader'
 export { default as MaterialInput } from './components/material-input'
