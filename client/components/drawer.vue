@@ -34,9 +34,10 @@
 </template>
 
 <script>
+    import { FScript, Drawer } from '@/script/fscript'
     export default {
         mounted () {
-            FS.addComponent(new Drawer())
+            FScript.addComponent(new Drawer())
         }
     }
 </script>

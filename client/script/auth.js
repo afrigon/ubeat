@@ -1,4 +1,5 @@
 import Api from '@/api'
+import { HttpError, Network } from '@/script/fscript'
 
 class Auth {
     static getToken () {
@@ -32,7 +33,7 @@ class Auth {
         if (!options) options = {}
         if (!options.headers) options.headers = {}
         options.headers['Authorization'] = token
-        const data = await Util.requestJSON(url, options)
+        const data = await Network.requestJSON(url, options)
         return data
     }
 }

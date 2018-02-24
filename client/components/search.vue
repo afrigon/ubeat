@@ -21,6 +21,7 @@
 <script>
     import { mapState, mapMutations } from 'vuex'
     import { TOGGLE_FILTER_FLAGS } from '@/store/mutation-types'
+    import { FScript, MaterialInput } from '@/script/fscript'
 
     export default {
         props: ['mobile'],
@@ -53,7 +54,7 @@
             })
 
             if (!this.mobile) return
-            FS.addComponent(new MaterialInput())
+            FScript.addComponent(new MaterialInput())
 
             const button = document.getElementById('search-action')
             if (!button) return

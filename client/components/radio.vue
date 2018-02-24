@@ -10,6 +10,7 @@
 
 <script>
     import { RadioApi } from '@/api'
+    import { FScript, AudioPlayer } from '@/script/fscript'
 
     export default {
         watch: {
@@ -86,7 +87,7 @@
                     }
                 })
                 this.player.genre = station.genre
-                FS.addComponent(this.player, '#player')
+                FScript.addComponent(this.player, '#player')
             },
             stopStation () {
                 this.song = null
@@ -145,7 +146,7 @@
                         })
                     }
                 })
-                FS.addComponent(this.player, '#player')
+                FScript.addComponent(this.player, '#player')
             }
         }
     }

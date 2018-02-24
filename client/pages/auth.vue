@@ -40,6 +40,7 @@
 <script>
     import Logo from '@/components/logo'
     import Api from '@/api'
+    import { FScript, Toast, MaterialInput, Util } from '@/script/fscript'
 
     export default {
         data: () => ({
@@ -64,7 +65,7 @@
                     } else {
                         document.getElementById('email').value = ''
                     }
-                    FS.addComponent(new MaterialInput())
+                    FScript.addComponent(new MaterialInput())
                 }, 100)
             }
         },
@@ -77,7 +78,7 @@
             } else {
                 document.getElementById('email').value = ''
             }
-            FS.addComponent(new MaterialInput())
+            FScript.addComponent(new MaterialInput())
             if (window.DeviceOrientationEvent && Util.isTouch()) {
                 window.addEventListener('deviceorientation', (event) => {
                     const gamma = (Util.clamp(event.gamma, -90, 90) + 90) * 200 / 180

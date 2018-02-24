@@ -1,4 +1,5 @@
 import Auth from '@/script/auth'
+import { Network } from '@/script/fscript'
 
 export { default as ArtistApi } from './artist'
 export { default as AlbumApi } from './album'
@@ -13,7 +14,7 @@ export default class Api {
         const params = new URLSearchParams()
         params.append('email', email)
         params.append('password', password)
-        const user = await Util.requestJSON('/api/login', {
+        const user = await Network.requestJSON('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: params
@@ -26,7 +27,7 @@ export default class Api {
         params.append('email', email)
         params.append('name', name)
         params.append('password', password)
-        await Util.requestJSON('/api/signup', {
+        await Network.requestJSON('/api/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: params

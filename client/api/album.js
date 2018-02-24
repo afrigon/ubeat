@@ -1,4 +1,5 @@
 import Auth from '@/script/auth'
+import { Util } from '@/script/fscript'
 
 export default class AlbumApi {
     static async getAlbum (id) {

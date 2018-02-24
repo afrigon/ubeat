@@ -7,15 +7,5 @@ module.exports = {
     plugins: ['html'],
     rules: {
         indent: [2, 4]
-    },
-    globals: {
-        FS: true,
-        Util: true,
-        AudioPlayer: true,
-        AutoScrollAnimator: true,
-        MaterialInput: true,
-        Drawer: true,
-        Toast: true,
-        HttpError: true
     }
 }
