@@ -1,5 +1,6 @@
 import Auth from '@/script/auth'
 import TrackApi from './track'
+import { Util } from '@/script/fscript'
 
 export default class PlaylistApi {
     static async createPlaylist (name) {
@@ -40,11 +41,14 @@ export default class PlaylistApi {
     }
 
     static async getPlaylist (id) {
-        const playlist = await Auth.authRequest(`/api/playlists/${id}`)
+        let playlist = await Auth.authRequest(`/api/playlists/${id}`)
+        playlist.tracks = playlist.tracks.map(n => Object.assign({}, n, { duration: Util.secondsToTime(n.trackTimeMillis / 1000) }))
         return playlist
     }
 
     static async addTrackToPlaylist (id, trackId) {
+        const playlist = await PlaylistApi.getPlaylist(id)
+        playlist.tracks.forEach(n => { console.log(n.trackId, trackId); if (n.trackId === trackId) throw new Error('Track is already in this playlist') })
         await Auth.authRequest(`/api/playlists/${id}/tracks`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

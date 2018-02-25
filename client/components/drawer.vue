@@ -5,7 +5,7 @@
                 i.material-icons close
         div.drawer-profile
             div.drawer-profile-image
-                img.circle.primary-border(src="/static/img/card.jpg")
+                img.circle.primary-border(:src="avatar")
                 p.text-white.margin-0.truncate alexfrigon154
         .divider.margin-down-10
         nav
@@ -36,7 +36,11 @@
 <script>
     import { FScript, Drawer } from '@/script/fscript'
     export default {
-        mounted () {
+        data: () => ({
+            avatar: null
+        }),
+        created () {
+            this.avatar = `https://secure.gravatar.com/avatar/${md5((window.localStorage.getItem('email') || '').trim().toLowerCase())}?s=150`
             FScript.addComponent(new Drawer())
         }
     }

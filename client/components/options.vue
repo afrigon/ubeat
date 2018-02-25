@@ -18,7 +18,7 @@
             i#search-action.material-icons.m.text-white.clickable.hide-after-m.margin-right-20(@click.stop="") search
             p#username.text-white.inline-block.margin-0.margin-right-20.truncate.hide-until-l {{ name }}
             .flex.flex-center.clickable(@click.stop="opened = !opened")
-                img.circle.primary-border.hide-until-m(src="/static/img/card.jpg")
+                img.circle.primary-border.hide-until-m(:src="avatar")
                 i#options-button.material-icons.s.text-white.margin-left-5.hide-until-m keyboard_arrow_down
 </template>
 
@@ -26,19 +26,20 @@
     export default {
         data: () => ({
             name: null,
+            avatar: null,
             opened: false
         }),
         watch: {
             '$route' () {
                 this.name = window.localStorage.getItem('name') ||
-                    window.localStorage.getItem('email') ||
-                    ''
+                    window.localStorage.getItem('email') || ''
+                this.avatar = `https://secure.gravatar.com/avatar/${md5((window.localStorage.getItem('email') || '').trim().toLowerCase())}?s=150`
             }
         },
         created () {
             this.name = window.localStorage.getItem('name') ||
-                window.localStorage.getItem('email') ||
-                ''
+                window.localStorage.getItem('email') || ''
+            this.avatar = `https://secure.gravatar.com/avatar/${md5((window.localStorage.getItem('email') || '').trim().toLowerCase())}?s=150`
         },
         mounted () {
             document.body.addEventListener('click', this.closeOptions)

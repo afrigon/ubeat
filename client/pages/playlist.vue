@@ -1,5 +1,8 @@
 <template lang="pug">
     main.dark.no-scroll.flex.flex-spaced.flex-vertical
+        error(:message="error" v-if="error")
+        loading(v-if="loading" color="#b29adb")
+        
         .container.margin-up-30
             .section
                 .row
@@ -12,7 +15,8 @@
                                 th
                         tbody#tracks.clickable
                             tr(v-for="track in playlist.tracks" :key="track.trackId")
-                                td.text-center {{ i + 1 }}
+                                td.artwork
+                                    img(:src="track.artworkUrl30")
                                 td {{ track.trackName }}
                                 td {{ track.duration }}
                                 td
@@ -36,7 +40,7 @@
             loading: null,
             playlist: null
         }),
-        beforeRouteEnter (to, from, next) {
+        async beforeRouteEnter (to, from, next) {
             try {
                 return next(async vm => vm.setData(await PlaylistApi.getPlaylist(to.params.id)))
             } catch (err) { return next(vm => vm.setData(null)) }
@@ -52,6 +56,7 @@
         },
         methods: {
             setData (data) {
+                console.log(data)
                 this.loading = false
                 if (!data) {
                     this.playlist = null
@@ -77,6 +82,8 @@
 </script>
 
 <style lang="scss" scoped>
-
+    .artwork { width: 70px; }
+    td:not(.playing) i { visibility: hidden; }
+    tr:hover td i { visibility: visible; }
 </style>
 

@@ -2,11 +2,7 @@ import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
 import router from './script/router'
-
-import Vuex from 'vuex'
-import Store from '@/store'
-Vue.use(Vuex)
-const store = new Vuex.Store(Store)
+import store from '@/store'
 
 Vue.config.productionTip = false
 

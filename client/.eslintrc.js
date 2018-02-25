@@ -7,5 +7,8 @@ module.exports = {
     plugins: ['html'],
     rules: {
         indent: [2, 4]
+    },
+    globals: {
+        md5: true
     }
 }
