@@ -39,7 +39,7 @@
         data: () => ({
             avatar: null
         }),
-        created () {
+        mounted () {
             this.avatar = `https://secure.gravatar.com/avatar/${md5((window.localStorage.getItem('email') || '').trim().toLowerCase())}?s=150`
             FScript.addComponent(new Drawer())
         }
