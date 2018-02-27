@@ -3,6 +3,8 @@
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
 
+        .absolute.close-icon(v-if="modal" @click="closeModal")
+            i.material-icons.text-white.l.clickable close
         .container.margin-up-30(:class="{'full-width': modal}")
             .section
                 .row.text-center(v-if="!modal")
@@ -11,7 +13,7 @@
                     .item.item-add.text-center.clickable(@click="createPlaylist" v-if="!modal")
                         p.text-white.margin-0.text-size-2
                             i.material-icons add
-                            span Add
+                            span.icon-text Add
                 .row.text-center(v-else)
                     playlist.item.playlist.clickable(v-for="playlist in playlists" :key="playlist.id" :name="playlist.name" :tracks="playlist.tracks" @click.native="() => selectPlaylist(playlist.id)")
 </template>
@@ -99,6 +101,9 @@
                 }
                 this.$store.commit(PREPARE_SONG_FOR_INSERT, null)
                 this.loading = false
+            },
+            closeModal () {
+                this.$store.commit(PREPARE_SONG_FOR_INSERT, null)
             }
         }
     }
@@ -126,6 +131,10 @@
     .full-width {
         width: 100%;
         max-width: 100%;
+    }
+
+    .close-icon {
+        top: 0px; right: 15px;
     }
 </style>
 

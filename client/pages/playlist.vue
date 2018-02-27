@@ -133,7 +133,7 @@
             async deleteAll () {
                 try {
                     await PlaylistApi.removePlaylist(this.playlist.id)
-                    this.$router.go(-1)
+                    this.$router.replace({ path: `/playlists`, query: this.$route.query })
                 } catch (err) {
                     FScript.addComponent(new Banner({
                         title: 'Error',

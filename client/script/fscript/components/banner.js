@@ -26,41 +26,44 @@ export default class Banner extends Component {
 
     init () {
         this.createBanner()
+        this.show(this.options.title, this.options.message)
+    }
+
+    createBanner () {
+        const banner = document.createElement('div')
+        this.banner = banner
+        banner.style.backgroundColor = this.options.backgroundColor
+        banner.style.color = this.options.color
+        banner.classList.add('fscript-banner')
+
+        const container = document.createElement('div')
+        container.classList.add('container')
+        banner.appendChild(container)
+
+        const title = document.createElement('strong')
+        this.title = title
+        title.classList.add('text-size-2')
+        title.innerHTML = this.options.title
+        container.appendChild(title)
+
+        const message = document.createElement('div')
+        this.message = message
+        message.classList.add('text-size-small-7')
+        container.appendChild(message)
+    }
+
+    show (title, message) {
+        this.title.innerHTML = title
+        this.message.innerHTML = message
+        document.body.appendChild(this.banner)
         setTimeout(() => {
             this.banner.classList.add('active')
         }, 100)
         setTimeout(() => {
             this.banner.classList.remove('active')
         }, this.options.duration + 100 + 300)
-    }
-
-    createBanner () {
-        this.banner = document.getElementById('fscript-banner')
-        if (!this.banner) {
-            const banner = document.createElement('div')
-            this.banner = banner
-            banner.classList.add('banner')
-            banner.id = 'fscript-banner'
-            document.body.appendChild(banner)
-
-            const container = document.createElement('div')
-            container.classList.add('container')
-            banner.appendChild(container)
-
-            const title = document.createElement('strong')
-            this.title = title
-            title.classList.add('text-size-2')
-            container.appendChild(title)
-
-            const message = document.createElement('div')
-            this.message = message
-            message.classList.add('text-size-small-7')
-            container.appendChild(message)
-        }
-
-        this.banner.style.backgroundColor = this.options.backgroundColor
-        this.banner.style.color = this.options.color
-        this.title.innerHTML = this.options.title
-        this.message.innerHTML = this.options.message
+        setTimeout(() => {
+            this.banner.parentNode.removeChild(this.banner)
+        }, this.options.duration + 100 + 300 + 300)
     }
 }
