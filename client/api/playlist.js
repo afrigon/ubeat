@@ -12,11 +12,11 @@ export default class PlaylistApi {
         return playlist
     }
 
-    static async updatePlaylist (id, name) {
+    static async updatePlaylist (id, playlist) {
         await Auth.authRequest(`/api/playlists/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name })
+            body: JSON.stringify(playlist)
         })
     }
 
@@ -48,7 +48,7 @@ export default class PlaylistApi {
 
     static async addTrackToPlaylist (id, trackId) {
         const playlist = await PlaylistApi.getPlaylist(id)
-        playlist.tracks.forEach(n => { console.log(n.trackId, trackId); if (n.trackId === trackId) throw new Error('Track is already in this playlist') })
+        playlist.tracks.forEach(n => { if (n.trackId === trackId) throw new Error('Track is already in this playlist') })
         await Auth.authRequest(`/api/playlists/${id}/tracks`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

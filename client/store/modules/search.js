@@ -9,12 +9,9 @@ const Search = {
         getFilterFlags: state => Util.getBitwiseArray(4).filter((n) => (n & state.filterFlags) !== 0)
     },
     mutations: {
-        [TOGGLE_FILTER_FLAGS] (state, payload) {
-            if ((state.filterFlags & payload) !== 0) {
-                state.filterFlags &= ~payload
-            } else {
-                state.filterFlags |= payload
-            }
+        [TOGGLE_FILTER_FLAGS] (state, value) {
+            if ((state.filterFlags & value) !== 0) state.filterFlags &= ~value
+            else state.filterFlags |= value
             return window.sessionStorage.setItem('search-flags', state.filterFlags)
         }
     }

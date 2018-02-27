@@ -40,4 +40,9 @@ export default class Api {
         const info = await Auth.authRequest('/api/tokeninfo')
         return info
     }
+
+    static getGravatar (size = 150) {
+        const email = (window.localStorage.getItem('email') || '').trim().toLowerCase()
+        return `https://secure.gravatar.com/avatar/${md5(email)}?s=${size}`
+    }
 }

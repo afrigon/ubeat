@@ -23,6 +23,8 @@
 </template>
 
 <script>
+    import Api from '@/api'
+
     export default {
         data: () => ({
             name: null,
@@ -33,13 +35,13 @@
             '$route' () {
                 this.name = window.localStorage.getItem('name') ||
                     window.localStorage.getItem('email') || ''
-                this.avatar = `https://secure.gravatar.com/avatar/${md5((window.localStorage.getItem('email') || '').trim().toLowerCase())}?s=150`
+                this.avatar = Api.getGravatar()
             }
         },
         created () {
             this.name = window.localStorage.getItem('name') ||
                 window.localStorage.getItem('email') || ''
-            this.avatar = `https://secure.gravatar.com/avatar/${md5((window.localStorage.getItem('email') || '').trim().toLowerCase())}?s=150`
+            this.avatar = Api.getGravatar()
         },
         mounted () {
             document.body.addEventListener('click', this.closeOptions)

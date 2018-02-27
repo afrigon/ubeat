@@ -36,7 +36,7 @@
         transition: transform 250ms ease-out;
         transform: translateY(0);
     }
-    .error-show-enter, .error-show-leave {
+    .error-show-enter, .error-show-leave-to {
         transform: translateY(-100%);
     }
 </style>

@@ -14,6 +14,7 @@ export default class AudioPlayer extends Component {
             loop: false,
             startTime: 0,
             disabled: false,
+            volume: 0.75,
             meta: {
                 title: '',
                 artist: '',
@@ -80,6 +81,7 @@ export default class AudioPlayer extends Component {
         player.appendChild(audio)
         audio.crossOrigin = 'anonymous'
         audio.src = this.source
+        audio.volume = Util.clamp(this.options.volume, 0, 1)
         audio.autoplay = this.options.autoplay
         audio.loop = this.options.loop
 

@@ -3,43 +3,70 @@
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
         
-        .container.margin-up-30
+        .container.margin-up-30(v-if="playlist")
             .section
+                .absolute.action.action-left
+                    button.text-button.transparent.text-primary-light(v-if="isEditing" @click="cancel") Cancel
+                .absolute.action.action-right
+                    button.text-button.transparent.text-primary-light(v-if="!isEditing" @click="edit") Edit
+                    button.full-button.text-white(v-else @click="save") Done
                 .row
-                    table.interactive.text-light-color(v-if="playlist && playlist.tracks && playlist.tracks.length > 0")
-                        thead
-                            tr.uppercase.text-grey.text-darken-3.text-size-small-9
-                                th
-                                th name
-                                th time
-                                th
-                        tbody#tracks.clickable
-                            tr(v-for="track in playlist.tracks" :key="track.trackId")
-                                td.artwork
-                                    img(:src="track.artworkUrl30")
-                                td {{ track.trackName }}
-                                td {{ track.duration }}
-                                td
-                                    i.material-icons.no-select play_circle_outline
+                    .column.s12.l3
+                        playlist.head(:tracks="playlist.tracks" :editing="isEditing")
+                        div.text-center.margin-up-20.clickable(v-if="isEditing")
+                            i.material-icons.circle.red.text-white.lighten-1.delete-all(@click="deleteAll") delete_forever
+                    .column.s12.l9
+                        table.interactive.text-light-color(v-if="playlist.tracks && playlist.tracks.length > 0")
+                            thead
+                                tr.uppercase.text-grey.text-darken-3.text-size-small-9
+                                    th.hide-until-m
+                                    th name
+                                    th time
+                                    th
+                            tbody#tracks.clickable
+                                tr(v-for="track in playlist.tracks" :key="track.trackId")
+                                    td.artwork.hide-until-m
+                                        img(:src="track.artworkUrl30")
+                                    td {{ track.trackName }}
+                                    td {{ track.duration }}
+                                    td(:class="{ active: isEditing, 'text-red text-lighten-1': isEditing }")
+                                        i.material-icons.no-select(@click="() => { if (isEditing) deleteTrack(track.trackId) }") {{ isEditing ? 'remove_circle_outline' : 'play_circle_outline' }}
+                        .text-center(v-else)
+                            p.text-grey.text-size-2 This playlist is empty, you should look for sick beats to add to it!
 </template>
 
 <script>
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
+    import Playlist from '@/components/playlist'
 
     import { PlaylistApi } from '@/api'
     import { FScript, Banner } from '@/script/fscript'
+    import { SET_PLAYLIST_NAME } from '@/store/mutation-types'
 
     export default {
         components: {
             'error': ErrorBox,
-            'loading': Loading
+            'loading': Loading,
+            'playlist': Playlist
         },
         data: () => ({
             error: null,
             loading: null,
-            playlist: null
+            playlist: null,
+            isEditing: null,
+            initialPlaylistName: null
         }),
+        computed: {
+            name: {
+                get () {
+                    return this.$store.state.temp.playlistName
+                },
+                set (value) {
+                    this.$store.commit(SET_PLAYLIST_NAME, value)
+                }
+            }
+        },
         async beforeRouteEnter (to, from, next) {
             try {
                 return next(async vm => vm.setData(await PlaylistApi.getPlaylist(to.params.id)))
@@ -56,7 +83,6 @@
         },
         methods: {
             setData (data) {
-                console.log(data)
                 this.loading = false
                 if (!data) {
                     this.playlist = null
@@ -65,15 +91,53 @@
 
                 this.error = null
                 this.playlist = data
+                this.name = data.name
             },
-            async updatePlaylist () {
+            async save () {
+                this.loading = true
                 try {
-                    const playlist = await PlaylistApi.updatePlaylist(this.$route.params.id, 'Empty Playlist')
-                    return this.playlists.push(playlist)
+                    await PlaylistApi.updatePlaylist(this.playlist.id, {
+                        name: this.name,
+                        tracks: this.playlist.tracks
+                    })
                 } catch (err) {
                     FScript.addComponent(new Banner({
                         title: 'Error',
-                        message: 'An error occured while renaming this playlist'
+                        message: 'An error occured while saving your changes'
+                    }))
+                }
+                this.loading = false
+                this.isEditing = false
+            },
+            edit () {
+                this.initialPlaylistName = this.name
+                this.isEditing = true
+            },
+            cancel () {
+                this.name = this.initialPlaylistName
+                this.isEditing = false
+            },
+            async deleteTrack (id) {
+                this.loading = true
+                try {
+                    await PlaylistApi.removeTrackFromPlaylist(this.playlist.id, id)
+                    this.playlist.tracks = this.playlist.tracks.filter(n => n.trackId !== id)
+                } catch (err) {
+                    FScript.addComponent(new Banner({
+                        title: 'Error',
+                        message: 'An error occured while deleting this track'
+                    }))
+                }
+                this.loading = false
+            },
+            async deleteAll () {
+                try {
+                    await PlaylistApi.removePlaylist(this.playlist.id)
+                    this.$router.go(-1)
+                } catch (err) {
+                    FScript.addComponent(new Banner({
+                        title: 'Error',
+                        message: 'An error occured while deleting this playlist'
                     }))
                 }
             }
@@ -83,7 +147,31 @@
 
 <style lang="scss" scoped>
     .artwork { width: 70px; }
-    td:not(.playing) i { visibility: hidden; }
+    td:not(.active) i { visibility: hidden; }
     tr:hover td i { visibility: visible; }
+    .head { text-align: center; margin: auto; max-width: 250px;}
+    .action {
+        top: 90px;
+        button {
+            padding: 5px 0;
+            text-align: center;
+            width: 75px;
+            font-weight: 200;
+            font-size: 1.32rem;
+        }
+        .text-button { text-shadow: 0px 0px 8px #555555 }
+        .full-button {
+            border-radius: 13px;
+            background-color: #484156;
+            padding: 0;
+            line-height: 31px;
+        }
+    }
+    .action-right { right: 32px; }
+    .action-left { left: 32px; }
+    td.text-red i {
+        transition: transform 150ms ease-out;
+        &:hover { transform: scale(1.1) }
+    }
+    .delete-all { width: 36px; height: 36px; }
 </style>
-

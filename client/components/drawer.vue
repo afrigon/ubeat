@@ -34,13 +34,15 @@
 </template>
 
 <script>
+    import Api from '@/api'
     import { FScript, Drawer } from '@/script/fscript'
+
     export default {
         data: () => ({
             avatar: null
         }),
         mounted () {
-            this.avatar = `https://secure.gravatar.com/avatar/${md5((window.localStorage.getItem('email') || '').trim().toLowerCase())}?s=150`
+            this.avatar = Api.getGravatar()
             FScript.addComponent(new Drawer())
         }
     }

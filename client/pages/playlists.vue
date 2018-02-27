@@ -1,13 +1,19 @@
 <template lang="pug">
-    main.dark.no-scroll.flex.flex-spaced.flex-vertical
-        .container.margin-up-30
+    main.dark.no-scroll.flex.flex-spaced.flex-vertical.scroll-invisible
+        error(:message="error" v-if="error")
+        loading(v-if="loading" color="#b29adb")
+
+        .container.margin-up-30(:class="{'full-width': modal}")
             .section
-                .row
-                    playlist.item.playlist(v-for="playlist in playlists" :id="playlist.id" :key="playlist.id" :name="playlist.name" :tracks="playlist.tracks")
-                    .item.item-add.text-center.clickable(@click="createPlaylist")
+                .row.text-center(v-if="!modal")
+                    router-link.no-hover-decoration.playlist(v-for="playlist in playlists" :to="{ path: `/playlist/${playlist.id}`, query: $route.query }" :key="playlist.id")
+                        playlist.item.playlist(:name="playlist.name" :tracks="playlist.tracks")
+                    .item.item-add.text-center.clickable(@click="createPlaylist" v-if="!modal")
                         p.text-white.margin-0.text-size-2
                             i.material-icons add
                             span Add
+                .row.text-center(v-else)
+                    playlist.item.playlist.clickable(v-for="playlist in playlists" :key="playlist.id" :name="playlist.name" :tracks="playlist.tracks" @click.native="() => selectPlaylist(playlist.id)")
 </template>
 
 <script>
@@ -17,8 +23,12 @@
 
     import { PlaylistApi } from '@/api'
     import { FScript, Banner } from '@/script/fscript'
+    import { PREPARE_SONG_FOR_INSERT } from '@/store/mutation-types'
 
     export default {
+        props: {
+            modal: Boolean
+        },
         components: {
             'error': ErrorBox,
             'loading': Loading,
@@ -43,6 +53,12 @@
             this.loading = true
             return next()
         },
+        async created () {
+            if (!this.modal) return
+            try {
+                return this.setData(await PlaylistApi.getPersonalPlaylists())
+            } catch (err) { return this.setData(null) }
+        },
         methods: {
             setData (data) {
                 this.loading = false
@@ -64,6 +80,25 @@
                         message: 'An error occured while creating your playlist'
                     }))
                 }
+            },
+            async selectPlaylist (id) {
+                this.loading = true
+                const songs = this.$store.state.temp.songs
+                for (let song of songs) {
+                    try {
+                        await PlaylistApi.addTrackToPlaylist(id, song)
+                    } catch (err) {
+                        if (songs.length === 1) {
+                            FScript.addComponent(new Banner({
+                                title: 'Playlist Info',
+                                message: 'This song is already in the playlist',
+                                type: 'info'
+                            }))
+                        }
+                    }
+                }
+                this.$store.commit(PREPARE_SONG_FOR_INSERT, null)
+                this.loading = false
             }
         }
     }
@@ -74,17 +109,23 @@
         vertical-align: top;
         display: inline-block;
         margin: 15px;
+        width: 150px;
+        height: 150px;
+        margin-bottom: 48px;
     }
 
     .item-add {
-        width: 150px;
-        height: 150px;
         border-radius: 5px;
         border: #696969 1px dashed;
         p, p i, p span {
             line-height: 150px;
             vertical-align: top;
         }
+    }
+
+    .full-width {
+        width: 100%;
+        max-width: 100%;
     }
 </style>
 

@@ -6,7 +6,6 @@ export default class Banner extends Component {
         return {
             backgroundColor: '#c64d47',
             color: '#FFFFFF',
-            borderColor: '#993a35',
             duration: 3000,
             title: 'FScript Banner',
             message: 'You should put a message in your banner!'
@@ -17,6 +16,12 @@ export default class Banner extends Component {
         super()
         if (!options) throw new Error('Banner should always have an option object as it\'s first parameter')
         this.options = Util.extends(options, this.defaults)
+        switch (this.options.type) {
+        case 'info': this.options.backgroundColor = '#1e88e5'; break
+        case 'success': this.options.backgroundColor = '#4caf50'; break
+        case 'warn': this.options.backgroundColor = '#ffca28'; break
+        case 'error': this.options.backgroundColor = '#c64d47'; break
+        }
     }
 
     init () {
@@ -55,7 +60,6 @@ export default class Banner extends Component {
 
         this.banner.style.backgroundColor = this.options.backgroundColor
         this.banner.style.color = this.options.color
-        this.banner.style.borderColor = this.options.borderColor
         this.title.innerHTML = this.options.title
         this.message.innerHTML = this.options.message
     }

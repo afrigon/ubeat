@@ -12,7 +12,7 @@ export default class UserApi {
 
     static async followUser (id) {
         await Auth.authRequest('/api/follow', {
-            methos: 'POST',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id })
         })

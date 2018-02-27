@@ -3,6 +3,8 @@
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
 
+        transition(name="playlist-modal")
+            playlists.fixed.playlists(v-if="isAddingToPlaylist" :modal="true")
         .section
             .row
                 .column.s12(v-if="album")
@@ -11,6 +13,10 @@
                             img#albumArt.hoverable-pop.no-select(:alt="`${album.collectionName} Album Art`" :src="album.artworkUrl400")
                             .row(v-if="album.releaseDate")
                                 p#releaseDate.text-grey.text-center.text-size-small-5.margin-0 Released: {{ new Date(album.releaseDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+                            .row
+                                .playlist-add-album.text-white.clickable(@click="addAlbumToPlaylist")
+                                    i.material-icons playlist_add
+                                    span.icon-text Add album to playlist
                         .column.s12.m6.l12.padding-0.scroll-animate-router.fadeInRight(v-if="album.collectionViewUrl")
                             .row
                                 a.itunes-button(target="_blank" rel="noopener" :href="album.collectionViewUrl")
@@ -39,11 +45,13 @@
                                             th
                                     tbody#tracks.clickable
                                         tr(v-for="(track, i) in tracks.list" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: album.artistName, pictureUrl: album.artworkUrl30 }, track.previewUrl)" :class="playingId === track.trackId ? 'active': ''")
-                                            td.text-center {{ i + 1 }}
+                                            td.text-center(:class="{ active: playingId === track.trackId }")
+                                                span.number {{ i + 1 }}
+                                                i.material-icons.no-select {{ playingId === track.trackId ? 'pause_circle_outline': 'play_circle_outline' }}
                                             td {{ track.trackName }}
                                             td {{ track.duration }}
-                                            td(:class="playingId === track.trackId ? 'playing': ''")
-                                                i.material-icons.no-select {{ playingId === track.trackId ? 'pause_circle_outline': 'play_circle_outline' }}
+                                            td.text-center.active.button
+                                                i.material-icons.no-select(@click.stop="() => addSongToPlaylist(track.trackId)") add
                             .row.margin-0.margin-left-20
                                 p.text-grey.text-size-small-5.margin-0 {{ tracks.length }} songs, {{ tracks.totalDuration }} minutes
                             .row.margin-0.margin-left-20(v-if="album.copyright")
@@ -53,13 +61,16 @@
 <script type="text/javascript">
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
+    import Playlists from '@/pages/playlists'
 
     import { AlbumApi } from '@/api'
+    import { PREPARE_SONG_FOR_INSERT } from '@/store/mutation-types'
 
     export default {
         components: {
             'error': ErrorBox,
-            'loading': Loading
+            'loading': Loading,
+            'playlists': Playlists
         },
         data: () => ({
             album: null,
@@ -68,6 +79,11 @@
             playingId: null,
             loading: null
         }),
+        computed: {
+            isAddingToPlaylist () {
+                return this.$store.state.temp.songs
+            }
+        },
         watch: {
             '$route': 'setPlayingSong'
         },
@@ -119,6 +135,12 @@
                     try { song = JSON.parse(songData) } catch (e) {}
                 }
                 this.playingId = song.id || null
+            },
+            addSongToPlaylist (id) {
+                this.$store.commit(PREPARE_SONG_FOR_INSERT, [id])
+            },
+            addAlbumToPlaylist () {
+                this.$store.commit(PREPARE_SONG_FOR_INSERT, this.tracks.list.map(n => n.trackId))
             }
         }
     }
@@ -126,8 +148,11 @@
 
 <style lang="scss" scoped>
     @media only screen and (max-width : 992px) { #albumArt { width: 75%; } }
-    td:not(.playing) i { visibility: hidden; }
-    tr:hover td i { visibility: visible; }
+
+    td:not(.active) i, td.active span, tr:hover td span { display: none; }
+    tr:hover td i { display: inline-block; }
+
+    .number { line-height: 36px; vertical-align: top; width: 24px; display: inline-block; }
     .itunes-button {
         display: inline-block;
         overflow: hidden;
@@ -141,5 +166,26 @@
         width: 50%;
         height: auto;
         border-radius: 5px;
+    }
+
+    .playlists {
+        z-index: 10001;
+        top: 100px;
+        bottom: 30px;
+        left: 30px;
+        right: 30px;
+        background-color: #454545 !important;
+        border-radius: 4px;
+    }
+
+    .playlist-modal-enter-active, .playlist-modal-leave-active {
+        will-change: transform, opacity;
+        transition: transform 250ms ease-out, opacity 250ms ease-out;
+        transform: scale(1);
+        opacity: 1;
+    }
+    .playlist-modal-enter, .playlist-modal-leave-to {
+        transform: scale(.95);
+        opacity: 0;
     }
 </style>
