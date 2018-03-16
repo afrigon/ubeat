@@ -16,17 +16,17 @@
                     a#itunes-button.right(target="_blank" rel="noopener" :href="artist.artistLinkUrl")
                     .divider
                 #latestReleases.column.s12.padding-0
-                    album(v-for="album in latestAlbums" :id="album.collectionId" :title="album.collectionName" :artist="album.artistName" :pictureUrl="album.artworkUrl400" :key="album.collectionId" highlight)
+                    album-card(v-for="album in latestAlbums" :id="album.collectionId" :title="album.collectionName" :artist="album.artistName" :pictureUrl="album.artworkUrl400" :key="album.collectionId" highlight)
             .row(v-if="albums")
                 .scroll-animate-router.fadeIn
                     h4.text-white.text-size-3.text-light Albums
                     .divider
                 #albums.column.s12.padding-0
-                    album(v-for="album in albums" :id="album.collectionId" :title="album.collectionName" :artist="album.artistName" :pictureUrl="album.artworkUrl200" :key="album.collectionId" )
+                    album-card(v-for="album in albums" :id="album.collectionId" :title="album.collectionName" :artist="album.artistName" :pictureUrl="album.artworkUrl200" :key="album.collectionId" )
 </template>
 
 <script>
-    import Album from '@/components/album'
+    import AlbumCard from '@/components/album-card'
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
 
@@ -34,7 +34,7 @@
 
     export default {
         components: {
-            'album': Album,
+            'album-card': AlbumCard,
             'error': ErrorBox,
             'loading': Loading
         },

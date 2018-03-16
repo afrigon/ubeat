@@ -4,7 +4,7 @@
         loading(v-if="loading" color="#b29adb")
 
         transition(name="playlist-modal")
-            playlists.fixed.playlists(v-if="isAddingToPlaylist" :modal="true")
+            add-to-playlist.fixed.playlists(v-if="isAddingToPlaylist")
         .section
             .row
                 .column.s12(v-if="album")
@@ -61,7 +61,7 @@
 <script type="text/javascript">
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
-    import Playlists from '@/pages/playlists'
+    import AddToPlaylist from '@/components/add-to-playlist'
 
     import { AlbumApi } from '@/api'
     import { PREPARE_SONG_FOR_INSERT } from '@/store/mutation-types'
@@ -70,7 +70,7 @@
         components: {
             'error': ErrorBox,
             'loading': Loading,
-            'playlists': Playlists
+            'add-to-playlist': AddToPlaylist
         },
         data: () => ({
             album: null,

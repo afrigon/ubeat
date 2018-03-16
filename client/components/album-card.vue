@@ -21,4 +21,3 @@
 <style lang="scss" scoped>
     img { width: 80%; height: auto; }
 </style>
-

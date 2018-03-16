@@ -12,9 +12,9 @@
                     button.full-button.text-white(v-else @click="save") Done
                 .row
                     .column.s12.l3
-                        playlist.head(:tracks="playlist.tracks" :editing="isEditing")
-                        div.text-center.margin-up-20.clickable(v-if="isEditing")
-                            i.material-icons.circle.red.text-white.lighten-1.delete-all(@click="deleteAll") delete_forever
+                        playlist-card.head(:tracks="playlist.tracks" :editing="isEditing" :validatedOnce="validatedOnce")
+                        div.text-center.margin-up-20(v-if="isEditing")
+                            i.material-icons.circle.red.text-white.lighten-1.delete-all.clickable(@click="deleteAll") delete_forever
                     .column.s12.l9
                         table.interactive.text-light-color(v-if="playlist.tracks && playlist.tracks.length > 0")
                             thead
@@ -38,7 +38,7 @@
 <script>
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
-    import Playlist from '@/components/playlist'
+    import PlaylistCard from '@/components/playlist-card'
 
     import { PlaylistApi } from '@/api'
     import { FScript, Banner } from '@/script/fscript'
@@ -48,14 +48,15 @@
         components: {
             'error': ErrorBox,
             'loading': Loading,
-            'playlist': Playlist
+            'playlist-card': PlaylistCard
         },
         data: () => ({
             error: null,
             loading: null,
             playlist: null,
             isEditing: null,
-            initialPlaylistName: null
+            initialPlaylistName: null,
+            validatedOnce: null
         }),
         computed: {
             name: {
@@ -94,6 +95,11 @@
                 this.name = data.name
             },
             async save () {
+                if (!this.validate()) {
+                    return
+                }
+
+                this.error = null
                 this.loading = true
                 try {
                     await PlaylistApi.updatePlaylist(this.playlist.id, {
@@ -109,6 +115,14 @@
                 this.loading = false
                 this.isEditing = false
             },
+            validate () {
+                if (!this.name) {
+                    this.validatedOnce = true
+                    return false
+                }
+
+                return true
+            },
             edit () {
                 this.initialPlaylistName = this.name
                 this.isEditing = true
@@ -116,6 +130,7 @@
             cancel () {
                 this.name = this.initialPlaylistName
                 this.isEditing = false
+                this.validatedOnce = false
             },
             async deleteTrack (id) {
                 this.loading = true
@@ -139,6 +154,13 @@
                         title: 'Error',
                         message: 'An error occured while deleting this playlist'
                     }))
+                }
+            }
+        },
+        watch: {
+            isEditing: () => {
+                if (!this.isEditing) {
+                    this.validatedOnce = false
                 }
             }
         }

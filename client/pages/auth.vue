@@ -29,11 +29,11 @@
                     label(for="confirm") Confirm Password
 
                 div(v-if="signup")
-                    input.primary.text-white.button(type="submit" value="Sign up")
+                    input.primary.text-white.submit-button(type="submit" value="Sign up")
                     router-link.text-primary-light(:to="{ path: '/login', query: $route.query }") Already have an account?
 
                 div(v-else)
-                    input.primary.text-white.button(type="submit" value="Login")
+                    input.primary.text-white.submit-button(type="submit" value="Login")
                     router-link.text-primary-light(:to="{ path: '/signup', query: $route.query }") Create an account
 </template>
 
@@ -243,11 +243,5 @@
         text-align: center;
         max-width: 500px;
         margin: auto;
-    }
-    .button {
-        display: block;
-        border-radius: 5px;
-        padding: 10px 65px;
-        margin: 25px auto 15px auto;
     }
 </style>

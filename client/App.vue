@@ -29,6 +29,27 @@
     }
 </script>
 
-<style>
+<style lang="scss">
     .body { overflow-x: hidden; }
+
+    .submit-button {
+        display: block;
+        border-radius: 5px;
+        padding: 10px 65px;
+        margin: 25px auto 15px auto;
+    }
+
+    .input-error {
+        input,
+        input:not([type]):focus:not([readonly]),
+        input[type=text]:not(.browser-default),
+        input[type=text]:not(.browser-default):focus:not([readonly]) {
+            border-bottom-color: #c64d47;
+        }
+
+        .input-error-message {
+            color: #c64d47;
+            font-weight: 400;
+        }
+    }
 </style>
