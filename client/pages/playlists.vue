@@ -1,45 +1,43 @@
 <template lang="pug">
-    main.dark.no-scroll.flex.flex-spaced.flex-vertical.scroll-invisible
+    main.dark.no-scroll
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
 
-        .absolute.close-icon(v-if="modal" @click="closeModal")
-            i.material-icons.text-white.l.clickable close
-        .container.margin-up-30(:class="{'full-width': modal}")
+        transition(name="playlist-modal")
+            new-playlist.fixed(v-if="isCreatingPlaylist" @close="closeModal" @createPlaylist="createPlaylist")
+        .container.margin-up-30
             .section
-                .row.text-center(v-if="!modal")
+                .row.text-center
                     router-link.no-hover-decoration.playlist(v-for="playlist in playlists" :to="{ path: `/playlist/${playlist.id}`, query: $route.query }" :key="playlist.id")
-                        playlist.item.playlist(:name="playlist.name" :tracks="playlist.tracks")
-                    .item.item-add.text-center.clickable(@click="createPlaylist" v-if="!modal")
+                        playlist-card.item.playlist(:name="playlist.name" :tracks="playlist.tracks")
+                    .item.item-add.text-center.clickable(@click="isCreatingPlaylist = true")
                         p.text-white.margin-0.text-size-2
                             i.material-icons add
                             span.icon-text Add
-                .row.text-center(v-else)
-                    playlist.item.playlist.clickable(v-for="playlist in playlists" :key="playlist.id" :name="playlist.name" :tracks="playlist.tracks" @click.native="() => selectPlaylist(playlist.id)")
 </template>
 
 <script>
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
-    import Playlist from '@/components/playlist'
+    import PlaylistCard from '@/components/playlist-card'
+    import NewPlaylist from '@/components/new-playlist'
 
     import { PlaylistApi } from '@/api'
     import { FScript, Banner } from '@/script/fscript'
-    import { PREPARE_SONG_FOR_INSERT } from '@/store/mutation-types'
 
     export default {
-        props: {
-            modal: Boolean
-        },
         components: {
             'error': ErrorBox,
             'loading': Loading,
-            'playlist': Playlist
+            'playlist-card': PlaylistCard,
+            'new-playlist': NewPlaylist
         },
         data: () => ({
             error: null,
             loading: null,
-            playlists: []
+            playlists: [],
+            isCreatingPlaylist: false,
+            newPlaylistName: null
         }),
         beforeRouteEnter (to, from, next) {
             try {
@@ -55,12 +53,6 @@
             this.loading = true
             return next()
         },
-        async created () {
-            if (!this.modal) return
-            try {
-                return this.setData(await PlaylistApi.getPersonalPlaylists())
-            } catch (err) { return this.setData(null) }
-        },
         methods: {
             setData (data) {
                 this.loading = false
@@ -72,38 +64,21 @@
                 this.error = null
                 this.playlists = data
             },
-            async createPlaylist () {
+            async createPlaylist (name) {
                 try {
-                    const playlist = await PlaylistApi.createPlaylist('Empty Playlist')
+                    const playlist = await PlaylistApi.createPlaylist(name)
+                    this.closeModal()
                     return this.playlists.push(playlist)
                 } catch (err) {
+                    this.closeModal()
                     FScript.addComponent(new Banner({
                         title: 'Error',
                         message: 'An error occured while creating your playlist'
                     }))
                 }
             },
-            async selectPlaylist (id) {
-                this.loading = true
-                const songs = this.$store.state.temp.songs
-                for (let song of songs) {
-                    try {
-                        await PlaylistApi.addTrackToPlaylist(id, song)
-                    } catch (err) {
-                        if (songs.length === 1) {
-                            FScript.addComponent(new Banner({
-                                title: 'Playlist Info',
-                                message: 'This song is already in the playlist',
-                                type: 'info'
-                            }))
-                        }
-                    }
-                }
-                this.$store.commit(PREPARE_SONG_FOR_INSERT, null)
-                this.loading = false
-            },
             closeModal () {
-                this.$store.commit(PREPARE_SONG_FOR_INSERT, null)
+                this.isCreatingPlaylist = false
             }
         }
     }
@@ -128,13 +103,14 @@
         }
     }
 
-    .full-width {
-        width: 100%;
-        max-width: 100%;
+    .playlist-modal-enter-active, .playlist-modal-leave-active {
+        will-change: transform, opacity;
+        transition: transform 250ms ease-out, opacity 250ms ease-out;
+        transform: scale(1);
+        opacity: 1;
     }
-
-    .close-icon {
-        top: 0px; right: 15px;
+    .playlist-modal-enter, .playlist-modal-leave-to {
+        transform: scale(.95);
+        opacity: 0;
     }
 </style>
-

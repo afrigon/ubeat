@@ -6,15 +6,16 @@
         .container.margin-up-30(v-if="playlist")
             .section
                 .absolute.action.action-left
-                    button.text-button.transparent.text-primary-light(v-if="isEditing" @click="cancel") Cancel
+                    button.text-button.transparent.text-primary-light(v-if="!isEditing" @click="back") Return
+                    button.text-button.transparent.text-primary-light(v-else @click="cancel") Cancel
                 .absolute.action.action-right
                     button.text-button.transparent.text-primary-light(v-if="!isEditing" @click="edit") Edit
                     button.full-button.text-white(v-else @click="save") Done
                 .row
                     .column.s12.l3
-                        playlist.head(:tracks="playlist.tracks" :editing="isEditing")
-                        div.text-center.margin-up-20.clickable(v-if="isEditing")
-                            i.material-icons.circle.red.text-white.lighten-1.delete-all(@click="deleteAll") delete_forever
+                        playlist-card.head(:tracks="playlist.tracks" :editing="isEditing" :validatedOnce="validatedOnce")
+                        div.text-center.margin-up-20(v-if="isEditing")
+                            i.material-icons.circle.red.text-white.lighten-1.delete-all.clickable(@click="deleteAll") delete_forever
                     .column.s12.l9
                         table.interactive.text-light-color(v-if="playlist.tracks && playlist.tracks.length > 0")
                             thead
@@ -24,13 +25,13 @@
                                     th time
                                     th
                             tbody#tracks.clickable
-                                tr(v-for="track in playlist.tracks" :key="track.trackId")
+                                tr(v-for="track in playlist.tracks" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: track.artistName, pictureUrl: track.artworkUrl30 }, track.previewUrl)" :class="playingId === track.trackId ? 'active': ''")
                                     td.artwork.hide-until-m
                                         img(:src="track.artworkUrl30")
                                     td {{ track.trackName }}
                                     td {{ track.duration }}
                                     td(:class="{ active: isEditing, 'text-red text-lighten-1': isEditing }")
-                                        i.material-icons.no-select(@click="() => { if (isEditing) deleteTrack(track.trackId) }") {{ isEditing ? 'remove_circle_outline' : 'play_circle_outline' }}
+                                        i.material-icons.no-select(@click="() => { if (isEditing) deleteTrack(track.trackId) }") {{ isEditing ? 'remove_circle_outline' : playingId === track.trackId ? 'pause_circle_outline': 'play_circle_outline' }}
                         .text-center(v-else)
                             p.text-grey.text-size-2 This playlist is empty, you should look for sick beats to add to it!
 </template>
@@ -38,7 +39,7 @@
 <script>
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
-    import Playlist from '@/components/playlist'
+    import PlaylistCard from '@/components/playlist-card'
 
     import { PlaylistApi } from '@/api'
     import { FScript, Banner } from '@/script/fscript'
@@ -48,14 +49,15 @@
         components: {
             'error': ErrorBox,
             'loading': Loading,
-            'playlist': Playlist
+            'playlist-card': PlaylistCard
         },
         data: () => ({
             error: null,
             loading: null,
             playlist: null,
             isEditing: null,
-            initialPlaylistName: null
+            initialPlaylistName: null,
+            validatedOnce: null
         }),
         computed: {
             name: {
@@ -66,6 +68,9 @@
                     this.$store.commit(SET_PLAYLIST_NAME, value)
                 }
             }
+        },
+        watch: {
+            '$route': 'setPlayingSong'
         },
         async beforeRouteEnter (to, from, next) {
             try {
@@ -93,7 +98,31 @@
                 this.playlist = data
                 this.name = data.name
             },
+            play (id, meta, url) {
+                if (this.playingId === id) {
+                    this.playingId = null
+                    window.sessionStorage.removeItem('song-url')
+                } else {
+                    this.playingId = id
+                    window.sessionStorage.setItem('song-url', JSON.stringify({ id: id, meta: meta, url: url }))
+                }
+
+                this.$router.replace({
+                    path: this.$route.path,
+                    query: Object.assign({}, this.$route.query, { refreshId: Math.random().toString(36).substr(2) })
+                })
+            },
+            setPlayingSong () {
+                const songData = window.sessionStorage.getItem('song-url')
+                let song = {}
+                if (songData) {
+                    try { song = JSON.parse(songData) } catch (e) {}
+                }
+                this.playingId = song.id || null
+            },
             async save () {
+                if (!this.validate()) return
+                this.error = null
                 this.loading = true
                 try {
                     await PlaylistApi.updatePlaylist(this.playlist.id, {
@@ -109,6 +138,14 @@
                 this.loading = false
                 this.isEditing = false
             },
+            validate () {
+                if (!this.name) {
+                    this.validatedOnce = true
+                    return false
+                }
+
+                return true
+            },
             edit () {
                 this.initialPlaylistName = this.name
                 this.isEditing = true
@@ -116,6 +153,10 @@
             cancel () {
                 this.name = this.initialPlaylistName
                 this.isEditing = false
+                this.validatedOnce = false
+            },
+            back () {
+                this.$router.replace({ path: `/playlists`, query: this.$route.query })
             },
             async deleteTrack (id) {
                 this.loading = true
@@ -140,6 +181,11 @@
                         message: 'An error occured while deleting this playlist'
                     }))
                 }
+            }
+        },
+        watch: {
+            isEditing: () => {
+                if (!this.isEditing) this.validatedOnce = false
             }
         }
     }
