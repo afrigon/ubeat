@@ -53,6 +53,9 @@ const router = new Router({
         path: '/logout',
         name: 'Logout',
         component: Vue.component('logout', {})
+    }, {
+        path: '*',
+        redirect: '/'
     }]
 })
 

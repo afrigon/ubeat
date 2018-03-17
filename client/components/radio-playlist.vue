@@ -2,7 +2,7 @@
     .playlist.clickable(:class="{ playing: genre === playingId }" :id="genre" :data-color="color")
         .filter.black
         i.play.material-icons.text-white play_circle_outline
-        svg.live( version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve")
+        svg.live(version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve")
             circle(cx="0" cy="0" r="12.247" transform="translate(50 50)")
                 animateTransform(attributeName="transform" type="scale" dur="3s" repeatCount="indefinite" from="1 1" to="0.5 0.5" additive="sum" values="1 1 ; 0.8 0.8 ; 1 1" keyTimes="0;0.5;1")
             g
