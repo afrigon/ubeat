@@ -8,7 +8,9 @@
             img.center(:alt="`${name} Playlist Art 3`" :src="images[2]")
             img.center(:alt="`${name} Playlist Art 4`" :src="images[3]")
         h5.truncate(v-if="!editing") {{ name || computedName }}
-        input.truncate(v-else v-model="computedName" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false")
+        div(v-else :class="{ 'input-error': nameError }")
+            input.truncate(v-model="computedName" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false")
+            span(v-if="nameError" class="input-error-message") Your playlist must have a name.
 </template>
 
 <script>
@@ -18,7 +20,8 @@
         props: {
             tracks: Array,
             name: String,
-            editing: Boolean
+            editing: Boolean,
+            validatedOnce: Boolean
         },
         computed: {
             images () {
@@ -31,9 +34,12 @@
                     this.tracks[3].artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2200x200$4')
                 ]
             },
+            nameError () {
+                return (this.validatedOnce && !(this.name || this.computedName))
+            },
             computedName: {
                 get () {
-                    return this.$store.state.temp.playlistName || 'Playlist'
+                    return this.$store.state.temp.playlistName
                 },
                 set (value) {
                     this.$store.commit(SET_PLAYLIST_NAME, value)
