@@ -95,10 +95,7 @@
                 this.name = data.name
             },
             async save () {
-                if (!this.validate()) {
-                    return
-                }
-
+                if (!this.validate()) return
                 this.error = null
                 this.loading = true
                 try {
@@ -159,9 +156,7 @@
         },
         watch: {
             isEditing: () => {
-                if (!this.isEditing) {
-                    this.validatedOnce = false
-                }
+                if (!this.isEditing) this.validatedOnce = false
             }
         }
     }
