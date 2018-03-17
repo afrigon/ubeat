@@ -69,9 +69,6 @@
                 }
             }
         },
-        watch: {
-            '$route': 'setPlayingSong'
-        },
         async beforeRouteEnter (to, from, next) {
             try {
                 return next(async vm => vm.setData(await PlaylistApi.getPlaylist(to.params.id)))
@@ -186,7 +183,8 @@
         watch: {
             isEditing: () => {
                 if (!this.isEditing) this.validatedOnce = false
-            }
+            },
+            '$route': 'setPlayingSong'
         }
     }
 </script>

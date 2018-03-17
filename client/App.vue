@@ -40,10 +40,32 @@
     }
 
     .input-error {
-        input,
-        input:not([type]):focus:not([readonly]),
+        input:not([type]),
         input[type=text]:not(.browser-default),
-        input[type=text]:not(.browser-default):focus:not([readonly]) {
+        input[type=password]:not(.browser-default),
+        input[type=email]:not(.browser-default),
+        input[type=url]:not(.browser-default),
+        input[type=time]:not(.browser-default),
+        input[type=date]:not(.browser-default),
+        input[type=datetime]:not(.browser-default),
+        input[type=datetime-local]:not(.browser-default),
+        input[type=tel]:not(.browser-default),
+        input[type=number]:not(.browser-default),
+        input[type=search]:not(.browser-default),
+        textarea:not(.browser-default),
+        input:not([type]):focus:not([readonly]),
+        input[type=text]:not(.browser-default):focus:not([readonly]),
+        input[type=password]:not(.browser-default):focus:not([readonly]),
+        input[type=email]:not(.browser-default):focus:not([readonly]),
+        input[type=url]:not(.browser-default):focus:not([readonly]),
+        input[type=time]:not(.browser-default):focus:not([readonly]),
+        input[type=date]:not(.browser-default):focus:not([readonly]),
+        input[type=datetime]:not(.browser-default):focus:not([readonly]),
+        input[type=datetime-local]:not(.browser-default):focus:not([readonly]),
+        input[type=tel]:not(.browser-default):focus:not([readonly]),
+        input[type=number]:not(.browser-default):focus:not([readonly]),
+        input[type=search]:not(.browser-default):focus:not([readonly]),
+        textarea:not(.browser-default):focus:not([readonly]) {
             border-bottom-color: #c64d47;
         }
 
