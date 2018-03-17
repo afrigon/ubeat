@@ -11,50 +11,41 @@
 <script>
     import { RadioApi } from '@/api'
     import { FScript, AudioPlayer } from '@/script/fscript'
+    import { STOP_AUDIO_PLAYER, RESTORE_RADIO } from '@/store/mutation-types'
+    import { mapMutations } from 'vuex'
 
     export default {
-        watch: {
-            '$route': 'init'
-        },
         mounted () {
-            window.addEventListener('beforeunload', () => {
-                window.sessionStorage.removeItem('song-url')
+            this.$store.watch(() => this.$store.state.persistent.audioPlayer.trackId, (trackId, oldTrackId) => {
+                if (trackId !== oldTrackId) this.stopStation()
+                this.init()
             })
-
             window.addEventListener('load', () => {
+                this.stopStation()
                 this.init()
             })
         },
         methods: {
+            ...mapMutations({
+                stopPlayer: STOP_AUDIO_PLAYER,
+                restoreRadio: RESTORE_RADIO
+            }),
             init () {
-                const songData = window.sessionStorage.getItem('song-url')
-                if (songData) {
-                    let song
-                    try { song = JSON.parse(songData) } catch (e) {}
-                    if (song) {
-                        if (!this.song || song.id !== this.song.id) return this.startSong(song)
+                return setTimeout(() => {
+                    if (!this.$store.state.persistent.audioPlayer.trackId) return
+                    if (this.$store.state.persistent.audioPlayer.isRadio) {
+                        return this.startStation({
+                            genre: this.$store.state.persistent.audioPlayer.trackId,
+                            color: this.$store.state.persistent.audioPlayer.meta.color
+                        })
                     }
-                    if (this.song) return
-                }
-
-                const stations = [
-                    { genre: 'pop', color: '#f06292' },
-                    { genre: 'classical', color: '#4caf50' },
-                    { genre: 'dance', color: '#5c6bc0' },
-                    { genre: 'rock', color: '#ffb74d' },
-                    { genre: 'metal', color: '#f44336' },
-                    { genre: 'rap', color: '#ba68c8' }
-                ]
-
-                let station = this.$route.query.station
-                station = stations.filter(n => n.genre === station)[0]
-
-                if (!station) return this.stopStation() // this was commented but song won't stop if it ain't stack on top of radio (needs vuex love)
-                this.startStation(station)
-                this.setLiveIcon()
+                    return this.startSong({
+                        url: this.$store.state.persistent.audioPlayer.meta.url,
+                        meta: this.$store.state.persistent.audioPlayer.meta
+                    })
+                }, 250)
             },
             startStation (station) {
-                this.song = null
                 if (this.player && this.player.genre === station.genre) return
                 this.player = new AudioPlayer({
                     visual: true,
@@ -75,8 +66,7 @@
                         radio.style.transform = 'translateY(0)'
                     },
                     stopCallback: (audioPlayer) => {
-                        this.stopStation()
-                        this.$router.replace({ path: this.$route.path })
+                        this.stopPlayer()
                     },
                     clipEndCallback: async (audioPlayer) => {
                         try {
@@ -90,31 +80,17 @@
                 FScript.addComponent(this.player, '#player')
             },
             stopStation () {
-                this.song = null
-                this.player = null
                 let radio = document.getElementById('radio')
                 if (!radio) return
 
                 radio.style.backgroundColor = 'transparent'
                 radio.style.transform = 'translateY(100%)'
-                this.setLiveIcon()
                 setTimeout(() => {
-                    const player = document.getElementById('player')
-                    if (!player) return
-                    while (player.firstChild) player.removeChild(player.firstChild)
+                    if (this.player) this.player.deinit()
+                    this.player = null
                 }, 250)
             },
-            setLiveIcon () {
-                let genre = false
-                if (this.player) genre = this.player.genre
-                document.querySelectorAll('.playlist').forEach(playlist => {
-                    playlist.id === genre
-                        ? playlist.classList.add('playing')
-                        : playlist.classList.remove('playing')
-                })
-            },
             startSong (song) {
-                this.song = song
                 this.player = new AudioPlayer(song.url, {
                     visual: true,
                     visualColor: '#999999',
@@ -127,23 +103,10 @@
                         radio.style.transform = 'translateY(0)'
                     },
                     stopCallback: () => {
-                        this.song = null
-                        window.sessionStorage.removeItem('song-url')
-                        const query = Object.assign({}, this.$route.query, { refreshId: Math.random().toString(36).substr(2) })
-                        // uncomment to stop station at the same time
-                        // query.station = null
-                        this.$router.replace({
-                            path: this.$route.path,
-                            query: query
-                        })
+                        this.restoreRadio()
                     },
                     clipEndCallback: () => {
-                        this.song = null
-                        window.sessionStorage.removeItem('song-url')
-                        this.$router.replace({
-                            path: this.$route.path,
-                            query: Object.assign({}, this.$route.query, { refreshId: Math.random().toString(36).substr(2) })
-                        })
+                        this.restoreRadio()
                     }
                 })
                 FScript.addComponent(this.player, '#player')

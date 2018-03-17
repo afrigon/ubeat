@@ -221,6 +221,7 @@
         transform-origin: 50% 50%;
         transform: scale(1.1);
         will-change: transform;
+        background-color: #a797c4;
     }
 
     @media only screen and (max-width : 600px) {

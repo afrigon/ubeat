@@ -25,15 +25,15 @@
                                     th time
                                     th
                             tbody#tracks.clickable
-                                tr(v-for="track in playlist.tracks" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: track.artistName, pictureUrl: track.artworkUrl30 }, track.previewUrl)" :class="playingId === track.trackId ? 'active': ''")
+                                tr(v-for="track in playlist.tracks" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: track.artistName, pictureUrl: track.artworkUrl30 }, track.previewUrl)")
                                     td.artwork.hide-until-m
                                         img(:src="track.artworkUrl30")
                                     td {{ track.trackName }}
                                     td {{ track.duration }}
-                                    td(:class="{ active: isEditing, 'text-red text-lighten-1': isEditing }")
+                                    td(:class="{ active: isEditing || playingId === track.trackId, 'text-red text-lighten-1': isEditing }")
                                         i.material-icons.no-select(@click="() => { if (isEditing) deleteTrack(track.trackId) }") {{ isEditing ? 'remove_circle_outline' : playingId === track.trackId ? 'pause_circle_outline': 'play_circle_outline' }}
                         .text-center(v-else)
-                            p.text-grey.text-size-2 This playlist is empty, you should look for sick beats to add to it!
+                            p.text-grey.text-size-2 This playlist is empty, you should look for sick beats and add them to it!
 </template>
 
 <script>
@@ -43,7 +43,7 @@
 
     import { PlaylistApi } from '@/api'
     import { FScript, Banner } from '@/script/fscript'
-    import { SET_PLAYLIST_NAME } from '@/store/mutation-types'
+    import { SET_PLAYLIST_NAME, PLAY_SONG, RESTORE_RADIO } from '@/store/mutation-types'
 
     export default {
         components: {
@@ -67,6 +67,14 @@
                 set (value) {
                     this.$store.commit(SET_PLAYLIST_NAME, value)
                 }
+            },
+            playingId () {
+                return this.$store.state.persistent.audioPlayer.trackId
+            }
+        },
+        watch: {
+            isEditing: () => {
+                if (!this.isEditing) this.validatedOnce = false
             }
         },
         async beforeRouteEnter (to, from, next) {
@@ -96,26 +104,11 @@
                 this.name = data.name
             },
             play (id, meta, url) {
-                if (this.playingId === id) {
-                    this.playingId = null
-                    window.sessionStorage.removeItem('song-url')
+                if (this.$store.state.persistent.audioPlayer.trackId === id) {
+                    this.$store.commit(RESTORE_RADIO)
                 } else {
-                    this.playingId = id
-                    window.sessionStorage.setItem('song-url', JSON.stringify({ id: id, meta: meta, url: url }))
+                    this.$store.commit(PLAY_SONG, { trackId: id, meta: meta, url: url })
                 }
-
-                this.$router.replace({
-                    path: this.$route.path,
-                    query: Object.assign({}, this.$route.query, { refreshId: Math.random().toString(36).substr(2) })
-                })
-            },
-            setPlayingSong () {
-                const songData = window.sessionStorage.getItem('song-url')
-                let song = {}
-                if (songData) {
-                    try { song = JSON.parse(songData) } catch (e) {}
-                }
-                this.playingId = song.id || null
             },
             async save () {
                 if (!this.validate()) return
@@ -179,12 +172,6 @@
                     }))
                 }
             }
-        },
-        watch: {
-            isEditing: () => {
-                if (!this.isEditing) this.validatedOnce = false
-            },
-            '$route': 'setPlayingSong'
         }
     }
 </script>

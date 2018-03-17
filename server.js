@@ -46,5 +46,6 @@ app.use('/api', proxy({
     pathRewrite: { '^/api': '' },
     logLevel: 'warn'
 }))
+app.all('/*', (req, res) => res.redirect(`/#${req.originalUrl}`))
 
 server.listen(config.port, config.ip)

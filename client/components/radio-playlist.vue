@@ -1,5 +1,5 @@
 <template lang="pug">
-    .playlist.clickable(:id="genre" :data-color="color")
+    .playlist.clickable(:class="{ playing: genre === playingId }" :id="genre" :data-color="color")
         .filter.black
         i.play.material-icons.text-white play_circle_outline
         svg.live(version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve")
@@ -16,22 +16,30 @@
 </template>
 
 <script>
+    import { START_RADIO } from '@/store/mutation-types'
+
     export default {
         props: ['genre', 'color'],
         mounted () {
             this.createEvent(this.genre, this.color)
         },
+        computed: {
+            playingId () {
+                return this.$store.state.persistent.audioPlayer.trackId
+            }
+        },
         methods: {
             createEvent (genre, color) {
                 document.getElementById(genre).addEventListener('click', (event) => {
-                    window.sessionStorage.removeItem('song-url')
-                    this.$router.replace({ path: '/', query: { station: genre } })
+                    this.$store.commit(START_RADIO, {
+                        genre: genre,
+                        color: color
+                    })
                 })
             }
         }
     }
 </script>
-
 
 <style lang="scss" scoped>
     .playlist {

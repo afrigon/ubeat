@@ -64,7 +64,7 @@
     import AddToPlaylist from '@/components/add-to-playlist'
 
     import { AlbumApi } from '@/api'
-    import { PREPARE_SONG_FOR_INSERT } from '@/store/mutation-types'
+    import { PREPARE_SONG_FOR_INSERT, PLAY_SONG, RESTORE_RADIO } from '@/store/mutation-types'
 
     export default {
         components: {
@@ -76,18 +76,16 @@
             album: null,
             tracks: null,
             error: null,
-            playingId: null,
             loading: null
         }),
         computed: {
             isAddingToPlaylist () {
                 return this.$store.state.temp.songs
+            },
+            playingId () {
+                return this.$store.state.persistent.audioPlayer.trackId
             }
         },
-        watch: {
-            '$route': 'setPlayingSong'
-        },
-        beforeDestroy () { this.playingId = null },
         beforeRouteEnter (to, from, next) {
             try {
                 return next(async vm => vm.setData(await AlbumApi.getFullAlbum(to.params.id)))
@@ -115,26 +113,11 @@
                 this.tracks = data.tracks
             },
             play (id, meta, url) {
-                if (this.playingId === id) {
-                    this.playingId = null
-                    window.sessionStorage.removeItem('song-url')
+                if (this.$store.state.persistent.audioPlayer.trackId === id) {
+                    this.$store.commit(RESTORE_RADIO)
                 } else {
-                    this.playingId = id
-                    window.sessionStorage.setItem('song-url', JSON.stringify({ id: id, meta: meta, url: url }))
+                    this.$store.commit(PLAY_SONG, { trackId: id, meta: meta, url: url })
                 }
-
-                this.$router.replace({
-                    path: this.$route.path,
-                    query: Object.assign({}, this.$route.query, { refreshId: Math.random().toString(36).substr(2) })
-                })
-            },
-            setPlayingSong () {
-                const songData = window.sessionStorage.getItem('song-url')
-                let song = {}
-                if (songData) {
-                    try { song = JSON.parse(songData) } catch (e) {}
-                }
-                this.playingId = song.id || null
             },
             addSongToPlaylist (id) {
                 this.$store.commit(PREPARE_SONG_FOR_INSERT, [id])
