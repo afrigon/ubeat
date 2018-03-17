@@ -8,6 +8,7 @@
 <script>
     import HeaderBar from '@/components/header-bar'
     import Radio from '@/components/radio'
+    import { WILL_UNLOAD } from '@/store/mutation-types'
     
     export default {
         name: 'app',
@@ -20,6 +21,9 @@
         }),
         created () {
             this.public = this.$route.meta.public
+            window.addEventListener('beforeunload', () => {
+                this.$store.commit(WILL_UNLOAD)
+            })
         },
         watch: {
             $route () {

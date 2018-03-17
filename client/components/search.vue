@@ -30,7 +30,7 @@
         }),
         computed: {
             ...mapState({
-                flags: state => state.search.filterFlags
+                flags: state => state.persistent.filterFlags
             })
         },
         mounted () {
