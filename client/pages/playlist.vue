@@ -15,7 +15,7 @@
                     .column.s12.l3
                         playlist-card.head(:tracks="playlist.tracks" :editing="isEditing" :validatedOnce="validatedOnce")
                         div.text-center.margin-up-20(v-if="isEditing")
-                            i.material-icons.circle.red.text-white.lighten-1.delete-all.clickable(@click="deleteAll") delete_forever
+                            confirm-delete(:click="deleteAll")
                     .column.s12.l9
                         table.interactive.text-light-color(v-if="playlist.tracks && playlist.tracks.length > 0")
                             thead
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+    import ConfirmDeleteButton from '@/components/confirm-delete'
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
     import PlaylistCard from '@/components/playlist-card'
@@ -47,6 +48,7 @@
 
     export default {
         components: {
+            'confirm-delete': ConfirmDeleteButton,
             'error': ErrorBox,
             'loading': Loading,
             'playlist-card': PlaylistCard
