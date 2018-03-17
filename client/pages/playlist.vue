@@ -31,7 +31,7 @@
                                     td {{ track.trackName }}
                                     td {{ track.duration }}
                                     td(:class="{ active: isEditing || playingId === track.trackId, 'text-red text-lighten-1': isEditing }")
-                                        i.material-icons.no-select(@click="() => { if (isEditing) deleteTrack(track.trackId) }") {{ isEditing ? 'remove_circle_outline' : playingId === track.trackId ? 'pause_circle_outline': 'play_circle_outline' }}
+                                        i.material-icons.no-select(@click="(event) => { if (isEditing) deleteTrack(event, track.trackId)}") {{ isEditing ? 'remove_circle_outline' : playingId === track.trackId ? 'pause_circle_outline': 'play_circle_outline' }}
                         .text-center(v-else)
                             p.text-grey.text-size-2 This playlist is empty, you should look for sick beats and add them to it!
 </template>
@@ -148,7 +148,8 @@
             back () {
                 this.$router.replace({ path: `/playlists`, query: this.$route.query })
             },
-            async deleteTrack (id) {
+            async deleteTrack (event, id) {
+                event.stopPropagation()
                 this.loading = true
                 try {
                     await PlaylistApi.removeTrackFromPlaylist(this.playlist.id, id)

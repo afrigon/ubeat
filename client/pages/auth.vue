@@ -62,8 +62,10 @@
                 setTimeout(() => {
                     if (!this.signup) {
                         document.getElementById('email').value = window.localStorage.getItem('email')
+                        document.getElementById('password').value = window.localStorage.getItem('password')
                     } else {
                         document.getElementById('email').value = ''
+                        document.getElementById('password').value = ''
                     }
                     FScript.addComponent(new MaterialInput())
                 }, 100)

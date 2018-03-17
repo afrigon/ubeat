@@ -1,7 +1,7 @@
 <template lang="pug">
     div#app.body
         header-bar(v-if="!public")
-        router-view.margin-up-70
+        router-view.margin-up-70.margin-down-100
         radio(v-if="!public")
 </template>
 

@@ -53,7 +53,7 @@
                                             td.text-center.active.button
                                                 i.material-icons.no-select(@click.stop="() => addSongToPlaylist(track.trackId)") add
                             .row.margin-0.margin-left-20
-                                p.text-grey.text-size-small-5.margin-0 {{ tracks.length }} songs, {{ tracks.totalDuration }} minutes
+                                p.text-grey.text-size-small-5.margin-0 {{ tracks.list.length }} songs, {{ tracks.totalDuration }} minutes
                             .row.margin-0.margin-left-20(v-if="album.copyright")
                                 p.text-grey.text-size-small-5 {{ album.copyright }}
 </template>
