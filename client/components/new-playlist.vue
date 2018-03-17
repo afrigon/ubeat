@@ -6,10 +6,10 @@
             h1.text-white.text-size-3.text-light.text-center Create a new playlist
             .section
                 .row.text-center
-                    .input-wrapper(:class="{ 'input-error': nameError }")
+                    .input-wrapper(:class="{ 'error': nameError }")
                         input(type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="name" v-model="name")
                         label(for="name") Name
-                        span(v-if="nameError" class="input-error-message") Your playlist must have a name.
+                        span(v-if="nameError" class="input-message") Your playlist must have a name.
                     button.hoverable-light.primary.text-white.submit-button(@click="validatePlaylist") Create playlist
 </template>
 

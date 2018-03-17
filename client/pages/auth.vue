@@ -19,25 +19,25 @@
                             strong.error-title.text-size-2 Error
                             .error.text-size-small-7 {{ submitError }}
 
-                .input-wrapper(v-if="signup" :class="{ 'input-error': nameError }")
+                .input-wrapper(v-if="signup" :class="{ 'error': nameError }")
                     input(type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="name" id="name" v-model="name")
                     label(for="name") Name
-                    span(v-if="nameError" class="input-error-message") {{ nameError }}
+                    span(v-if="nameError" class="input-message") {{ nameError }}
 
-                .input-wrapper(:class="{ 'input-error': emailError }")
+                .input-wrapper(:class="{ 'error': emailError }")
                     input(type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="email" id="email" v-model="email")
                     label(for="email") Email
-                    span(v-if="emailError" class="input-error-message") {{ emailError }}
+                    span(v-if="emailError" class="input-message") {{ emailError }}
 
-                .input-wrapper(:class="{ 'input-error': passwordError }")
+                .input-wrapper(:class="{ 'error': passwordError }")
                     input(type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="password" id="password" v-model="password")
                     label(for="password") Password
-                    span(v-if="passwordError" class="input-error-message") {{ passwordError }}
+                    span(v-if="passwordError" class="input-message") {{ passwordError }}
 
-                .input-wrapper(v-if="signup" :class="{ 'input-error': passwordConfirmationError }")
+                .input-wrapper(v-if="signup" :class="{ 'error': passwordConfirmationError }")
                     input(type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="confirm" id="confirm" v-model="passwordConfirmation")
                     label(for="confirm") Confirm Password
-                    span(v-if="passwordConfirmationError" class="input-error-message") {{ passwordConfirmationError }}
+                    span(v-if="passwordConfirmationError" class="input-message") {{ passwordConfirmationError }}
 
                 div(v-if="signup")
                     input.primary.text-white.submit-button(type="submit" value="Sign up")
@@ -80,11 +80,7 @@
                 this.signup = this.$route.name !== 'Login'
 
                 this.password = null
-                if (!this.signup) {
-                    this.email = window.localStorage.getItem('email')
-                } else {
-                    this.email = null
-                }
+                this.email = this.signup ? null : window.localStorage.getItem('email')
 
                 setTimeout(() => {
                     FScript.addComponent(new MaterialInput())
@@ -95,11 +91,7 @@
             this.signup = this.$route.name !== 'Login'
         },
         mounted () {
-            if (!this.signup) {
-                this.email = window.localStorage.getItem('email')
-            } else {
-                this.email = null
-            }
+            this.email = this.signup ? null : window.localStorage.getItem('email')
             setTimeout(() => {
                 FScript.addComponent(new MaterialInput())
             }, 100)
