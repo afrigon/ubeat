@@ -8,9 +8,9 @@
             img.center(:alt="`${name} Playlist Art 3`" :src="images[2]")
             img.center(:alt="`${name} Playlist Art 4`" :src="images[3]")
         h5.truncate(v-if="!editing") {{ name || computedName }}
-        div(v-else :class="{ 'input-error': nameError }")
+        .input-wrapper(v-else :class="{ 'error': nameError }")
             input.truncate(v-model="computedName" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false")
-            span(v-if="nameError" class="input-error-message") Your playlist must have a name.
+            span(v-if="nameError" class="input-message") Your playlist must have a name.
 </template>
 
 <script>
