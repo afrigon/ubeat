@@ -32,7 +32,7 @@ class Radio {
                 this.song = song || {}
             }
 
-            setTimeout(this.nextSong.bind(this), /* this.song.duration || this.timeout */ 20) // preview time
+            setTimeout(this.nextSong.bind(this), /* this.song.duration || this.timeout */ this.timeout) // preview time
             this.startTime = Date.now()
             return this.fetchSong(this.playlist.pop(), (err, song) => {
                 if (err) return (this.preFetchedSong = this.song)
