@@ -46,7 +46,7 @@
                 }, 250)
             },
             startStation (station) {
-                if (this.player && this.player.genre === station.genre) return
+                if ((this.player && this.player.genre === station.genre) || !station || !station.genre) return
                 this.player = new AudioPlayer({
                     visual: true,
                     visualColor: station.color,
@@ -91,6 +91,7 @@
                 }, 250)
             },
             startSong (song) {
+                if (!song || !song.url) return
                 this.player = new AudioPlayer(song.url, {
                     visual: true,
                     visualColor: '#999999',
@@ -121,7 +122,7 @@
         position: fixed;
         width: 100%;
         bottom: 0px;
-        z-index: 3000;
+        // z-index: 3000;
         transform: translateY(100%);
         will-change: transform;
         transition: transform 200ms ease-out;

@@ -6,7 +6,7 @@
         div.drawer-profile
             div.drawer-profile-image
                 img.circle.primary-border(:src="avatar")
-                p.text-white.margin-0.truncate alexfrigon154
+                p.text-white.margin-0.truncate {{ username }}
         .divider.margin-down-10
         nav
             ul.capitalize
@@ -38,6 +38,9 @@
     import { FScript, Drawer } from '@/script/fscript'
 
     export default {
+        props: {
+            username: String
+        },
         data: () => ({
             avatar: null
         }),
