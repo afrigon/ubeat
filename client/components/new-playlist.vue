@@ -20,7 +20,8 @@
     export default {
         data: () => ({
             name: null,
-            validatedOnce: false
+            validatedOnce: false,
+            isCreatingPlaylist: false
         }),
         methods: {
             validatePlaylist () {
@@ -29,8 +30,10 @@
                     return
                 }
 
-                if (this.$store.state.temp.newPlaylistName) return this.$emit('close')
+                if (this.isCreatingPlaylist) return
+                this.isCreatingPlaylist = true
                 this.$store.commit(CREATE_PLAYLIST, this.name)
+                this.$emit('close')
             }
         },
         computed: {
