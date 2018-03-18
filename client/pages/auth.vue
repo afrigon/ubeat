@@ -78,9 +78,7 @@
                 this.validatedOnce = false
                 this.submitError = false
                 this.signup = this.$route.name !== 'Login'
-
-                this.password = this.signup ? null : window.localStorage.getItem('password')
-                this.email = this.signup ? null : window.localStorage.getItem('email')
+                this.resetForms()
 
                 setTimeout(() => {
                     FScript.addComponent(new MaterialInput())
@@ -91,8 +89,7 @@
             this.signup = this.$route.name !== 'Login'
         },
         mounted () {
-            this.email = this.signup ? null : window.localStorage.getItem('email')
-            this.password = this.signup ? null : window.localStorage.getItem('password')
+            this.resetForms()
             setTimeout(() => {
                 FScript.addComponent(new MaterialInput())
             }, 100)
@@ -181,6 +178,17 @@
             validateRegistration () {
                 this.validatedOnce = true
                 return (!this.nameError && !this.emailError && !this.passwordError && !this.passwordConfirmationError)
+            },
+            resetForms () {
+                if (!this.signup) {
+                    this.email = window.localStorage.getItem('email')
+                    this.password = null
+                } else {
+                    this.name = null
+                    this.email = null
+                    this.password = null
+                    this.passwordConfirmation = null
+                }
             }
         },
         computed: {
