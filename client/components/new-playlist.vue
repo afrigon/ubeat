@@ -15,6 +15,7 @@
 
 <script>
     import { FScript, MaterialInput } from '@/script/fscript'
+    import { CREATE_PLAYLIST } from '@/store/mutation-types'
 
     export default {
         data: () => ({
@@ -28,7 +29,8 @@
                     return
                 }
 
-                this.$emit('createPlaylist', this.name)
+                if (this.$store.state.temp.newPlaylistName) return this.$emit('close')
+                this.$store.commit(CREATE_PLAYLIST, this.name)
             }
         },
         computed: {
@@ -38,6 +40,7 @@
         },
         mounted () {
             FScript.addComponent(new MaterialInput())
+            document.getElementById('name').focus()
         }
     }
 </script>

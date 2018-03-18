@@ -52,6 +52,7 @@
     import Logo from '@/components/logo'
     import Api from '@/api'
     import { FScript, Toast, MaterialInput, Util } from '@/script/fscript'
+    import { STOP_AUDIO_PLAYER } from '@/store/mutation-types'
 
     export default {
         data: () => ({
@@ -90,6 +91,7 @@
         },
         mounted () {
             this.resetForms()
+            this.$store.commit(STOP_AUDIO_PLAYER)
             setTimeout(() => {
                 FScript.addComponent(new MaterialInput())
             }, 100)

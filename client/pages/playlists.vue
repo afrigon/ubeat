@@ -1,10 +1,10 @@
 <template lang="pug">
     main.dark.no-scroll
         error(:message="error" v-if="error")
-        loading(v-if="loading" color="#b29adb")
+        loading(v-if="loading || playlistName" color="#b29adb")
 
         transition(name="playlist-modal")
-            new-playlist.fixed(v-if="isCreatingPlaylist" @close="closeModal" @createPlaylist="createPlaylist")
+            new-playlist.fixed(v-if="isCreatingPlaylist" @close="closeModal")
         .container.margin-up-30
             .section
                 .row.text-center
@@ -24,6 +24,7 @@
 
     import { PlaylistApi } from '@/api'
     import { FScript, Banner } from '@/script/fscript'
+    import { CREATE_PLAYLIST } from '@/store/mutation-types'
 
     export default {
         components: {
@@ -39,6 +40,18 @@
             isCreatingPlaylist: false,
             newPlaylistName: null
         }),
+        computed: {
+            playlistName () {
+                return this.$store.state.temp.newPlaylistName
+            }
+        },
+        mounted () {
+            this.$store.watch(() => this.$store.state.temp.newPlaylistName, (playlistName, oldPlaylistName) => {
+                if (!playlistName || playlistName === oldPlaylistName) return
+                this.createPlaylist(playlistName)
+                this.$store.commit(CREATE_PLAYLIST, null)
+            })
+        },
         beforeRouteEnter (to, from, next) {
             try {
                 return next(async vm => vm.setData(await PlaylistApi.getPersonalPlaylists()))
