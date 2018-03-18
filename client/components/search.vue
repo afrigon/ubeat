@@ -35,6 +35,9 @@
         },
         mounted () {
             const form = document.getElementById(`form-search${this.mobile ? '-mobile' : ''}`)
+            form.addEventListener('submit', (event) => {
+                event.preventDefault()
+            })
             if (!form) return console.log('could not find search form')
 
             const input = form.querySelectorAll('.search-input')[0]
