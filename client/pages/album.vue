@@ -44,7 +44,7 @@
                                             th time
                                             th
                                     tbody#tracks.clickable
-                                        tr(v-for="(track, i) in tracks.list" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: album.artistName, pictureUrl: album.artworkUrl30 }, track.previewUrl)" :class="playingId === track.trackId ? 'active': ''")
+                                        tr(v-for="(track, i) in tracks.list" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: album.artistName, pictureUrl: album.artworkUrl30 }, track.previewUrl)" :class="{ active: playingId === track.trackId }")
                                             td.text-center(:class="{ active: playingId === track.trackId }")
                                                 span.number {{ i + 1 }}
                                                 i.material-icons.no-select {{ playingId === track.trackId ? 'pause_circle_outline': 'play_circle_outline' }}
@@ -53,7 +53,7 @@
                                             td.text-center.active.button
                                                 i.material-icons.no-select(@click.stop="() => addSongToPlaylist(track.trackId)") add
                             .row.margin-0.margin-left-20
-                                p.text-grey.text-size-small-5.margin-0 {{ tracks.length }} songs, {{ tracks.totalDuration }} minutes
+                                p.text-grey.text-size-small-5.margin-0 {{ tracks.list.length }} songs, {{ tracks.totalDuration }} minutes
                             .row.margin-0.margin-left-20(v-if="album.copyright")
                                 p.text-grey.text-size-small-5 {{ album.copyright }}
 </template>
