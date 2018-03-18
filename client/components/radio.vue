@@ -17,8 +17,6 @@
     export default {
         mounted () {
             this.$store.watch(() => this.$store.state.persistent.audioPlayer.trackId, (trackId, oldTrackId) => {
-                console.log(trackId)
-                console.log(oldTrackId)
                 if (trackId !== oldTrackId) this.stopStation()
                 this.init()
             })

@@ -29,9 +29,7 @@ let stored = window.sessionStorage.getItem('persistent-store')
 if (stored) {
     try {
         stored = JSON.parse(stored)
-    } catch (e) {
-        stored = defaults
-    }
+    } catch (e) { stored = defaults }
     if (stored.audioPlayer && (Date.now() - stored.audioPlayer.unloadTime) > 10000) stored.audioPlayer = defaults.audioPlayer
 } else {
     stored = defaults
