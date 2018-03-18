@@ -4,7 +4,7 @@
         loading(v-if="loading || playlistName" color="#b29adb")
 
         transition(name="playlist-modal")
-            new-playlist.fixed(v-if="isCreatingPlaylist" @close="closeModal")
+            new-playlist.fixed(v-if="isCreatingPlaylist" @close="closeModal" @createPlaylist="createPlaylist")
         .container.margin-up-30
             .section
                 .row.text-center
