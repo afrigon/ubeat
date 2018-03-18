@@ -12,21 +12,32 @@
                     h2.text-size-2.margin-10.text-regular Login and find YOUR beat
             form#auth-form.box.dark(:class="signup ? 'signup' : 'login'")
                 logo.logo-login.dark
-                .input-wrapper(v-if="signup")
-                    input(type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="name" id="name")
+
+                transition(name="error-show" appear v-if="submitError")
+                    .section.error-wrapper
+                        .row.text-white
+                            strong.error-title.text-size-2 Error
+                            .error.text-size-small-7 {{ submitError }}
+
+                .input-wrapper(v-if="signup" :class="{ 'error': nameError }")
+                    input(type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="name" id="name" v-model="name")
                     label(for="name") Name
+                    span(v-if="nameError" class="input-message") {{ nameError }}
 
-                .input-wrapper
-                    input(type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="email" id="email")
+                .input-wrapper(:class="{ 'error': emailError }")
+                    input(type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="email" id="email" v-model="email")
                     label(for="email") Email
+                    span(v-if="emailError" class="input-message") {{ emailError }}
 
-                .input-wrapper
-                    input(type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="password" id="password")
+                .input-wrapper(:class="{ 'error': passwordError }")
+                    input(type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="password" id="password" v-model="password")
                     label(for="password") Password
+                    span(v-if="passwordError" class="input-message") {{ passwordError }}
 
-                .input-wrapper(v-if="signup")
-                    input(type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="confirm" id="confirm")
+                .input-wrapper(v-if="signup" :class="{ 'error': passwordConfirmationError }")
+                    input(type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" name="confirm" id="confirm" v-model="passwordConfirmation")
                     label(for="confirm") Confirm Password
+                    span(v-if="passwordConfirmationError" class="input-message") {{ passwordConfirmationError }}
 
                 div(v-if="signup")
                     input.primary.text-white.submit-button(type="submit" value="Sign up")
@@ -51,22 +62,27 @@
                 gamma: null,
                 x: 0,
                 y: 0
-            }
+            },
+            name: null,
+            email: null,
+            password: null,
+            passwordConfirmation: null,
+            validatedOnce: null,
+            submitError: null
         }),
         components: {
             'logo': Logo
         },
         watch: {
             '$route' () {
+                this.validatedOnce = false
+                this.submitError = false
                 this.signup = this.$route.name !== 'Login'
+
+                this.password = this.signup ? null : window.localStorage.getItem('password')
+                this.email = this.signup ? null : window.localStorage.getItem('email')
+
                 setTimeout(() => {
-                    if (!this.signup) {
-                        document.getElementById('email').value = window.localStorage.getItem('email')
-                        document.getElementById('password').value = window.localStorage.getItem('password')
-                    } else {
-                        document.getElementById('email').value = ''
-                        document.getElementById('password').value = ''
-                    }
                     FScript.addComponent(new MaterialInput())
                 }, 100)
             }
@@ -75,12 +91,12 @@
             this.signup = this.$route.name !== 'Login'
         },
         mounted () {
-            if (!this.signup) {
-                document.getElementById('email').value = window.localStorage.getItem('email')
-            } else {
-                document.getElementById('email').value = ''
-            }
-            FScript.addComponent(new MaterialInput())
+            this.email = this.signup ? null : window.localStorage.getItem('email')
+            this.password = this.signup ? null : window.localStorage.getItem('password')
+            setTimeout(() => {
+                FScript.addComponent(new MaterialInput())
+            }, 100)
+
             if (window.DeviceOrientationEvent && Util.isTouch()) {
                 window.addEventListener('deviceorientation', (event) => {
                     const gamma = (Util.clamp(event.gamma, -90, 90) + 90) * 200 / 180
@@ -119,11 +135,8 @@
             form && form.addEventListener('submit', (event) => {
                 event.preventDefault()
 
-                const email = document.getElementById('email')
-                email && window.localStorage.setItem('email', email.value)
-
-                const name = document.getElementById('name')
-                name && window.localStorage.setItem('name', name.value)
+                this.email && window.localStorage.setItem('email', this.email)
+                this.name && window.localStorage.setItem('name', this.name)
 
                 if (this.signup) {
                     return this.register(form)
@@ -134,78 +147,71 @@
         },
         methods: {
             async login (form) {
-                const email = document.getElementById('email').value.toLowerCase()
-                const password = document.getElementById('password').value
-                if (!email || !password) {
-                    window.scroll({ top: 0, left: 0, behavior: 'smooth' })
-                    return this.toast.show('Error', 'Email and password don\'t match any of our records', { type: 'error' })
-                }
-
+                if (!this.validateLogin()) return form.scrollIntoView({ behavior: 'smooth' })
                 try {
-                    const data = await Api.login(email, password)
+                    const data = await Api.login(this.email.toLowerCase(), this.password)
                     if (data) {
                         if (data.token) window.localStorage.setItem('access_token', data.token)
                         if (data.name) window.localStorage.setItem('name', data.name)
                     }
                     return this.$router.push(this.$route.query.redirect || '/')
                 } catch (err) {
-                    window.scroll({ top: 0, left: 0, behavior: 'smooth' })
-                    return this.toast.show('Error', 'Email and password don\'t match any of our records', { type: 'error' })
+                    this.submitError = 'Your email and password combination don\'t match any of our records.'
+                    form.scrollIntoView({ behavior: 'smooth' })
                 }
             },
-            async register () {
-                let error = false
-                const name = document.getElementById('name').value
-                if (!name) {
-                    error = true
-                    this.toast.show('Error', 'A valid name must be provided', { type: 'error' })
-                }
-
-                const email = document.getElementById('email').value.toLowerCase()
-                const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-                if (!email || !emailRegex.test(email)) {
-                    error = true
-                    this.toast.show('Error', 'A valid email adress must be provided', { type: 'error' })
-                }
-
-                const password = document.getElementById('password').value
-                if (!password) {
-                    error = true
-                    this.toast.show('Error', 'A password must be provided', { type: 'error' })
-                }
-
-                const confirm = document.getElementById('confirm').value
-                if (!confirm || password !== confirm) {
-                    error = true
-                    this.toast.show('Error', 'Password confirmation must be the same as password', { type: 'error' })
-                }
-
-                if (error) return window.scroll({ top: 0, left: 0, behavior: 'smooth' })
+            validateLogin () {
+                this.validatedOnce = true
+                return (!this.emailError && !this.passwordError)
+            },
+            async register (form) {
+                if (!this.validateRegistration()) return form.scrollIntoView({ behavior: 'smooth' })
                 try {
-                    const data = await Api.register(email, name, password)
+                    const data = await Api.register(this.email, this.name, this.password)
                     if (data) {
                         if (data.token) window.localStorage.setItem('access_token', data.token)
                         if (data.name) window.localStorage.setItem('name', data.name)
                     }
                     return this.$router.push(this.$route.query.redirect || '/')
                 } catch (err) {
-                    window.scroll({ top: 0, left: 0, behavior: 'smooth' })
-                    return this.toast.show('Error', 'Could not create account, try again later', { type: 'error' })
+                    this.submitError = 'We could not create account, please try again later.'
+                    form.scrollIntoView({ behavior: 'smooth' })
                 }
+            },
+            validateRegistration () {
+                this.validatedOnce = true
+                return (!this.nameError && !this.emailError && !this.passwordError && !this.passwordConfirmationError)
+            }
+        },
+        computed: {
+            nameError () {
+                if (this.validatedOnce && !this.name) return 'Your name is required.'
+                return null
+            },
+            emailError () {
+                if (this.validatedOnce) {
+                    const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+                    if (!this.email) return 'Your email is required.'
+                    if (!emailRegex.test(this.email)) return 'You must provide a valid email.'
+                }
+                return null
+            },
+            passwordError () {
+                if (this.validatedOnce && !this.password) return 'Your password is required.'
+                return null
+            },
+            passwordConfirmationError () {
+                if (this.validatedOnce) {
+                    if (!this.passwordConfirmation) return 'You must confirm your password.'
+                    if (this.passwordConfirmation !== this.password) return 'Your password confirmation does not match with your password.'
+                }
+                return null
             }
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    main {
-        position: relative;
-        overflow: hidden;
-        height: 100vh;
-        width: 100vw;
-        box-sizing: border-box;
-    }
-
     .background {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
@@ -246,5 +252,24 @@
         text-align: center;
         max-width: 500px;
         margin: auto;
+    }
+
+    .error-wrapper {
+        background-color: #c64d47;
+        border-radius: 0 0 4px 4px;
+        padding: 10px 30px;
+        border: 1px solid #993a35;
+        margin: 40px auto 30px;
+        text-align: left;
+    }
+
+    .error-show-enter-active {
+        will-change: transform;
+        transition: transform 250ms ease-out;
+        transform: translateY(0);
+    }
+
+    .error-show-enter {
+        transform: translateY(-100%);
     }
 </style>
