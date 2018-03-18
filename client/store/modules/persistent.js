@@ -10,8 +10,8 @@ import {
 const defaults = {
     filterFlags: 7,
     audioPlayer: {
-        isRadio: false,
-        trackId: 'default',
+        isRadio: true,
+        trackId: null,
         unloadTime: null,
         trackToRestore: null,
         meta: {
