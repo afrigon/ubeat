@@ -16,7 +16,7 @@
         #options-divider.divider.hide-until-m
         #avatar.text-right.flex.flex-right.clickable.margin-left-25.margin-right-25
             i#search-action.material-icons.m.text-white.clickable.hide-after-m.margin-right-20(@click.stop="") search
-            p#username.text-white.inline-block.margin-0.margin-right-20.truncate.hide-until-l {{ name }}
+            p#username.text-white.inline-block.margin-0.margin-right-20.truncate.hide-until-l {{ username }}
             .flex.flex-center.clickable(@click.stop="opened = !opened")
                 img.circle.primary-border.hide-until-m(:src="avatar")
                 i#options-button.material-icons.s.text-white.margin-left-5.hide-until-m keyboard_arrow_down
@@ -26,21 +26,19 @@
     import Api from '@/api'
 
     export default {
+        props: {
+            username: String
+        },
         data: () => ({
-            name: null,
             avatar: null,
             opened: false
         }),
         watch: {
             '$route' () {
-                this.name = window.localStorage.getItem('name') ||
-                    window.localStorage.getItem('email') || ''
                 this.avatar = Api.getGravatar()
             }
         },
         created () {
-            this.name = window.localStorage.getItem('name') ||
-                window.localStorage.getItem('email') || ''
             this.avatar = Api.getGravatar()
         },
         mounted () {
