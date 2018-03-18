@@ -180,15 +180,10 @@
                 return (!this.nameError && !this.emailError && !this.passwordError && !this.passwordConfirmationError)
             },
             resetForms () {
-                if (!this.signup) {
-                    this.email = window.localStorage.getItem('email')
-                    this.password = null
-                } else {
-                    this.name = null
-                    this.email = null
-                    this.password = null
-                    this.passwordConfirmation = null
-                }
+                this.name = null
+                this.password = null
+                this.passwordConfirmation = null
+                this.email = this.signup ? null : window.localStorage.getItem('email')
             }
         },
         computed: {
