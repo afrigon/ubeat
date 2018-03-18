@@ -122,7 +122,7 @@
         position: fixed;
         width: 100%;
         bottom: 0px;
-        z-index: 3000;
+        // z-index: 3000;
         transform: translateY(100%);
         will-change: transform;
         transition: transform 200ms ease-out;
