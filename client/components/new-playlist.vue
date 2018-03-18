@@ -19,7 +19,8 @@
     export default {
         data: () => ({
             name: null,
-            validatedOnce: false
+            validatedOnce: false,
+            isCreatingPlaylist: false
         }),
         methods: {
             validatePlaylist () {
@@ -28,6 +29,8 @@
                     return
                 }
 
+                if (this.isCreatingPlaylist) return
+                this.isCreatingPlaylist = true
                 this.$emit('createPlaylist', this.name)
             }
         },
