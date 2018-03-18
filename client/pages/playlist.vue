@@ -25,7 +25,7 @@
                                     th time
                                     th
                             tbody#tracks.clickable
-                                tr(v-for="track in playlist.tracks" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: track.artistName, pictureUrl: track.artworkUrl30 }, track.previewUrl)" :class="playingId === track.trackId ? 'active': ''")
+                                tr(v-for="track in playlist.tracks" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: track.artistName, pictureUrl: track.artworkUrl30 }, track.previewUrl)" :class="{ active: playingId === track.trackId }")
                                     td.artwork.hide-until-m
                                         img(:src="track.artworkUrl30")
                                     td {{ track.trackName }}

@@ -11,8 +11,9 @@ const defaults = {
     filterFlags: 7,
     audioPlayer: {
         isRadio: false,
-        trackId: null,
+        trackId: 'default',
         unloadTime: null,
+        trackToRestore: null,
         meta: {
             url: null,
             artist: null,
@@ -28,12 +29,16 @@ let stored = window.sessionStorage.getItem('persistent-store')
 if (stored) {
     try {
         stored = JSON.parse(stored)
-    } catch (e) {}
+    } catch (e) {
+        stored = defaults
+    }
     if (stored.audioPlayer && (Date.now() - stored.audioPlayer.unloadTime) > 10000) stored.audioPlayer = defaults.audioPlayer
+} else {
+    stored = defaults
 }
 
 const Persistent = {
-    state: stored || defaults,
+    state: stored,
     getters: {
         getFilterFlags: state => Util.getBitwiseArray(4).filter((n) => (n & state.filterFlags) !== 0)
     },

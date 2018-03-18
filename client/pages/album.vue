@@ -44,7 +44,7 @@
                                             th time
                                             th
                                     tbody#tracks.clickable
-                                        tr(v-for="(track, i) in tracks.list" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: album.artistName, pictureUrl: album.artworkUrl30 }, track.previewUrl)" :class="playingId === track.trackId ? 'active': ''")
+                                        tr(v-for="(track, i) in tracks.list" :key="track.trackId" @click="play(track.trackId, { title: track.trackName, artist: album.artistName, pictureUrl: album.artworkUrl30 }, track.previewUrl)" :class="{ active: playingId === track.trackId }")
                                             td.text-center(:class="{ active: playingId === track.trackId }")
                                                 span.number {{ i + 1 }}
                                                 i.material-icons.no-select {{ playingId === track.trackId ? 'pause_circle_outline': 'play_circle_outline' }}
