@@ -15,7 +15,6 @@
 
 <script>
     import { FScript, MaterialInput } from '@/script/fscript'
-    import { CREATE_PLAYLIST } from '@/store/mutation-types'
 
     export default {
         data: () => ({
@@ -32,8 +31,7 @@
 
                 if (this.isCreatingPlaylist) return
                 this.isCreatingPlaylist = true
-                this.$store.commit(CREATE_PLAYLIST, this.name)
-                this.$emit('close')
+                this.$emit('createPlaylist', this.name)
             }
         },
         computed: {
