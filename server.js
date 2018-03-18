@@ -1,11 +1,11 @@
 const path = require('path')
+const cors = require('cors')
 const express = require('express')
 const app = express()
 const server = require('http').createServer(app)
 const favicon = require('serve-favicon')
 const proxy = require('http-proxy-middleware')
 const radio = require('./radio')
-
 let config = require('./config')
 const sharedConfig = config.shared
 
@@ -37,6 +37,11 @@ if (process.argv.indexOf('-p') !== -1) {
 }
 
 app.disable('x-powered-by')
+app.use(cors({
+    origin: '*',
+    methods: ['GET'],
+    credentials: true
+}))
 app.use(favicon(path.join(__dirname, 'assets', 'favicon.ico')))
 app.use('/radio', radio)
 app.use('/static', express.static(path.join('.', 'static')))

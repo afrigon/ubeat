@@ -53,13 +53,15 @@ export default class AudioPlayer extends Component {
 
             FScript.autoRemoveComponentsOfTypes(this.constructor.name)
             this.el = el
+            // water bucket
+            while (this.el.firstChild) this.el.removeChild(this.el.firstChild)
             el.appendChild(this.createPlayer())
             this.createMeta()
         })
     }
 
     deinit () {
-        this.audioContext.close()
+        if (this.audioContext) this.audioContext.close()
         Util.removeEvent(window, 'resize', this.resize)
         while (this.el.firstChild) this.el.removeChild(this.el.firstChild)
     }
