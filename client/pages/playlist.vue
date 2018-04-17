@@ -148,6 +148,9 @@
                 this.validatedOnce = false
             },
             back () {
+                if (this.$route.query && this.$route.query.redirectUrl) {
+                    return this.$router.replace({ path: this.$route.query.redirectUrl })
+                }
                 this.$router.replace({ path: `/playlists`, query: this.$route.query })
             },
             async deleteTrack (event, id) {
