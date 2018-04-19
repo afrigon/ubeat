@@ -28,7 +28,7 @@ export default class Drawer extends Component {
         Util.addEvent(window, 'resize', (event) => {
             return drawer.classList.remove('open')
         })
-        component.querySelectorAll('.drawer-close i').forEach((closeButton) => {
+        component.querySelectorAll('.drawer-close').forEach((closeButton) => {
             Util.addEvent(closeButton, 'click', (event) => {
                 return drawer.classList.remove('open')
             })

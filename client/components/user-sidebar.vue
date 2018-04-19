@@ -8,7 +8,7 @@
                 p.text-white.text-center.margin-0 {{ user.email }}
             .row
                 .text-white.clickable(@click="showFollowing")
-                    i.material-icons list
+                    i.material-icons perm_identity
                     span.icon-text {{ user.following ? user.following.length : null }} friend(s)
             .row(v-if="isFollowed")
                 .text-white.clickable(@click="unfollow")
