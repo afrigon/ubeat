@@ -11,6 +11,7 @@
                             img.hoverable-pop.no-select.circle(:alt="`${targetUser.name} Profile Picture`" :src="targetUser.avatar")
                             .row(v-if="targetUser.name")
                                 p.text-white.text-center.text-size-2.margin-0 {{ targetUser.name }}
+                                p.text-white.text-center.text-size-1.margin-0 {{ targetUser.email }}
                         .column.s12.m6.l12.padding-0
                             .row(v-if="targetUser.isFollowed")
                                 .text-white.clickable(@click="unfollow")
