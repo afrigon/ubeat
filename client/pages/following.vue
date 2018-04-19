@@ -4,7 +4,7 @@
         loading(v-if="loading" color="#b29adb")
         .section
             .absolute.action.action-left
-                button.text-button.transparent.text-primary-light(@click="back") Return
+                button.text-button.transparent.text-primary-light(@click="back") Return to playlists
             .row
                 .column.s12
                     user-sidebar(:key="targetUser.id" :user="targetUser")
@@ -69,7 +69,7 @@
         },
         methods: {
             back () {
-                return this.$router.go(-1)
+                return this.$router.push({path: `/user/${this.targetUser.id}`})
             },
             setData (data) {
                 this.loading = false
@@ -94,7 +94,6 @@
         button {
             padding: 5px 0;
             text-align: center;
-            width: 75px;
             font-weight: 200;
             font-size: 1.32rem;
         }
@@ -117,18 +116,8 @@
         vertical-align: top;
         display: inline-block;
         margin: 15px;
-        width: 150px;
+        width: 200px;
         height: 150px;
         margin-bottom: 40px;
-    }
-
-    .following-profile-image {
-        width: 75%;
-    }
-
-    @media only screen and (max-width: 600px) {
-        .following-profile-image {
-            width: 60%;
-        }
     }
 </style>

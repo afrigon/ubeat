@@ -67,6 +67,12 @@
         align-self: flex-end;
         max-width: 367px;
 
+        #username {
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
         .interactive {
             padding: 2px 0px;
             min-width: 120px;
@@ -82,7 +88,7 @@
 
         &.active {
             #options-button { transform: scale(-1); }
-            margin-bottom: -139px;
+            margin-bottom: -100px;
         }
 
         #options-list {
@@ -101,7 +107,6 @@
 
         #avatar {
             margin: 8px 0px;
-            padding: 5px;
 
             p {
                 max-width: 220px;
@@ -129,6 +134,7 @@
             #avatar {
                 margin-left: 0px !important;
                 margin-right: 0px !important;
+                padding: 5px;
             }
         }
     }

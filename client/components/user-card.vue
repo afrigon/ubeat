@@ -21,16 +21,8 @@
 </script>
 
 <style lang="scss" scoped>
-
     .avatar
     {
-        width: 75%;
-    }
-
-    @media only screen and (max-width: 600px) {
-        .avatar
-        {
-            width: 60%;
-        }
+        width: 55%;
     }
 </style>

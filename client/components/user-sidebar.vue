@@ -10,14 +10,13 @@
                 .text-white.clickable(@click="showFollowing")
                     i.material-icons perm_identity
                     span.icon-text {{ user.following ? user.following.length : null }} friend(s)
-            .row(v-if="isFollowed")
-                .text-white.clickable(@click="unfollow")
-                    i.material-icons remove_circle_outline
-                    span.icon-text Unfollow
-            .row(v-else)
-                .text-white.clickable(@click="follow")
-                    i.material-icons person_add
-                    span.icon-text Follow
+                span(v-if="me.id !== null && me.id !== user.id")
+                    .text-white.clickable(v-if="isFollowed" @click="unfollow")
+                        i.material-icons remove_circle_outline
+                        span.icon-text Unfollow
+                    .text-white.clickable(v-else @click="follow")
+                        i.material-icons person_add
+                        span.icon-text Follow
 </template>
 
 <script>
@@ -34,7 +33,10 @@
         data: () => ({
             avatar: null,
             isFollowed: null,
-            loading: null
+            loading: null,
+            me: {
+                id: null
+            }
         }),
         computed: {
             getAvatar () {
@@ -66,6 +68,7 @@
         },
         async created () {
             this.avatar = Api.getGravatar(150, this.user.email)
+            this.me = await UserApi.me()
             this.isFollowed = await UserApi.isFollowing(this.user.id)
         }
     }
