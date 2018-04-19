@@ -7,23 +7,11 @@
             .absolute.action.action-left
                 button.text-button.transparent.text-primary-light(@click="back") Return
             .row
-                .column.s12(v-if="targetUser")
-                    .column.s12.l3.text-center
-                        .column.s12.m12.l12.padding-0.relative
-                            img.hoverable-pop.no-select.circle(:alt="`${targetUser.name} Profile Picture`" :src="targetUser.avatar")
-                            .row(v-if="targetUser.name")
-                                p.text-white.text-center.text-size-2.margin-0 {{ targetUser.name }}
-                            .row(v-if="targetUser.isFollowed")
-                                .text-white.clickable(@click="unfollow")
-                                    i.material-icons remove_circle_outline
-                                    span.icon-text Unfollow
-                            .row(v-else)
-                                .text-white.clickable(@click="follow")
-                                    i.material-icons person_add
-                                    span.icon-text Follow
+                .column.s12
+                    user-sidebar(:key="targetUser.id" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" )
                     .column.s12.l9.padding-0
                         .container.margin-up-30
-                            h1.text-white.text-size-3.text-light.text-center Friends ({{targetUser.following.length}})
+                            h1.text-white.text-size-3.text-light.text-center Friends ({{ targetUser.following.length }})
                             .section
                                 .row.text-center
                                     user-card.user-card.clickable(v-for="followingUser in targetUser.following" :key="followingUser.id" :name="followingUser.name" :email="followingUser.email" @click.native="() => selectFollowingUser (followingUser.id)")
@@ -36,14 +24,16 @@
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
     import UserCard from '@/components/user-card'
+    import UserSidebar from '@/components/user-sidebar'
 
-    import Api, { UserApi } from '@/api'
+    import { UserApi } from '@/api'
 
     export default {
         components: {
             'error': ErrorBox,
             'loading': Loading,
-            'user-card': UserCard
+            'user-card': UserCard,
+            'user-sidebar': UserSidebar
         },
         data: () => ({
             targetUser: null,
@@ -54,8 +44,6 @@
             try {
                 return next(async vm => {
                     const user = await UserApi.getUser(to.params.id)
-                    user.avatar = Api.getGravatar(150, user.email)
-                    user.isFollowed = await UserApi.isFollowing(user.id)
                     vm.setData(user)
                 })
             } catch (err) { return next(vm => vm.setData(null)) }
@@ -63,8 +51,6 @@
         async beforeRouteUpdate (to, from, next) {
             try {
                 const user = await UserApi.getUser(to.params.id)
-                user.avatar = Api.getGravatar(150, user.email)
-                user.isFollowed = await UserApi.isFollowing(user.id)
                 return this.setData(user) & next()
             } catch (err) { return this.setData(null) & next() }
         },
@@ -86,24 +72,6 @@
                 this.error = null
                 this.targetUser = data
                 console.log('targetUser', this.targetUser)
-            },
-            async follow () {
-                this.loading = true
-                try {
-                    await UserApi.followUser(this.targetUser.id)
-                    this.error = null
-                    this.targetUser.isFollowed = true
-                } catch (err) { this.error = 'An error occured while following this user.' }
-                this.loading = false
-            },
-            async unfollow () {
-                this.loading = true
-                try {
-                    await UserApi.unfollowUser(this.targetUser.id)
-                    this.error = null
-                    this.targetUser.isFollowed = false
-                } catch (err) { this.error = 'An error occured while following this user.' }
-                this.loading = false
             },
             selectFollowingUser (id) {
                 this.$router.push({ path: `/user/${id}` })

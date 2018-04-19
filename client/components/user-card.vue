@@ -1,7 +1,8 @@
 <template lang="pug">
     div
-        img.avatar.hoverable-pop.no-select.circle(:alt="`{{name}} Profile Picture`" :src="getAvatar")
-        .text-white {{name}}
+        img.avatar.hoverable-pop.no-select.circle(:alt="`{{ name }} Profile Picture`" :src="getAvatar")
+        .text-white.text-size-2 {{ name }}
+        .text-white.text-center {{ email }}
 </template>
 
 <script>

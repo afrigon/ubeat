@@ -15,6 +15,7 @@
                                 .text-white.clickable(@click="showFollowing")
                                     i.material-icons list
                                     span.icon-text {{ targetUser.following.length }} friend(s)
+                        .column.s12.m12.l12.padding-0.relative
                             .row(v-if="targetUser.isFollowed")
                                 .text-white.clickable(@click="unfollow")
                                     i.material-icons remove_circle_outline
