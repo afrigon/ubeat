@@ -2,7 +2,7 @@
     main.dark.no-scroll.flex.flex-spaced.flex-vertical
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
-        
+
         .container.margin-up-30(v-if="playlist")
             .section
                 .absolute.action.action-left
@@ -170,7 +170,7 @@
             async deleteAll () {
                 try {
                     await PlaylistApi.removePlaylist(this.playlist.id)
-                    this.$router.replace({ path: `/playlists`, query: this.$route.query })
+                    this.$router.go(-1)
                 } catch (err) {
                     FScript.addComponent(new Banner({
                         title: 'Error',

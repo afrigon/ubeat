@@ -2,31 +2,31 @@
     main.dark.no-scroll
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
-
         .section
             .absolute.action.action-left
                 button.text-button.transparent.text-primary-light(@click="back") Return
             .row
                 .column.s12
-                    user-sidebar(:key="targetUser.id" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" )
+                    user-sidebar(:key="targetUser.id" :user="targetUser" :context="'following'")
                     .column.s12.l9.padding-0
                         .container.margin-up-30
                             h1.text-white.text-size-3.text-light.text-center Friends ({{ targetUser.following.length }})
                             .section
                                 .row.text-center
-                                    user-card.user-card.clickable(v-for="followingUser in targetUser.following" :key="followingUser.id" :name="followingUser.name" :email="followingUser.email" @click.native="() => selectFollowingUser (followingUser.id)")
+                                    i.text-white.text-size-2(v-if="targetUser.following.length === 0") This user is antisocial and does not have any friends.
+                                    user-card.user-card.clickable(v-else v-for="followingUser in targetUser.following" :key="followingUser.id" :user="followingUser" @click.native="() => selectFollowingUser (followingUser.id)")
 
 </template>
 
 <script>
-    // 5aaaad66d85c31000414d68a frigon
+    // 5aaaad66d85c31000414d68a Frigon
     // 5aac54dba6d6b600042f3082 Sam
+    import UserSidebar from '@/components/user-sidebar'
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
     import UserCard from '@/components/user-card'
-    import UserSidebar from '@/components/user-sidebar'
 
-    import { UserApi } from '@/api'
+    import {UserApi} from '@/api'
 
     export default {
         components: {
@@ -36,7 +36,12 @@
             'user-sidebar': UserSidebar
         },
         data: () => ({
-            targetUser: null,
+            targetUser: {
+                id: null,
+                name: null,
+                email: null,
+                following: []
+            },
             error: null,
             loading: null
         }),
@@ -46,13 +51,17 @@
                     const user = await UserApi.getUser(to.params.id)
                     vm.setData(user)
                 })
-            } catch (err) { return next(vm => vm.setData(null)) }
+            } catch (err) {
+                return next(vm => vm.setData(null))
+            }
         },
         async beforeRouteUpdate (to, from, next) {
             try {
                 const user = await UserApi.getUser(to.params.id)
                 return this.setData(user) & next()
-            } catch (err) { return this.setData(null) & next() }
+            } catch (err) {
+                return this.setData(null) & next()
+            }
         },
         beforeRouteLeave (to, from, next) {
             this.loading = true
@@ -71,10 +80,9 @@
 
                 this.error = null
                 this.targetUser = data
-                console.log('targetUser', this.targetUser)
             },
             selectFollowingUser (id) {
-                this.$router.push({ path: `/user/${id}` })
+                this.$router.push({path: `/user/${id}`})
             }
         }
     }
@@ -90,7 +98,9 @@
             font-weight: 200;
             font-size: 1.32rem;
         }
-        .text-button { text-shadow: 0px 0px 8px #555555 }
+        .text-button {
+            text-shadow: 0px 0px 8px #555555
+        }
         .full-button {
             border-radius: 13px;
             background-color: #484156;
@@ -98,7 +108,10 @@
             line-height: 31px;
         }
     }
-    .action-left { left: 32px; }
+
+    .action-left {
+        left: 32px;
+    }
 
     .user-card {
         vertical-align: top;
@@ -109,14 +122,12 @@
         margin-bottom: 40px;
     }
 
-    .following-profile-image
-    {
+    .following-profile-image {
         width: 75%;
     }
 
     @media only screen and (max-width: 600px) {
-        .following-profile-image
-        {
+        .following-profile-image {
             width: 60%;
         }
     }

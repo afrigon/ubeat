@@ -7,7 +7,8 @@
             h1.text-white.text-size-3.text-light.text-center Playlists
             .section
                 .row.text-center
-                    playlist-card.item.playlist.clickable(v-for="playlist in playlists" :key="playlist.id" :name="playlist.name" :tracks="playlist.tracks" @click.native="() => selectPlaylist(playlist.id)")
+                    i.text-white.text-size-2(v-if="playlists.length === 0") This user has no playlist.
+                    playlist-card.item.playlist.clickable(v-else v-for="playlist in playlists" :key="playlist.id" :name="playlist.name" :tracks="playlist.tracks" @click.native="() => selectPlaylist(playlist.id)")
 </template>
 
 <script>

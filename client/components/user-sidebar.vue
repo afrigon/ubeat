@@ -1,10 +1,15 @@
 <template lang="pug">
-    .column.s12.l3.text-center
+    .column.s12.l3.text-center(v-if="user.name")
+        loading(v-if="loading" color="#b29adb")
         .column.s12.m12.l12.padding-0.relative
-            img.hoverable-pop.no-select.circle(:alt="`{{ name }} Profile Picture`" :src="getAvatar")
-            .row(v-if="name")
-                p.text-white.text-center.text-size-2.margin-0 {{ name }}
-                p.text-white.text-center.margin-0 {{ email }}
+            img.hoverable-pop.no-select.circle(:alt="`{{ user.name }} Profile Picture`" :src="getAvatar")
+            .row
+                p.text-white.text-center.text-size-2.margin-0 {{ user.name }}
+                p.text-white.text-center.margin-0 {{ user.email }}
+            .row(v-if="context !== 'following'")
+                .text-white.clickable(@click="showFollowing")
+                    i.material-icons list
+                    span.icon-text {{ user.following ? user.following.length : null }} friend(s)
             .row(v-if="isFollowed")
                 .text-white.clickable(@click="unfollow")
                     i.material-icons remove_circle_outline
@@ -17,25 +22,31 @@
 
 <script>
     import Api, { UserApi } from '@/api'
+    import Loading from '@/components/loading'
 
     export default {
+        components: {
+            'loading': Loading
+        },
         props: {
-            id: String,
-            name: String,
-            email: String
+            user: Object,
+            context: String
         },
         data: () => ({
             avatar: null,
-            isFollowed: null
+            isFollowed: null,
+            loading: null
         }),
         computed: {
             getAvatar () {
                 return this.avatar
-            },
+            }
+        },
+        methods: {
             async follow () {
                 this.loading = true
                 try {
-                    await UserApi.followUser(this.id)
+                    await UserApi.followUser(this.user.id)
                     this.error = null
                     this.isFollowed = true
                 } catch (err) { this.error = 'An error occured while following this user.' }
@@ -44,16 +55,19 @@
             async unfollow () {
                 this.loading = true
                 try {
-                    await UserApi.unfollowUser(this.id)
+                    await UserApi.unfollowUser(this.user.id)
                     this.error = null
                     this.isFollowed = false
                 } catch (err) { this.error = 'An error occured while following this user.' }
                 this.loading = false
+            },
+            showFollowing () {
+                this.$router.push({ path: `/user/${this.user.id}/friends` })
             }
         },
         async created () {
-            this.avatar = Api.getGravatar(150, this.email)
-            this.isFollowed = await UserApi.isFollowing(this.id)
+            this.avatar = Api.getGravatar(150, this.user.email)
+            this.isFollowed = await UserApi.isFollowing(this.user.id)
         }
     }
 </script>

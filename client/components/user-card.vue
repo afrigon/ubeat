@@ -1,8 +1,8 @@
 <template lang="pug">
     div
-        img.avatar.hoverable-pop.no-select.circle(:alt="`{{ name }} Profile Picture`" :src="getAvatar")
-        .text-white.text-size-2 {{ name }}
-        .text-white.text-center {{ email }}
+        img.avatar.hoverable-pop.no-select.circle(:alt="`{{ user.name }} Profile Picture`" :src="getAvatar")
+        .text-white.text-size-2 {{ user.name }}
+        .text-white.text-center {{ user.email }}
 </template>
 
 <script>
@@ -10,12 +10,11 @@
 
     export default {
         props: {
-            name: String,
-            email: String
+            user: Object
         },
         computed: {
             getAvatar () {
-                return Api.getGravatar(150, this.email)
+                return Api.getGravatar(150, this.user.email)
             }
         }
     }
