@@ -31,11 +31,13 @@
         data: () => ({
             targetUser: null,
             error: null,
-            loading: null
+            loading: null,
+            me: null
         }),
         beforeRouteEnter (to, from, next) {
             try {
                 return next(async vm => {
+                    vm.setMe()
                     const user = await UserApi.getUser(to.params.id)
                     vm.setData(user)
                 })
@@ -52,6 +54,9 @@
             return next()
         },
         methods: {
+            async setMe () {
+                this.me = await UserApi.me()
+            },
             setData (data) {
                 this.loading = false
                 if (!data) {
