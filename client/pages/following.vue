@@ -7,7 +7,7 @@
                 button.text-button.transparent.text-primary-light(@click="back") Return
             .row
                 .column.s12
-                    user-sidebar(:key="targetUser.id" :user="targetUser" :context="'following'")
+                    user-sidebar(:key="targetUser.id" :user="targetUser")
                     .column.s12.l9.padding-0
                         .container.margin-up-30
                             h1.text-white.text-size-3.text-light.text-center Friends ({{ targetUser.following.length }})

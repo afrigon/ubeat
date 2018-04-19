@@ -5,7 +5,7 @@
         .section
             .row
                 .column.s12(v-if="targetUser")
-                    user-sidebar(:key="targetUser.id" :user="targetUser" :context="'user'")
+                    user-sidebar(:key="targetUser.id" :user="targetUser")
                     .column.s12.l9.padding-0
                         show-playlist(:user-id="targetUser.id")
 

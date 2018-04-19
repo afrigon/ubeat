@@ -6,7 +6,7 @@
             .row
                 p.text-white.text-center.text-size-2.margin-0 {{ user.name }}
                 p.text-white.text-center.margin-0 {{ user.email }}
-            .row(v-if="context !== 'following'")
+            .row
                 .text-white.clickable(@click="showFollowing")
                     i.material-icons list
                     span.icon-text {{ user.following ? user.following.length : null }} friend(s)
@@ -29,8 +29,7 @@
             'loading': Loading
         },
         props: {
-            user: Object,
-            context: String
+            user: Object
         },
         data: () => ({
             avatar: null,

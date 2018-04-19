@@ -4,11 +4,11 @@
             router-link.no-hover-decoration(:to="{ path: '/playlists', query: $route.query }")
                 li.text-white.interactive.clickable
                     i.material-icons.s playlist_play
-                    span Playlists
-            router-link.no-hover-decoration(:to="{ path: '/settings', query: $route.query }")
+                    span My Playlists
+            router-link.no-hover-decoration(:to="{ path: '/user/' + me.id, query: $route.query }")
                 li.text-white.interactive.clickable
-                    i.material-icons.s settings
-                    span Settings
+                    i.material-icons.s account_box
+                    span My User
             router-link.no-hover-decoration(:to="{ path: '/logout' }")
                 li.text-white.interactive.clickable
                     i.material-icons.s exit_to_app
@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    import Api from '@/api'
+    import Api, { UserApi } from '@/api'
 
     export default {
         props: {
@@ -31,15 +31,19 @@
         },
         data: () => ({
             avatar: null,
-            opened: false
+            opened: false,
+            me: {
+                id: null
+            }
         }),
         watch: {
             '$route' () {
                 this.avatar = Api.getGravatar()
             }
         },
-        created () {
+        async created () {
             this.avatar = Api.getGravatar()
+            this.me = await UserApi.me()
         },
         mounted () {
             document.body.addEventListener('click', this.closeOptions)
@@ -100,7 +104,7 @@
         #avatar {
             margin: 8px 0px;
             padding: 5px;
-            
+
             p {
                 max-width: 220px;
             }
@@ -111,7 +115,7 @@
             &:hover #options-button {
                 color: #C0C0C0 !important;
             }
-        
+
             img {
                 height: 40px;
                 width: 40px;
