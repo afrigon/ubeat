@@ -4,8 +4,8 @@ import { Util } from '@/script/fscript'
 export default class AlbumApi {
     static async getAlbum (id) {
         const album = (await Auth.authRequest(`/api/albums/${id}`)).results[0]
-        album.artworkUrl30 = album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$230x30$4')
-        album.artworkUrl400 = album.artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2400x400$4')
+        album.artworkUrl30 = album.artworkUrl100.replace(/https:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1$230x30$4')
+        album.artworkUrl400 = album.artworkUrl100.replace(/https:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1$2400x400$4')
         album.collectionViewUrl = `${album.collectionViewUrl}&app=itunes`
         return album
     }

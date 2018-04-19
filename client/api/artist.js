@@ -19,8 +19,8 @@ export default class ArtistApi {
     static async getArtistAlbums (id, limit = 30) {
         const albums = (await Auth.authRequest(`/api/artists/${id}/albums?limit=${limit}`)).results
         for (let i = 0; i < albums.length; ++i) {
-            albums[i].artworkUrl400 = albums[i].artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2400x400$4')
-            albums[i].artworkUrl200 = albums[i].artworkUrl100.replace(/http:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1-ssl$2200x200$4')
+            albums[i].artworkUrl400 = albums[i].artworkUrl100.replace(/https:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1$2400x400$4')
+            albums[i].artworkUrl200 = albums[i].artworkUrl100.replace(/https:\/\/(is\d+)(.*)(100x100)(.*)/, 'https://$1$2200x200$4')
         }
         return albums
     }
