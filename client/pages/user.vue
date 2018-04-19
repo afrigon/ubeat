@@ -7,11 +7,11 @@
             .row
                 .column.s12(v-if="targetUser")
                     .column.s12.l3.text-center
-                        .column.s12.m6.l12.padding-0.relative
+                        .column.s12.m12.l12.padding-0.relative
                             img.hoverable-pop.no-select.circle(:alt="`${targetUser.name} Profile Picture`" :src="targetUser.avatar")
                             .row(v-if="targetUser.name")
                                 p.text-white.text-center.text-size-2.margin-0 {{ targetUser.name }}
-                        .column.s12.m6.l12.padding-0
+                                p.text-white.text-center.text-size-1.margin-0 {{ targetUser.email }}
                             .row(v-if="targetUser.isFollowed")
                                 .text-white.clickable(@click="unfollow")
                                     i.material-icons remove_circle_outline
@@ -42,11 +42,13 @@
         data: () => ({
             targetUser: null,
             error: null,
-            loading: null
+            loading: null,
+            me: null
         }),
         beforeRouteEnter (to, from, next) {
             try {
                 return next(async vm => {
+                    vm.setMe()
                     const user = await UserApi.getUser(to.params.id)
                     user.avatar = Api.getGravatar(150, user.email)
                     user.isFollowed = await UserApi.isFollowing(user.id)
@@ -67,6 +69,9 @@
             return next()
         },
         methods: {
+            async setMe () {
+                this.me = await UserApi.me()
+            },
             setData (data) {
                 this.loading = false
                 if (!data) {
