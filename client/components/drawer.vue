@@ -26,9 +26,6 @@
                 router-link.drawer-action(:to="{ path: '/playlists', query: $route.query }")
                     i.material-icons playlist_play
                     li Playlists
-                router-link.drawer-action(:to="{ path: '/settings', query: $route.query }")
-                    i.material-icons settings
-                    li Settings
                 router-link.drawer-action(:to="{ path: '/logout' }")
                     i.material-icons exit_to_app
                     li Logout

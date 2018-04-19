@@ -5,10 +5,6 @@
                 li.text-white.interactive.clickable
                     i.material-icons.s playlist_play
                     span My Playlists
-            router-link.no-hover-decoration(:to="{ path: '/user/' + me.id, query: $route.query }")
-                li.text-white.interactive.clickable
-                    i.material-icons.s account_box
-                    span My User
             router-link.no-hover-decoration(:to="{ path: '/logout' }")
                 li.text-white.interactive.clickable
                     i.material-icons.s exit_to_app
