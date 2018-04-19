@@ -15,6 +15,7 @@ export default class Drawer extends Component {
     }
 
     initDrawer (drawer) {
+        drawer.classList.remove('invisible')
         const component = document.createElement('div')
         component.classList.add('drawer')
         while (drawer.firstChild) { component.appendChild(drawer.removeChild(drawer.firstChild)) }
@@ -28,7 +29,7 @@ export default class Drawer extends Component {
         Util.addEvent(window, 'resize', (event) => {
             return drawer.classList.remove('open')
         })
-        component.querySelectorAll('.drawer-close i').forEach((closeButton) => {
+        component.querySelectorAll('.drawer-close').forEach((closeButton) => {
             Util.addEvent(closeButton, 'click', (event) => {
                 return drawer.classList.remove('open')
             })

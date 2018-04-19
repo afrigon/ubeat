@@ -1,12 +1,13 @@
 <template lang="pug">
-    #drawer-menu.drawer-wrapper.drawer-popup-wrapper
+    #drawer-menu.drawer-wrapper.drawer-popup-wrapper.invisible
         div.drawer-header
             div.drawer-close
                 i.material-icons close
-        div.drawer-profile
-            div.drawer-profile-image
-                img.circle.primary-border(:src="avatar")
-                p.text-white.margin-0.truncate {{ username }}
+        router-link.no-decoration.drawer-close(:to="{ path: '/user/' + me.id, query: $route.query }")
+            div.drawer-profile
+                div.drawer-profile-image
+                    img.circle.primary-border(:src="avatar")
+                    p.text-white.margin-0.truncate {{ username }}
         .divider.margin-down-10
         nav
             ul.capitalize
@@ -25,16 +26,13 @@
                 router-link.drawer-action(:to="{ path: '/playlists', query: $route.query }")
                     i.material-icons playlist_play
                     li Playlists
-                router-link.drawer-action(:to="{ path: '/settings', query: $route.query }")
-                    i.material-icons settings
-                    li Settings
                 router-link.drawer-action(:to="{ path: '/logout' }")
                     i.material-icons exit_to_app
                     li Logout
 </template>
 
 <script>
-    import Api from '@/api'
+    import Api, { UserApi } from '@/api'
     import { FScript, Drawer } from '@/script/fscript'
 
     export default {
@@ -42,10 +40,14 @@
             username: String
         },
         data: () => ({
-            avatar: null
+            avatar: null,
+            me: {
+                id: null
+            }
         }),
-        mounted () {
+        async mounted () {
             this.avatar = Api.getGravatar()
+            this.me = await UserApi.me()
             FScript.addComponent(new Drawer())
         }
     }
