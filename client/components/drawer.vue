@@ -1,5 +1,5 @@
 <template lang="pug">
-    #drawer-menu.drawer-wrapper.drawer-popup-wrapper
+    #drawer-menu.drawer-wrapper.drawer-popup-wrapper.invisible
         div.drawer-header
             div.drawer-close
                 i.material-icons close

@@ -15,6 +15,7 @@ export default class Drawer extends Component {
     }
 
     initDrawer (drawer) {
+        drawer.classList.remove('invisible')
         const component = document.createElement('div')
         component.classList.add('drawer')
         while (drawer.firstChild) { component.appendChild(drawer.removeChild(drawer.firstChild)) }
