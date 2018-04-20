@@ -2,13 +2,13 @@
     main.dark.no-scroll.flex.flex-spaced.flex-vertical
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
-        
+
         .container.margin-up-30(v-if="playlist")
             .section
                 .absolute.action.action-left
                     button.text-button.transparent.text-primary-light(v-if="!isEditing" @click="back") Return
                     button.text-button.transparent.text-primary-light(v-else @click="cancel") Cancel
-                .absolute.action.action-right
+                .absolute.action.action-right(v-if="canEdit")
                     button.text-button.transparent.text-primary-light(v-if="!isEditing" @click="edit") Edit
                     button.full-button.text-white(v-else @click="save") Done
                 .row
@@ -42,7 +42,7 @@
     import Loading from '@/components/loading'
     import PlaylistCard from '@/components/playlist-card'
 
-    import { PlaylistApi } from '@/api'
+    import { PlaylistApi, UserApi } from '@/api'
     import { FScript, Banner } from '@/script/fscript'
     import { SET_PLAYLIST_NAME, PLAY_SONG, RESTORE_RADIO } from '@/store/mutation-types'
 
@@ -59,7 +59,8 @@
             playlist: null,
             isEditing: null,
             initialPlaylistName: null,
-            validatedOnce: null
+            validatedOnce: null,
+            canEdit: false
         }),
         computed: {
             name: {
@@ -81,13 +82,13 @@
         },
         async beforeRouteEnter (to, from, next) {
             try {
-                return next(async vm => vm.setData(await PlaylistApi.getPlaylist(to.params.id)))
+                return next(async vm => vm.setData(await PlaylistApi.getPlaylist(to.params.id)) & vm.setEditAccess())
             } catch (err) { return next(vm => vm.setData(null)) }
         },
         async beforeRouteUpdate (to, from, next) {
             try {
                 return this.setData(await PlaylistApi.getPlaylist(to.params.id)) & next()
-            } catch (err) { return this.setData(null) & next() }
+            } catch (err) { return this.setData(null) & this.setEditAccess() & next() }
         },
         beforeRouteLeave (to, from, next) {
             this.loading = true
@@ -104,6 +105,10 @@
                 this.error = null
                 this.playlist = data
                 this.name = data.name
+            },
+            async setEditAccess () {
+                let me = await UserApi.me()
+                this.canEdit = this.playlist.owner.id === me.id
             },
             play (id, meta, url) {
                 if (this.$store.state.persistent.audioPlayer.trackId === id) {
@@ -170,7 +175,7 @@
             async deleteAll () {
                 try {
                     await PlaylistApi.removePlaylist(this.playlist.id)
-                    this.$router.replace({ path: `/playlists`, query: this.$route.query })
+                    this.$router.go(-1)
                 } catch (err) {
                     FScript.addComponent(new Banner({
                         title: 'Error',

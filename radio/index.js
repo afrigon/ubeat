@@ -101,7 +101,6 @@ class Radio {
 
             return this.parseSong(data, (err, song) => {
                 if (err) {
-                    console.log(id)
                     return callback(err)
                 }
                 this.cache.push(song)

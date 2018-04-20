@@ -6,6 +6,7 @@ import Home from '@/pages/home'
 import Album from '@/pages/album'
 import Artist from '@/pages/artist'
 import User from '@/pages/user'
+import Following from '@/pages/following'
 import Playlists from '@/pages/playlists'
 import Playlist from '@/pages/playlist'
 import Settings from '@/pages/settings'
@@ -32,6 +33,10 @@ const router = new Router({
         path: '/user/:id',
         name: 'User',
         component: User
+    }, {
+        path: '/user/:id/friends',
+        name: 'Following',
+        component: Following
     }, {
         path: '/playlists',
         name: 'Playlists',
