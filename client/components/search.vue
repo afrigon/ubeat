@@ -214,5 +214,8 @@
             overflow: scroll;
             white-space: nowrap;
         }
+        ul::-webkit-scrollbar { 
+            display: none; 
+        }
     }
 </style>
