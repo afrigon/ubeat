@@ -26,7 +26,7 @@
                         .section.result-item.result-songs(v-if="(mode == 0 || mode == 3) && songs && songs.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular Songs
                             .text-center
-                                song.row(v-for="song in songs" :key="song.trackId" :id="song.trackId" albumId="song.collectionId" :name="song.trackName" :pictureUrl="song.artworkUrl60")
+                                song.row(v-for="song in songs" :key="song.trackId" :id="song.trackId" :albumId="song.collectionId" :name="song.trackName" :pictureUrl="song.artworkUrl60")
                         .section.result-item.result-users(v-if="(mode == 0 || mode == 4) && users && users.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular Users
                             .text-center
