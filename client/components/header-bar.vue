@@ -11,7 +11,7 @@
 <script>
     import Navigation from '@/components/navigation'
     import Drawer from '@/components/drawer'
-    import Search from '@/components/_search'
+    import Search from '@/components/search'
     import Options from '@/components/options'
 
     export default {

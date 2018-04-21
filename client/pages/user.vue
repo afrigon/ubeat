@@ -6,7 +6,7 @@
         .section
             .row
                 .column.s12(v-if="targetUser")
-                    user-sidebar(:key="targetUser.id" :user="targetUser")
+                    user-sidebar(:id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="me")
                     .column.s12.l9.padding-0
                         show-playlist(:user-id="targetUser.id")
 
@@ -32,7 +32,8 @@
         data: () => ({
             targetUser: null,
             error: null,
-            loading: null
+            loading: null,
+            me: null
         }),
         beforeRouteEnter (to, from, next) {
             try {
@@ -53,12 +54,16 @@
             return next()
         },
         methods: {
-            setData (data) {
+            async setData (data) {
                 this.loading = false
                 if (!data) {
                     this.targetUser = null
                     return (this.error = 'An error occured while searching for this user.')
                 }
+
+                try {
+                    this.me = await UserApi.me()
+                } catch (err) { this.error = 'An error occured while fetching data for this user.' }
 
                 this.error = null
                 this.targetUser = data
