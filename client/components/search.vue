@@ -1,8 +1,8 @@
 <template lang="pug">
     transition(name="fade")
-        .fixed.edge-0(v-if="opened")
+        .fixed.edge-0.grey.darken-5(v-if="opened")
             form.dark(@submit.prevent="x => x")
-                p.tagline.text-white Search for an artist, album song or user
+                p.hide-until-m.tagline.text-white Search for an artist, album song or user
                 input.text-white.text-fat.transparent.browser-default(type="text" name="q" autocomplete="off" @keyup="search" ref="search" v-model="qString")
                 .close-search.absolute.clickable(@click="close")
                     i.material-icons.l.text-white close
@@ -17,17 +17,21 @@
                     .container
                         .section.result-item.result-artists(v-if="mode <= 1 && artists && artists.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular Artists
-                            artist.row(v-for="artist in artists" :key="artist.artistId" :id="artist.artistId" :name="artist.artistName")
+                            .text-center
+                                artist.row(v-for="artist in artists" :key="artist.artistId" :id="artist.artistId" :name="artist.artistName")
                         .section.result-item.result-albums(v-if="(mode == 0 || mode == 2) && albums && albums.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular Albums
-                            album.row(v-for="album in albums" :key="album.collectionId" :id="album.collectionId" :title="album.collectionName" :pictureUrl="album.artworkUrl100")
+                            .text-center
+                                album.row(v-for="album in albums" :key="album.collectionId" :id="album.collectionId" :title="album.collectionName" :pictureUrl="album.artworkUrl100")
                         .section.result-item.result-songs(v-if="(mode == 0 || mode == 3) && songs && songs.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular Songs
-                            song.row(v-for="song in songs" :key="song.trackId" :id="song.trackId" albumId="song.collectionId" :name="song.trackName" :pictureUrl="song.artworkUrl60")
+                            .text-center
+                                song.row(v-for="song in songs" :key="song.trackId" :id="song.trackId" albumId="song.collectionId" :name="song.trackName" :pictureUrl="song.artworkUrl60")
                         .section.result-item.result-users(v-if="(mode == 0 || mode == 4) && users && users.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular Users
-                            router-link.inline-block.text-center.text-white.text-size-2.user(v-for="user in users" :to="{ path: `/user/${user.id}` }" :key="user.id")
-                                user-sidebar.row(v-if="me" :id="user.id" :name="user.name" :email="user.email" :selfId="me.id")
+                            .text-center
+                                router-link.inline-block.text-center.text-white.text-size-2.user(v-for="user in users" :to="{ path: `/user/${user.id}` }" :key="user.id")
+                                    user-sidebar.row(v-if="me" :id="user.id" :name="user.name" :email="user.email" :selfId="me.id")
                         .section(v-if="error")
                             .row.text-center
                                 h1.text-red.text-size-2 {{ error }}
@@ -143,7 +147,7 @@
         border: none;
         box-shadow: none;
         height: 50px;
-        line-height: 1.5;
+        line-height: 50px;
         box-sizing: border-box;
         font-size: 34px;
         position: absolute;
@@ -189,5 +193,26 @@
         margin-top: 10px;
         margin-bottom: 10px;
         box-sizing: border-box;
+    }
+
+    @media only screen and (max-width : 600px) {
+        form {
+            height: 75px;
+        }
+        input {
+            left: 10px;
+            bottom: 12.5px;
+            right: 36px;
+        }
+        .close-search {
+            right: 10px;
+            bottom: 11px;
+        }
+        ul {
+            width: 100%;
+            height: 61px;
+            overflow: scroll;
+            white-space: nowrap;
+        }
     }
 </style>
