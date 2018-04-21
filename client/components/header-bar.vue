@@ -5,14 +5,13 @@
         drawer(:username="username")
         navigation
         search()
-        search(mobile)
         options(:username="username")
 </template>
 
 <script>
     import Navigation from '@/components/navigation'
     import Drawer from '@/components/drawer'
-    import Search from '@/components/search'
+    import Search from '@/components/_search'
     import Options from '@/components/options'
 
     export default {
