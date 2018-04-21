@@ -6,7 +6,7 @@
         .section
             .row
                 .column.s12(v-if="targetUser")
-                    user-sidebar(:id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="me")
+                    user-sidebar(v-if="me" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="me.id")
                     .column.s12.l9.padding-0
                         show-playlist(:user-id="targetUser.id")
 

@@ -27,7 +27,7 @@
                         .section.result-item.result-users(v-if="(mode == 0 || mode == 4) && users && users.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular Users
                             router-link.inline-block.text-center.text-white.text-size-2.user(v-for="user in users" :to="{ path: `/user/${user.id}` }" :key="user.id")
-                                user-sidebar.row(:id="user.id" :name="user.name" :email="user.email" :selfId="me")
+                                user-sidebar.row(v-if="me" :id="user.id" :name="user.name" :email="user.email" :selfId="me.id")
                         .section(v-if="error")
                             .row.text-center
                                 h1.text-red.text-size-2 {{ error }}

@@ -7,10 +7,10 @@
                 button.text-button.transparent.text-primary-light(@click="back") Return to playlists
             .row
                 .column.s12
-                    user-sidebar(:id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="me")
+                    user-sidebar(v-if="me" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="me.id")
                     .column.s12.l9.padding-0
                         .container.margin-up-30
-                            h1.text-white.text-size-3.text-light.text-center Friends ({{ targetUser.following.length }})
+                            h1.text-white.text-size-3.text-light.text-center Following ({{ targetUser.following.length }})
                             .section
                                 .row.text-center
                                     i.text-white.text-size-2(v-if="targetUser.following.length === 0") This user does not have any friends.
@@ -19,8 +19,6 @@
 </template>
 
 <script>
-    // 5aaaad66d85c31000414d68a Frigon
-    // 5aac54dba6d6b600042f3082 Sam
     import UserSidebar from '@/components/user-sidebar'
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'

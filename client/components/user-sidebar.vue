@@ -9,7 +9,7 @@
             .row
                 .text-white.clickable(@click="showFollowing" v-if="following")
                     i.material-icons perm_identity
-                    span.icon-text {{ following.length }} friend(s)
+                    span.icon-text {{ following.length }} following
                 span(v-if="selfId !== id")
                     .text-white.clickable(v-if="isFollowed" @click.stop="unfollow")
                         i.material-icons remove_circle_outline
