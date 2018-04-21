@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Auth from '@/script/auth'
+import Cookies from 'js-cookie'
 
 import Home from '@/pages/home'
 import Album from '@/pages/album'
@@ -9,7 +10,6 @@ import User from '@/pages/user'
 import Following from '@/pages/following'
 import Playlists from '@/pages/playlists'
 import Playlist from '@/pages/playlist'
-import Settings from '@/pages/settings'
 
 import AuthPage from '@/pages/auth'
 
@@ -46,10 +46,6 @@ const router = new Router({
         name: 'Playlist',
         component: Playlist
     }, {
-        path: '/settings',
-        name: 'Settings',
-        component: Settings
-    }, {
         path: '/login',
         name: 'Login',
         component: AuthPage,
@@ -72,7 +68,7 @@ const router = new Router({
 router.beforeEach(async (to, from, next) => {
     let query = { redirect: to.fullPath }
     if (to.name === 'Logout') {
-        window.localStorage.removeItem('access_token')
+        Cookies.remove('access_token')
         query = {}
     }
 

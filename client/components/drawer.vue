@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import Api, { UserApi } from '@/api'
+    import Api from '@/api'
     import { FScript, Drawer } from '@/script/fscript'
 
     export default {
@@ -47,7 +47,7 @@
         }),
         async mounted () {
             this.avatar = Api.getGravatar()
-            this.me = await UserApi.me()
+            this.me.id = window.localStorage.getItem('id')
             FScript.addComponent(new Drawer())
         }
     }
