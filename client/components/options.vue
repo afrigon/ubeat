@@ -11,9 +11,9 @@
                     span Logout
         #options-divider.divider.hide-until-m
         #avatar.text-right.flex.flex-right.clickable.margin-left-25.margin-right-25
-            i#search-action.material-icons.m.text-white.clickable.hide-after-m.margin-right-20(@click.stop="") search
+            i#search-action.material-icons.m.text-white.clickable.margin-right-20 search
             router-link(:to="{ path: '/user/' + me.id, query: $route.query }")
-                p#username.text-white.inline-block.margin-0.margin-right-20.truncate.hide-until-l {{ username }}
+                p#username.no-decoration.text-white.inline-block.margin-0.margin-right-20.truncate.hide-until-l {{ username }}
             .flex.flex-center.clickable
                 router-link(:to="{ path: '/user/' + me.id, query: $route.query }")
                     img.circle.primary-border.hide-until-m(:src="avatar")

@@ -5,7 +5,6 @@
         drawer(:username="username")
         navigation
         search()
-        search(mobile)
         options(:username="username")
 </template>
 

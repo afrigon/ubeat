@@ -2,11 +2,28 @@
     main.dark.no-scroll
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
-
         .section
             .row
                 .column.s12(v-if="targetUser")
-                    user-sidebar(v-if="me" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="me.id")
+<<<<<<< HEAD
+                    .column.s12.l3.text-center
+                        .column.s12.m6.l12.padding-0.relative
+                            img.hoverable-pop.no-select.circle(:alt="`${targetUser.name} Profile Picture`" :src="targetUser.avatar")
+                            .row(v-if="targetUser.name")
+                                p.text-white.text-center.text-size-2.margin-0 {{ targetUser.name }}
+                                p.text-white.text-center.text-size-1.margin-0 {{ targetUser.email }}
+                        .column.s12.m6.l12.padding-0
+                            .row(v-if="targetUser.isFollowed")
+                                .text-white.clickable(@click="unfollow")
+                                    i.material-icons remove_circle_outline
+                                    span.icon-text Unfollow
+                            .row(v-else)
+                                .text-white.clickable(@click="follow")
+                                    i.material-icons person_add
+                                    span.icon-text Follow
+=======
+                    user-sidebar(:key="targetUser.id" :user="targetUser")
+>>>>>>> f85feb007ee1b82c0d514c749a4f407b44f124a5
                     .column.s12.l9.padding-0
                         show-playlist(:user-id="targetUser.id")
 
@@ -32,8 +49,7 @@
         data: () => ({
             targetUser: null,
             error: null,
-            loading: null,
-            me: null
+            loading: null
         }),
         beforeRouteEnter (to, from, next) {
             try {
@@ -54,16 +70,12 @@
             return next()
         },
         methods: {
-            async setData (data) {
+            setData (data) {
                 this.loading = false
                 if (!data) {
                     this.targetUser = null
                     return (this.error = 'An error occured while searching for this user.')
                 }
-
-                try {
-                    this.me = await UserApi.me()
-                } catch (err) { this.error = 'An error occured while fetching data for this user.' }
 
                 this.error = null
                 this.targetUser = data

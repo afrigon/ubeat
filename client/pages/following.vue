@@ -7,26 +7,24 @@
                 button.text-button.transparent.text-primary-light(@click="back") Return to playlists
             .row
                 .column.s12
-                    user-sidebar(:key="targetUser.id" :user="targetUser")
+                    user-sidebar(v-if="me" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="me.id")
                     .column.s12.l9.padding-0
                         .container.margin-up-30
-                            h1.text-white.text-size-3.text-light.text-center Friends ({{ targetUser.following.length }})
+                            h1.text-white.text-size-3.text-light.text-center Following ({{ targetUser.following.length }})
                             .section
                                 .row.text-center
-                                    i.text-white.text-size-2(v-if="targetUser.following.length === 0") This user is antisocial and does not have any friends.
+                                    i.text-white.text-size-2(v-if="targetUser.following.length === 0") This user does not have any friends.
                                     user-card.user-card.clickable(v-else v-for="followingUser in targetUser.following" :key="followingUser.id" :user="followingUser" @click.native="() => selectFollowingUser (followingUser.id)")
 
 </template>
 
 <script>
-    // 5aaaad66d85c31000414d68a Frigon
-    // 5aac54dba6d6b600042f3082 Sam
     import UserSidebar from '@/components/user-sidebar'
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
     import UserCard from '@/components/user-card'
 
-    import {UserApi} from '@/api'
+    import { UserApi } from '@/api'
 
     export default {
         components: {
@@ -42,6 +40,7 @@
                 email: null,
                 following: []
             },
+            me: null,
             error: null,
             loading: null
         }),
@@ -71,12 +70,16 @@
             back () {
                 return this.$router.push({path: `/user/${this.targetUser.id}`})
             },
-            setData (data) {
+            async setData (data) {
                 this.loading = false
                 if (!data) {
                     this.targetUser = null
                     return (this.error = 'An error occured while fetching data for this user.')
                 }
+
+                try {
+                    this.me = await UserApi.me()
+                } catch (err) { this.error = 'An error occured while fetching data for this user.' }
 
                 this.error = null
                 this.targetUser = data

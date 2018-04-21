@@ -21,8 +21,5 @@
 </script>
 
 <style lang="scss" scoped>
-    .avatar
-    {
-        width: 55%;
-    }
+    .avatar { width: 55%; }
 </style>
