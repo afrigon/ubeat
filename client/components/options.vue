@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import Api, { UserApi } from '@/api'
+    import Api from '@/api'
 
     export default {
         props: {
@@ -41,7 +41,7 @@
         },
         async created () {
             this.avatar = Api.getGravatar()
-            this.me = await UserApi.me()
+            this.me.id = window.localStorage.getItem('id')
         },
         mounted () {
             document.body.addEventListener('click', this.closeOptions)

@@ -53,6 +53,7 @@
     import Api from '@/api'
     import { FScript, Toast, MaterialInput, Util } from '@/script/fscript'
     import { STOP_AUDIO_PLAYER } from '@/store/mutation-types'
+    import Cookies from 'js-cookie'
 
     export default {
         data: () => ({
@@ -150,8 +151,9 @@
                 try {
                     const data = await Api.login(this.email.toLowerCase(), this.password)
                     if (data) {
-                        if (data.token) window.localStorage.setItem('access_token', data.token)
+                        if (data.token) Cookies.set('access_token', data.token, { expires: 0.25 })
                         if (data.name) window.localStorage.setItem('name', data.name)
+                        if (data.id) window.localStorage.setItem('id', data.id)
                     }
                     return this.$router.push(this.$route.query.redirect || '/')
                 } catch (err) {
@@ -168,8 +170,9 @@
                 try {
                     const data = await Api.register(this.email, this.name, this.password)
                     if (data) {
-                        if (data.token) window.localStorage.setItem('access_token', data.token)
+                        if (data.token) Cookies.set('access_token', data.token, { expires: 0.25 })
                         if (data.name) window.localStorage.setItem('name', data.name)
+                        if (data.id) window.localStorage.setItem('id', data.id)
                     }
                     return this.$router.push(this.$route.query.redirect || '/')
                 } catch (err) {
