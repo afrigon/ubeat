@@ -16,29 +16,30 @@
                     li.filter(@click="_ => selectMode(4)" :class="{ selected: mode == 4 }") USERS
 
                 .result-items.scroll
+                    loading(v-if="loading" color="#b29adb")
                     .container
                         .section.result-item.result-artists(v-if="mode <= 1 && artists && artists.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular
                                 i.material-icons.margin-right-5 account_circle
-                                span Artists
+                                span Artists ({{artists.length}})
                             .text-center
                                 artist.row(v-for="artist in artists" :key="artist.artistId" :id="artist.artistId" :name="artist.artistName")
                         .section.result-item.result-albums(v-if="(mode == 0 || mode == 2) && albums && albums.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular
                                 i.material-icons.margin-right-5 album
-                                span Albums
+                                span Albums ({{albums.length}})
                             .text-center
                                 album.row(v-for="album in albums" :key="album.collectionId" :id="album.collectionId" :title="album.collectionName" :pictureUrl="album.artworkUrl100")
                         .section.result-item.result-songs(v-if="(mode == 0 || mode == 3) && songs && songs.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular
                                 i.material-icons.margin-right-5 audiotrack
-                                span Songs
+                                span Songs ({{songs.length}})
                             .text-center
                                 song.row(v-for="song in songs" :key="song.trackId" :id="song.trackId" :albumId="song.collectionId" :name="song.trackName" :pictureUrl="song.artworkUrl60")
                         .section.result-item.result-users(v-if="(mode == 0 || mode == 4) && users && users.length > 0" @click="close")
                             h1.row.text-white.text-size-3.text-regular
                                 i.material-icons.margin-right-5 person
-                                span Users
+                                span Users ({{users.length}})
                             .text-center
                                 router-link.inline-block.text-center.text-white.text-size-2.user(v-for="user in users" :to="{ path: `/user/${user.id}` }" :key="user.id")
                                     user-card.row(:id="user.id" :name="user.name" :email="user.email")
@@ -54,13 +55,15 @@
     import Album from '@/components/search-results/album'
     import Song from '@/components/search-results/song'
     import UserCard from '@/components/user-card'
+    import Loading from '@/components/loading'
 
     export default {
         components: {
             'artist': Artist,
             'album': Album,
             'song': Song,
-            'user-card': UserCard
+            'user-card': UserCard,
+            'loading': Loading
         },
         data: () => ({
             opened: false,
@@ -71,7 +74,8 @@
             songs: null,
             users: null,
             timer: null,
-            error: null
+            error: null,
+            loading: null
         }),
         async mounted () {
             const action = document.getElementById('search-action')
@@ -86,6 +90,7 @@
                 if (this.$refs.search) this.$refs.search.focus()
             },
             selectMode (mode) {
+                this.loading = true
                 this.mode = mode
                 if (this.qString !== '') this.search()
             },
@@ -124,6 +129,7 @@
                             break
                         }
                     } catch (err) { this.error = `An error occured while searching for '${this.qString}', try again later.` }
+                    this.loading = false
                 }, 500)
             }
         }
@@ -141,7 +147,21 @@
     .result-items {
         height: calc(100vh - 125px - 62px);
         overflow-x: hidden;
+
+        .result-item {
+            padding-top: 26px;
+            border-bottom: 1px solid #9E9E9E;
+        }
     }
+
+    .result-item:last-child {
+        border-bottom: none;
+    }
+
+    .result-item:first-child {
+        padding-top: 14.5px;
+    }
+
     .filter {
         display: inline-block;
         margin: 20px;
@@ -173,7 +193,7 @@
         right: 50px;
         bottom: 23px;
     }
-    .filter.selected { border-bottom: 1px solid white; }
+    .filter.selected { border-bottom: 2px solid rgb(178, 154, 219); }
     .section { box-sizing: content-box; }
 
     .result-items::-webkit-scrollbar {

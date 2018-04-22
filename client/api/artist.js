@@ -56,8 +56,6 @@ export default class ArtistApi {
             albumTracks = await AlbumApi.getAlbumTracks(albums[i].collectionId)
             tracks = [...tracks, ...albumTracks.list]
         }
-
-        console.log('tracks', tracks)
         return tracks
     }
 }
