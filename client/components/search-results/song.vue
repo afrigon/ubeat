@@ -1,5 +1,5 @@
 <template lang="pug">
-    div.inline-block.song
+    div.inline-block.song.margin-down-45
         router-link.text-center.text-white.text-size-2(:to="{ path: `/album/${albumId}` }")
             img.song-art(:src="pictureUrl" alt="Album Art")
             p.truncate {{ name }}

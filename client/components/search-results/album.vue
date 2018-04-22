@@ -1,5 +1,5 @@
 <template lang="pug">
-    div.inline-block.album
+    div.inline-block.album.margin-down-45
         router-link.text-center.text-white.text-size-2(:to="{ path: `/album/${id}` }")
             img.album-art(:src="pictureUrl" alt="Album Art")
             p.truncate {{ title }}

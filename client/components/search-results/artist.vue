@@ -1,5 +1,5 @@
 <template lang="pug">
-    router-link.inline-block.text-center.text-white.text-size-2.artist(:to="{ path: `/artist/${id}` }")
+    router-link.inline-block.text-center.text-white.text-size-2.artist.margin-down-45(:to="{ path: `/artist/${id}` }")
         .artist-icon
             i.material-icons.xl account_circle
         p.truncate {{ name }}
@@ -29,4 +29,3 @@
         font-size: 70px;
     }
 </style>
-
