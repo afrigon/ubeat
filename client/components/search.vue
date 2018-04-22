@@ -1,11 +1,15 @@
 <template lang="pug">
     transition(name="fade")
         .fixed.edge-0.grey.darken-5(v-if="opened")
+            transition(name="playlist-modal")
+                add-to-playlist.fixed.playlists(v-if="isAddingToPlaylist")
+
             form.dark(@submit.prevent="x => x")
                 p.hide-until-m.tagline.text-white Search for an artist, album song or user
                 input.text-white.text-fat.transparent.browser-default(type="text" name="q" autocomplete="off" @keyup="search" ref="search" v-model="qString")
                 .close-search.absolute.clickable(@click="close")
                     i.material-icons.l.text-white close
+            
             .results.grey.darken-5
                 ul.no-select.filter-wrapper.text-white.text-size-1.text-fat.text-center.clickable(@click="focus")
                     li.filter(@click="_ => selectMode(0)" :class="{ selected: mode == 0 }") ALL RESULTS
@@ -13,6 +17,7 @@
                     li.filter(@click="_ => selectMode(2)" :class="{ selected: mode == 2 }") ALBUMS
                     li.filter(@click="_ => selectMode(3)" :class="{ selected: mode == 3 }") SONGS
                     li.filter(@click="_ => selectMode(4)" :class="{ selected: mode == 4 }") USERS
+            
                 .result-items.scroll
                     .container
                         .section.result-item.result-artists(v-if="mode <= 1 && artists && artists.length > 0" @click="close")
