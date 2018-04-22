@@ -18,19 +18,27 @@
                 .result-items.scroll
                     .container
                         .section.result-item.result-artists(v-if="mode <= 1 && artists && artists.length > 0" @click="close")
-                            h1.row.text-white.text-size-3.text-regular Artists
+                            h1.row.text-white.text-size-3.text-regular
+                                i.material-icons.margin-right-5 account_circle
+                                span Artists
                             .text-center
                                 artist.row(v-for="artist in artists" :key="artist.artistId" :id="artist.artistId" :name="artist.artistName")
                         .section.result-item.result-albums(v-if="(mode == 0 || mode == 2) && albums && albums.length > 0" @click="close")
-                            h1.row.text-white.text-size-3.text-regular Albums
+                            h1.row.text-white.text-size-3.text-regular
+                                i.material-icons.margin-right-5 album
+                                span Albums
                             .text-center
                                 album.row(v-for="album in albums" :key="album.collectionId" :id="album.collectionId" :title="album.collectionName" :pictureUrl="album.artworkUrl100")
                         .section.result-item.result-songs(v-if="(mode == 0 || mode == 3) && songs && songs.length > 0" @click="close")
-                            h1.row.text-white.text-size-3.text-regular Songs
+                            h1.row.text-white.text-size-3.text-regular
+                                i.material-icons.margin-right-5 audiotrack
+                                span Songs
                             .text-center
                                 song.row(v-for="song in songs" :key="song.trackId" :id="song.trackId" :albumId="song.collectionId" :name="song.trackName" :pictureUrl="song.artworkUrl60")
                         .section.result-item.result-users(v-if="(mode == 0 || mode == 4) && users && users.length > 0" @click="close")
-                            h1.row.text-white.text-size-3.text-regular Users
+                            h1.row.text-white.text-size-3.text-regular
+                                i.material-icons.margin-right-5 person
+                                span Users
                             .text-center
                                 router-link.inline-block.text-center.text-white.text-size-2.user(v-for="user in users" :to="{ path: `/user/${user.id}` }" :key="user.id")
                                     user-card.row(:id="user.id" :name="user.name" :email="user.email")
