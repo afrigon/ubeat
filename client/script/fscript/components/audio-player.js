@@ -87,20 +87,24 @@ export default class AudioPlayer extends Component {
         audio.autoplay = this.options.autoplay
         audio.loop = this.options.loop
 
+        this.createButton(player)
+        this.createEvents(audio, button)
+        this.createProgress(player)
+
+        this.isCreated = true
+        if (this.options.createdCallback && Util.isFunction(this.options.createdCallback)) {
+            this.options.createdCallback(this)
+        }
+        return player
+    }
+
+    createButton () {
         const button = document.createElement('i')
         player.appendChild(button)
         button.classList.add('button')
         button.innerHTML = 'play_arrow'
         button.classList.add('material-icons')
         button.style.color = this.options.color
-
-        this.createEvents(audio, button)
-        this.createProgress(player)
-
-        this.isCreated = true
-        if (this.options.createdCallback && Util.isFunction(this.options.createdCallback))
-            this.options.createdCallback(this)
-        return player
     }
 
     createEvents (audio, button) {
