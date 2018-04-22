@@ -1,7 +1,8 @@
 <template lang="pug">
-    router-link.inline-block.text-center.text-white.text-size-2.song(:to="{ path: `/album/${albumId}` }")
-        img.song-art(:src="pictureUrl" alt="Album Art")
-        p.truncate {{ name }}
+    div.inline-block.song
+        router-link.text-center.text-white.text-size-2(:to="{ path: `/album/${albumId}` }")
+            img.song-art(:src="pictureUrl" alt="Album Art")
+            p.truncate {{ name }}
         .playlist-add-album.text-white.clickable(@click.stop="addSongToPlaylist(id)")
             i.material-icons playlist_add
             span.icon-text Add song to playlist
