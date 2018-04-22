@@ -1,0 +1,290 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=2.5cm,
+    bottom=2.5cm
+}
+
+\begin{document}
+    \begin{titlepage}
+        {\setlength{\parindent}{0pt}
+            \underline{Équipe 01} \par
+            Mathieu \textsc{Dubreuil} (MADUB434 / 111 178 187) \par
+            Samuel \textsc{Foisy} (SAFOI / 111 157 794) \par
+            Alexandre \textsc{Frigon} (ALFRI8 / 111 175 404) \par
+            Alexandre \textsc{Godbout} (ALGOD40 / 111 123 834) \par
+        }
+
+        \begin{center}
+            \vspace{4cm}
+            {\Large\textbf{Document de design} \par}
+            {\large\textbf{UBeat - Livrable 3} \par}
+
+            \vspace{2cm}
+            {\large Travail présenté à messieurs William \textsc{Fortin} et Vincent \textsc{Séguin} \par}
+
+            \vspace{1.25cm}
+            {\large
+                Développement d'applications Web \par
+                GLO-3102 -- A \par
+            }
+
+            \vfill
+            Département d’informatique et de génie logiciel \par
+            Université Laval \par
+            22 avril 2018 \par
+        \end{center}
+    \end{titlepage}
+    
+    \section*{Lancement de l'application}
+
+    \begin{enumerate}
+        \item Installer les dépendances avec la commande \verb|npm i|
+        \item Démarrer le serveur avec la commande \verb|npm run-script start-prod|
+        \item Aller à l'adresse \verb|localhost:9016| dans votre navigateur
+        \item Explorer les routes suivantes : \par
+        \begin{itemize}
+            \item Routes publiques : \par
+            \verb|GET /login| \par
+            \verb|GET /signup| \par
+            \verb|GET /logout|
+            
+            \item Routes privées : \par
+            \verb|GET /| \par
+            \verb|GET /album/:id| \par
+            \verb|GET /artist/:id| \par
+            \verb|GET /playlists| \par
+            \verb|GET /playlists/:id| \par
+            \verb|GET /users/:id| \par
+            \verb|GET /users/:id/friends|
+        \end{itemize}
+    \end{enumerate}
+
+    \bigskip
+
+    Le projet est aussi hébergé sur \url{https://ubeat.frigstudio.com/}.
+    
+    \section*{Connexion}
+    \begin{itemize}
+        \item Se connecter :
+        \begin{enumerate}
+            \item Entrer votre adresse courriel et votre mot de passe.
+            \item Cliquer sur le bouton \textit{Login}.
+        \end{enumerate}
+    \end{itemize}
+    
+    \section*{Création d'un compte}
+    \begin{itemize}
+        \item Accéder à la page :
+        \begin{enumerate}
+            \item Cliquer sur le lien \textit{Create an account} situé sous le bouton \textit{Login} dans la page \textit{Login}.
+        \end{enumerate}
+
+        \item Créer un compte :
+        \begin{enumerate}
+            \item Entrer les informations nécessaires.
+            \item Cliquer sur le bouton \textit{Sign up}.
+        \end{enumerate}
+    \end{itemize}
+
+    \section*{Déconnexion}
+    \begin{itemize}
+    \item Se déconnecter :
+        \begin{enumerate}
+            \item Cliquer sur la flèche à droite de votre avatar. Ce dernier est situé à droite dans l'en-tête. Un menu devrait apparaître.
+            \item Cliquer sur le lien \textit{Logout} dans ce menu.
+        \end{enumerate}
+    \end{itemize}
+
+    \section*{Accueil}
+    \begin{itemize}
+        \item Accéder à la page :
+        \begin{enumerate}
+            \item Cliquer sur le lien \textit{Home} situé dans le menu de gauche de l'en-tête.
+        \end{enumerate}
+
+        \item Jouer une station de radio :
+        \begin{enumerate}
+            \item Cliquer sur la vignette d'une station de radio.
+        \end{enumerate}
+    \end{itemize}
+    
+    \section*{Album}
+    \begin{itemize}
+        \item Accéder à la page :
+        \begin{enumerate}
+            \item Cliquer sur le lien \textit{Album} situé dans le menu de gauche de l'en-tête.
+        \end{enumerate}
+
+        \item Écouter l'extrait d'une chanson :
+        \begin{enumerate}
+            \item Cliquer sur le nom d'une chanson.
+        \end{enumerate}
+
+        \item Ajouter une chanson à une liste de lecture :
+        \begin{enumerate}
+            \item Cliquer sur le bouton \textit{+} situé à droite du titre d'une chanson. Une fenêtre devrait apparaître avec toutes les listes de lecture de l'utilisateur.
+
+            \item Cliquer sur la liste de lecture dans laquelle vous voulez ajouter la chanson.
+        \end{enumerate}
+
+        \item Ajouter l'album à une liste de lecture :
+        \begin{enumerate}
+            \item Cliquer sur le bouton \textit{Add album to playlist} situé directement sous la pochette. Une fenêtre devrait apparaître avec toutes les listes de lecture de l'utilisateur.
+
+            \item Cliquer sur la liste de lecture dans laquelle vous voulez ajouter l'album.
+        \end{enumerate}
+    \end{itemize}
+
+    \section*{Artiste}
+    \begin{itemize}
+        \item Accéder à la page :
+        \begin{enumerate}
+            \item Cliquer sur le lien \textit{Artist} situé dans le menu de gauche de l'en-tête.
+        \end{enumerate}
+
+        \item Consulter des informations sur un album :
+        \begin{enumerate}
+            \item Cliquer sur la pochette d'un album
+        \end{enumerate}
+    \end{itemize}
+
+    \section*{Listes de lecture}
+    \begin{itemize}
+        \item Accéder à la page :
+        \begin{enumerate}
+            \item Cliquer sur la flèche à droite de votre avatar. Ce dernier est situé à droite dans l'en-tête. Un menu devrait apparaître.
+            \item Cliquer sur le lien \textit{Playlists} dans ce menu.
+        \end{enumerate}
+
+        \item Créer une nouvelle liste de lecture :
+        \begin{enumerate}
+            \item Cliquer sur la vignette \textit{+ Add}. Une fenêtre demandant le nom de la nouvelle liste de lecture devrait apparaître.
+
+            \item Entrer le nom de la liste de lecture.
+
+            \item Cliquer sur le bouton \textit{Create playlist}.
+        \end{enumerate}
+
+        \item Consulter une liste de lecture :
+        \begin{enumerate}
+            \item Cliquer sur la vignette d'une liste de lecture.
+        \end{enumerate}
+    \end{itemize}
+
+    \section*{Liste de lecture individuelle}
+    \begin{itemize}
+        \item Accéder à la page :
+        \begin{enumerate}
+            \item Aller sur la page \textit{Playlists}.
+            \item Cliquer sur la vignette d'une liste de lecture.
+        \end{enumerate}
+
+        \item Modifier la liste de lecture :
+        \begin{enumerate}
+            \item Cliquer sur le bouton \textit{Edit} situé en haut à droite de la page.
+
+            \item Modifier les informations :
+            \begin{itemize}
+                \item Modifier le nom avec le champ situé sous l'image de la liste de lecture.
+
+                \item Supprimer une chanson avec le bouton \textit{-} situé à droite de son titre.
+            \end{itemize}
+
+            \item Enregistrer les changements en cliquant sur le bouton \textit{Done} situé en haut à droite de la page. Annuler les changements en cliquant sur le bouton \textit{Cancel} situé en haut à gauche de la page.
+        \end{enumerate}
+        
+        \item Supprimer la liste de lecture :
+        \begin{enumerate}
+            \item Cliquer sur le bouton \textit{Edit}.
+
+            \item Cliquer sur le bouton \textit{x} situé sous son nom.
+            
+            \item Confirmer la suppression.
+        \end{enumerate}
+    \end{itemize}
+    
+    \section*{Recherche}
+    \begin{itemize}
+        \item Accéder à la page :
+        \begin{enumerate}
+            \item Cliquer sur la loupe située à droite dans l'en-tête.
+        \end{enumerate}
+        
+        \item Lancer une recherche :
+        \begin{enumerate}
+            \item Taper ce que vous voulez rechercher dans le champ en haut.
+            \item Appuyer sur la touche \textit{Entrée}.
+        \end{enumerate}
+
+        \item Filtrer les résultats par catégorie :
+        \begin{enumerate}
+            \item Cliquer sur l'un des onglets situé sous le champ de recherche.
+        \end{enumerate}
+    \end{itemize}
+    
+    \section*{Utilisateur}
+    \begin{itemize}
+        \item Accéder à la page :
+        \begin{enumerate}
+            \item Cliquer sur votre nom ou sur votre avatar situé à droite dans l'en-tête. Il est également possible d'accéder à la page d'un autre utilisateur à partir de la rechercheé
+        \end{enumerate}
+
+        \item Suivre un utilisateur :
+        \begin{enumerate}
+            \item Cliquer sur le bouton \textit{Follow} situé sous l'avatar de l'utilisateur.
+        \end{enumerate}
+
+        \item Arrêter de suivre un utilisateur :
+        \begin{enumerate}
+            \item Cliquer sur le bouton \textit{Unfollow} situé sous l'avatar de l'utilisateur.
+        \end{enumerate}
+
+        \item Consulter les personnes que suit l'utilisateur :
+        \begin{enumerate}
+            \item Cliquer sur le bouton \textit{x following} situé sous l'avatar de l'utilisateur.
+        \end{enumerate}
+    \end{itemize}
+
+    \section*{Fonctionnalités avancées}
+    \subsubsection*{Afficher une photo de l’utilisateur avec Gravatar}
+    \begin{itemize}
+        \item Choisir une photo :
+        \begin{enumerate}
+            \item Aller sur \url{https://en.gravatar.com/}.
+            \item Se créer un compte.
+            \item Ajouter une photo.
+        \end{enumerate}
+
+        \item Visualiser la photo :
+        \begin{enumerate}
+            \item Se créer un compte UBeat avec la même adresse courriel que celle utilisée pour votre compte Gravatar.
+            \item Se connecter avec cette adresse courriel. Votre Gravatar devrait apparaître à droite dans l'en-tête, à côté de votre nom.
+        \end{enumerate}
+    \end{itemize}
+    
+    \subsubsection*{Afficher un histogramme de la chanson en cours (animation qui suit la musique)}
+    \begin{itemize}
+        \item Visualiser l'histogramme :
+        \begin{enumerate}
+            \item Aller sur la page \textit{Home}.
+            \item Cliquer sur la vignette d'une station de radio. L'histogramme se situe dans le lecteur au bas de la page, au-dessus de la barre de temps.
+        \end{enumerate}
+    \end{itemize}
+
+    \subsubsection*{Radio en direct}
+    \begin{itemize}
+        \item Jouer une station de radio :
+        \begin{enumerate}
+            \item Aller à la page \textit{Home}
+            \item Cliquer sur la vignette d'une station de radio. Il est prévu que si l'utilisateur démarre l'écoute de l'extrait d'une chanson dans la page \textit{Album} ou \textit{Playlists}, la radio reprendra dès que l'extrait est terminé. Le concept d'en direct signifie que si l'on change de station de radio, une chanson sera déjà en train de jouer dans la nouvelle station.
+        \end{enumerate}
+    \end{itemize}
+\end{document}
