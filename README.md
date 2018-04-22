@@ -46,7 +46,7 @@ GET /album/:id
 GET /artist/:id
 GET /playlists
 GET /playlist/:id
-GET /settings
+GET /user/:id
 ```
 
 ## License
