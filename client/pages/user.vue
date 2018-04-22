@@ -6,14 +6,14 @@
         .section
             .row
                 .column.s12(v-if="targetUser")
-                    user-sidebar(:id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following")
-                    .column.s12.l9.padding-0
+                    user-card(:id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following")
+                    .column.s12.l8.padding-0
                         show-playlist(:user-id="targetUser.id")
 
 </template>
 
 <script>
-    import UserSidebar from '@/components/user-sidebar'
+    import UserCard from '@/components/user-card'
     import ShowPlaylist from '@/components/show-playlist'
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
@@ -25,7 +25,7 @@
             'error': ErrorBox,
             'loading': Loading,
             'show-playlist': ShowPlaylist,
-            'user-sidebar': UserSidebar
+            'user-card': UserCard
         },
         data: () => ({
             targetUser: null,

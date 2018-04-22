@@ -33,7 +33,7 @@
                             h1.row.text-white.text-size-3.text-regular Users
                             .text-center
                                 router-link.inline-block.text-center.text-white.text-size-2.user(v-for="user in users" :to="{ path: `/user/${user.id}` }" :key="user.id")
-                                    user-sidebar.row(:id="user.id" :name="user.name" :email="user.email")
+                                    user-card.row(:id="user.id" :name="user.name" :email="user.email")
                         .section(v-if="error")
                             .row.text-center
                                 h1.text-red.text-size-2 {{ error }}
@@ -45,14 +45,14 @@
     import Artist from '@/components/search-results/artist'
     import Album from '@/components/search-results/album'
     import Song from '@/components/search-results/song'
-    import UserSidebar from '@/components/user-sidebar'
+    import UserCard from '@/components/user-card'
 
     export default {
         components: {
             'artist': Artist,
             'album': Album,
             'song': Song,
-            'user-sidebar': UserSidebar
+            'user-card': UserCard
         },
         data: () => ({
             opened: false,
