@@ -90,9 +90,11 @@
                 if (this.$refs.search) this.$refs.search.focus()
             },
             selectMode (mode) {
-                this.loading = true
                 this.mode = mode
-                if (this.qString !== '') this.search()
+                if (this.qString !== '') {
+                    this.loading = true
+                    this.search()
+                }
             },
             close () {
                 this.opened = false
