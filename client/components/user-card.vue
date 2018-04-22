@@ -14,7 +14,7 @@
         },
         computed: {
             getAvatar () {
-                return Api.getGravatar(150, this.user.email)
+                return Api.getGravatar(this.user.email, 150)
             }
         }
     }

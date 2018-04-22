@@ -40,8 +40,6 @@ class Auth {
 
     static logout () {
         Cookies.remove('access_token')
-        window.localStorage.removeItem('id')
-        window.localStorage.removeItem('name')
     }
 }
 

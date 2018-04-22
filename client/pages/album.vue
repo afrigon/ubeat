@@ -83,7 +83,7 @@
                 return this.$store.state.temp.songs
             },
             playingId () {
-                return this.$store.state.persistent.audioPlayer.trackId
+                return this.$store.state.session.audioPlayer.trackId
             }
         },
         beforeRouteEnter (to, from, next) {
@@ -113,7 +113,7 @@
                 this.tracks = data.tracks
             },
             play (id, meta, url) {
-                if (this.$store.state.persistent.audioPlayer.trackId === id) {
+                if (this.$store.state.session.audioPlayer.trackId === id) {
                     this.$store.commit(RESTORE_RADIO)
                 } else {
                     this.$store.commit(PLAY_SONG, { trackId: id, meta: meta, url: url })

@@ -6,7 +6,7 @@
         .section
             .row
                 .column.s12(v-if="targetUser")
-                    user-sidebar(v-if="selfId" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="selfId")
+                    user-sidebar(:id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following")
                     .column.s12.l9.padding-0
                         show-playlist(:user-id="targetUser.id")
 
@@ -30,8 +30,7 @@
         data: () => ({
             targetUser: null,
             error: null,
-            loading: null,
-            selfId: null
+            loading: null
         }),
         beforeRouteEnter (to, from, next) {
             try {
@@ -59,14 +58,9 @@
                     return (this.error = 'An error occured while searching for this user.')
                 }
 
-                this.selfId = window.localStorage.getItem('id')
                 this.error = null
                 this.targetUser = data
             }
         }
     }
 </script>
-
-<style lang="scss" scoped>
-
-</style>

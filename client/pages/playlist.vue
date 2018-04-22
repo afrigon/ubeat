@@ -72,7 +72,7 @@
                 }
             },
             playingId () {
-                return this.$store.state.persistent.audioPlayer.trackId
+                return this.$store.state.session.audioPlayer.trackId
             }
         },
         watch: {
@@ -107,10 +107,10 @@
                 this.name = data.name
             },
             async setEditAccess () {
-                this.canEdit = this.playlist.owner.id === window.localStorage.getItem('id')
+                this.canEdit = this.playlist.owner.id === this.$store.state.persistent.user.id
             },
             play (id, meta, url) {
-                if (this.$store.state.persistent.audioPlayer.trackId === id) {
+                if (this.$store.state.session.audioPlayer.trackId === id) {
                     this.$store.commit(RESTORE_RADIO)
                 } else {
                     this.$store.commit(PLAY_SONG, { trackId: id, meta: meta, url: url })

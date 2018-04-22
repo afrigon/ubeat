@@ -32,16 +32,9 @@
             opened: false,
             selfId: null
         }),
-        watch: {
-            '$route' () {
-                this.avatar = Api.getGravatar()
-            }
-        },
-        async created () {
-            this.avatar = Api.getGravatar()
-            this.selfId = window.localStorage.getItem('id')
-        },
         mounted () {
+            this.avatar = Api.getGravatar(this.$store.state.persistent.user.email)
+            this.selfId = this.$store.state.persistent.user.id
             document.body.addEventListener('click', this.closeOptions)
             document.body.addEventListener('resize', this.closeOptions)
         },
@@ -120,7 +113,7 @@
             img {
                 height: 40px;
                 width: 40px;
-                border: solid 2px;
+                margin: 2px;
             }
 
             i {

@@ -44,8 +44,8 @@
             selfId: null
         }),
         async mounted () {
-            this.avatar = Api.getGravatar()
-            this.selfId = window.localStorage.getItem('id')
+            this.avatar = Api.getGravatar(this.$store.state.persistent.user.email)
+            this.selfId = this.$store.state.persistent.user.id
             FScript.addComponent(new Drawer())
         }
     }

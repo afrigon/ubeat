@@ -31,7 +31,7 @@
                             h1.row.text-white.text-size-3.text-regular Users
                             .text-center
                                 router-link.inline-block.text-center.text-white.text-size-2.user(v-for="user in users" :to="{ path: `/user/${user.id}` }" :key="user.id")
-                                    user-sidebar.row(v-if="selfId" :id="user.id" :name="user.name" :email="user.email" :selfId="selfId")
+                                    user-sidebar.row(:id="user.id" :name="user.name" :email="user.email")
                         .section(v-if="error")
                             .row.text-center
                                 h1.text-red.text-size-2 {{ error }}
@@ -61,8 +61,7 @@
             songs: null,
             users: null,
             timer: null,
-            error: null,
-            selfId: null
+            error: null
         }),
         async mounted () {
             const action = document.getElementById('search-action')
@@ -71,10 +70,6 @@
                 this.opened = true
                 Vue.nextTick(_ => this.focus())
             })
-
-            try {
-                this.selfId = window.localStorage.getItem('id')
-            } catch (err) { this.error = 'An error occured while fetching data for this user.' }
         },
         methods: {
             focus () {

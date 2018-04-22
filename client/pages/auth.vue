@@ -52,7 +52,7 @@
     import Logo from '@/components/logo'
     import Api from '@/api'
     import { FScript, Toast, MaterialInput, Util, Network } from '@/script/fscript'
-    import { STOP_AUDIO_PLAYER } from '@/store/mutation-types'
+    import { STOP_AUDIO_PLAYER, STORE_USER } from '@/store/mutation-types'
     import Cookies from 'js-cookie'
 
     export default {
@@ -134,14 +134,7 @@
             const form = document.getElementById('auth-form')
             form && form.addEventListener('submit', (event) => {
                 event.preventDefault()
-
-                this.email && window.localStorage.setItem('email', this.email)
-                this.name && window.localStorage.setItem('name', this.name)
-
-                if (this.signup) {
-                    return this.register(form)
-                }
-
+                if (this.signup) return this.register(form)
                 return this.login(form)
             })
         },
@@ -156,8 +149,7 @@
                 if (data) {
                     this.computeExpires(data, (_, expires) => {
                         if (data.token) Cookies.set('access_token', data.token, { expires: expires })
-                        if (data.name) window.localStorage.setItem('name', data.name)
-                        if (data.id) window.localStorage.setItem('id', data.id)
+                        this.$store.commit(STORE_USER, data)
                         return callback()
                     })
                 }
@@ -194,7 +186,7 @@
                 this.name = null
                 this.password = null
                 this.passwordConfirmation = null
-                this.email = this.signup ? null : window.localStorage.getItem('email')
+                this.email = this.signup ? null : this.$store.state.persistent.user.email
             }
         },
         computed: {

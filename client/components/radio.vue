@@ -16,7 +16,7 @@
 
     export default {
         mounted () {
-            this.$store.watch(() => this.$store.state.persistent.audioPlayer.trackId, (trackId, oldTrackId) => {
+            this.$store.watch(() => this.$store.state.session.audioPlayer.trackId, (trackId, oldTrackId) => {
                 if (trackId !== oldTrackId) this.stopStation()
                 this.init()
             })
@@ -32,16 +32,16 @@
             }),
             init () {
                 return setTimeout(() => {
-                    if (!this.$store.state.persistent.audioPlayer.trackId) return
-                    if (this.$store.state.persistent.audioPlayer.isRadio) {
+                    if (!this.$store.state.session.audioPlayer.trackId) return
+                    if (this.$store.state.session.audioPlayer.isRadio) {
                         return this.startStation({
-                            genre: this.$store.state.persistent.audioPlayer.trackId,
-                            color: this.$store.state.persistent.audioPlayer.meta.color
+                            genre: this.$store.state.session.audioPlayer.trackId,
+                            color: this.$store.state.session.audioPlayer.meta.color
                         })
                     }
                     return this.startSong({
-                        url: this.$store.state.persistent.audioPlayer.meta.url,
-                        meta: this.$store.state.persistent.audioPlayer.meta
+                        url: this.$store.state.session.audioPlayer.meta.url,
+                        meta: this.$store.state.session.audioPlayer.meta
                     })
                 }, 250)
             },

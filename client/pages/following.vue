@@ -6,8 +6,8 @@
             .absolute.action.action-left
                 button.text-button.transparent.text-primary-light(@click="back") Return to playlists
             .row
-                .column.s12
-                    user-sidebar(v-if="selfId" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="selfId")
+                .column.s12(v-if="targetUser")
+                    user-sidebar(:id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following")
                     .column.s12.l9.padding-0
                         .container.margin-up-30
                             h1.text-white.text-size-3.text-light.text-center Following ({{ targetUser.following.length }})
@@ -34,13 +34,7 @@
             'user-sidebar': UserSidebar
         },
         data: () => ({
-            targetUser: {
-                id: null,
-                name: null,
-                email: null,
-                following: []
-            },
-            selfId: null,
+            targetUser: null,
             error: null,
             loading: null
         }),
@@ -76,10 +70,6 @@
                     this.targetUser = null
                     return (this.error = 'An error occured while fetching data for this user.')
                 }
-
-                try {
-                    this.selfId = window.localStorage.getItem('id')
-                } catch (err) { this.error = 'An error occured while fetching data for this user.' }
 
                 this.error = null
                 this.targetUser = data
