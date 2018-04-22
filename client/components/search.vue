@@ -6,7 +6,7 @@
                 input.text-white.text-fat.transparent.browser-default(type="text" name="q" autocomplete="off" @keyup="search" ref="search" v-model="qString")
                 .close-search.absolute.clickable(@click="close")
                     i.material-icons.l.text-white close
-            
+
             .results.grey.darken-5
                 ul.no-select.filter-wrapper.text-white.text-size-1.text-fat.text-center.clickable(@click="focus")
                     li.filter(@click="_ => selectMode(0)" :class="{ selected: mode == 0 }") ALL RESULTS
@@ -14,7 +14,7 @@
                     li.filter(@click="_ => selectMode(2)" :class="{ selected: mode == 2 }") ALBUMS
                     li.filter(@click="_ => selectMode(3)" :class="{ selected: mode == 3 }") SONGS
                     li.filter(@click="_ => selectMode(4)" :class="{ selected: mode == 4 }") USERS
-            
+
                 .result-items.scroll
                     .container
                         .section.result-item.result-artists(v-if="mode <= 1 && artists && artists.length > 0" @click="close")
@@ -160,6 +160,9 @@
         bottom: 25px;
         left: 100px;
         right: 100px;
+        width: 80%;
+        padding: 10px 15px;
+        border-bottom: 1px solid #9E9E9E;
     }
     .tagline {
         margin: 0;
@@ -220,8 +223,8 @@
             overflow: scroll;
             white-space: nowrap;
         }
-        ul::-webkit-scrollbar { 
-            display: none; 
+        ul::-webkit-scrollbar {
+            display: none;
         }
     }
 </style>
