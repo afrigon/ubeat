@@ -98,9 +98,8 @@ export default class AudioPlayer extends Component {
         this.createProgress(player)
 
         this.isCreated = true
-        if (this.options.createdCallback && Util.isFunction(this.options.createdCallback)) {
+        if (this.options.createdCallback && Util.isFunction(this.options.createdCallback))
             this.options.createdCallback(this)
-        }
         return player
     }
 
