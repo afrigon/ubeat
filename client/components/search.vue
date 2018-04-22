@@ -1,9 +1,6 @@
 <template lang="pug">
     transition(name="fade")
         .fixed.edge-0.grey.darken-5(v-if="opened")
-            transition(name="playlist-modal")
-                add-to-playlist.fixed.playlists(v-if="isAddingToPlaylist")
-
             form.dark(@submit.prevent="x => x")
                 p.hide-until-m.tagline.text-white Search for an artist, album song or user
                 input.text-white.text-fat.transparent.browser-default(type="text" name="q" autocomplete="off" @keyup="search" ref="search" v-model="qString")
