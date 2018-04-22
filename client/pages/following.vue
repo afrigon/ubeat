@@ -29,7 +29,6 @@
         components: {
             'error': ErrorBox,
             'loading': Loading,
-            'user-card': UserCard,
             'user-card': UserCard
         },
         data: () => ({
