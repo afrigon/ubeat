@@ -1,7 +1,7 @@
 <template lang="pug">
     div.inline-block.artist
         loading(v-if="loading" color="#b29adb")
-        router-link.text-center.text-white.text-size-2(:to="{ path: `/artist/${id}` }")
+        router-link.text-center.text-white.text-size-2.margin-down-45(:to="{ path: `/artist/${id}` }")
             .artist-icon
                 i.material-icons.xl account_circle
             p.truncate {{ name }}
@@ -54,4 +54,3 @@
         font-size: 70px;
     }
 </style>
-
