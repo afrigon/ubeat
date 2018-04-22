@@ -19,7 +19,6 @@
 </template>
 
 <script>
-    import UserCard from '@/components/user-card'
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
     import UserCard from '@/components/user-card'
