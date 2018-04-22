@@ -87,7 +87,7 @@ export default class AudioPlayer extends Component {
         audio.autoplay = this.options.autoplay
         audio.loop = this.options.loop
 
-        this.createButton(player)
+        const button = this.createButton(player)
         this.createEvents(audio, button)
         this.createProgress(player)
 
@@ -98,13 +98,14 @@ export default class AudioPlayer extends Component {
         return player
     }
 
-    createButton () {
+    createButton (player) {
         const button = document.createElement('i')
         player.appendChild(button)
         button.classList.add('button')
         button.innerHTML = 'play_arrow'
         button.classList.add('material-icons')
         button.style.color = this.options.color
+        return button
     }
 
     createEvents (audio, button) {
