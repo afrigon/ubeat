@@ -23,8 +23,7 @@ class Auth {
 
     static async checkAuth () {
         try {
-            const info = await Api.getTokenInfo()
-            window.localStorage.setItem('id', info.id)
+            await Api.getTokenInfo()
             return true
         } catch (err) { return false }
     }
@@ -37,6 +36,12 @@ class Auth {
         options.headers['Authorization'] = token
         const data = await Network.requestJSON(url, options)
         return data
+    }
+
+    static logout () {
+        Cookies.remove('access_token')
+        window.localStorage.removeItem('id')
+        window.localStorage.removeItem('name')
     }
 }
 

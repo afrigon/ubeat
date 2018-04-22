@@ -12,10 +12,10 @@
         #options-divider.divider.hide-until-m
         #avatar.text-right.flex.flex-right.clickable.margin-left-25.margin-right-25
             i#search-action.material-icons.m.text-white.clickable.margin-right-20 search
-            router-link(:to="{ path: '/user/' + me.id, query: $route.query }")
+            router-link(:to="{ path: '/user/' + selfId, query: $route.query }")
                 p#username.no-decoration.text-white.inline-block.margin-0.margin-right-20.truncate.hide-until-l {{ username }}
             .flex.flex-center.clickable
-                router-link(:to="{ path: '/user/' + me.id, query: $route.query }")
+                router-link(:to="{ path: '/user/' + selfId, query: $route.query }")
                     img.circle.primary-border.hide-until-m(:src="avatar")
                 i#options-button.material-icons.s.text-white.margin-left-5.hide-until-m.padding-left-5.padding-right-5(@click.stop="opened = !opened") keyboard_arrow_down
 </template>
@@ -30,9 +30,7 @@
         data: () => ({
             avatar: null,
             opened: false,
-            me: {
-                id: null
-            }
+            selfId: null
         }),
         watch: {
             '$route' () {
@@ -41,7 +39,7 @@
         },
         async created () {
             this.avatar = Api.getGravatar()
-            this.me.id = window.localStorage.getItem('id')
+            this.selfId = window.localStorage.getItem('id')
         },
         mounted () {
             document.body.addEventListener('click', this.closeOptions)

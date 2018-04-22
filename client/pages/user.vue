@@ -6,15 +6,13 @@
         .section
             .row
                 .column.s12(v-if="targetUser")
-                    user-sidebar(v-if="me" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="me.id")
+                    user-sidebar(v-if="selfId" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="selfId")
                     .column.s12.l9.padding-0
                         show-playlist(:user-id="targetUser.id")
 
 </template>
 
 <script>
-    // 5aaaad66d85c31000414d68a Frigon
-    // 5aac54dba6d6b600042f3082 Sam
     import UserSidebar from '@/components/user-sidebar'
     import ShowPlaylist from '@/components/show-playlist'
     import ErrorBox from '@/components/error'
@@ -33,7 +31,7 @@
             targetUser: null,
             error: null,
             loading: null,
-            me: null
+            selfId: null
         }),
         beforeRouteEnter (to, from, next) {
             try {
@@ -61,10 +59,7 @@
                     return (this.error = 'An error occured while searching for this user.')
                 }
 
-                try {
-                    this.me = await UserApi.me()
-                } catch (err) { this.error = 'An error occured while fetching data for this user.' }
-
+                this.selfId = window.localStorage.getItem('id')
                 this.error = null
                 this.targetUser = data
             }

@@ -31,7 +31,7 @@
                             h1.row.text-white.text-size-3.text-regular Users
                             .text-center
                                 router-link.inline-block.text-center.text-white.text-size-2.user(v-for="user in users" :to="{ path: `/user/${user.id}` }" :key="user.id")
-                                    user-sidebar.row(v-if="me" :id="user.id" :name="user.name" :email="user.email" :selfId="me.id")
+                                    user-sidebar.row(v-if="selfId" :id="user.id" :name="user.name" :email="user.email" :selfId="selfId")
                         .section(v-if="error")
                             .row.text-center
                                 h1.text-red.text-size-2 {{ error }}
@@ -39,7 +39,7 @@
 
 <script>
     import Vue from 'vue'
-    import { UserApi, SearchApi } from '@/api'
+    import { SearchApi } from '@/api'
     import Artist from '@/components/search-results/artist'
     import Album from '@/components/search-results/album'
     import Song from '@/components/search-results/song'
@@ -62,7 +62,7 @@
             users: null,
             timer: null,
             error: null,
-            me: null
+            selfId: null
         }),
         async mounted () {
             const action = document.getElementById('search-action')
@@ -73,7 +73,7 @@
             })
 
             try {
-                this.me = await UserApi.me()
+                this.selfId = window.localStorage.getItem('id')
             } catch (err) { this.error = 'An error occured while fetching data for this user.' }
         },
         methods: {
@@ -102,6 +102,7 @@
                             this.artists = result.filter(n => n.wrapperType === 'artist')
                             this.songs = result.filter(n => n.wrapperType === 'track')
                             this.users = await SearchApi.searchUsers(this.qString)
+                            this.users.splice(30, this.users.length - 1)
                             break
                         case 1:
                             this.artists = await SearchApi.searchArtists(this.qString)

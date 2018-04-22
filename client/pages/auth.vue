@@ -51,7 +51,7 @@
 <script>
     import Logo from '@/components/logo'
     import Api from '@/api'
-    import { FScript, Toast, MaterialInput, Util } from '@/script/fscript'
+    import { FScript, Toast, MaterialInput, Util, Network } from '@/script/fscript'
     import { STOP_AUDIO_PLAYER } from '@/store/mutation-types'
     import Cookies from 'js-cookie'
 
@@ -146,16 +146,27 @@
             })
         },
         methods: {
+            computeExpires (data, callback) {
+                return Network.jsonParse(atob(data.token.split('.')[1]), (err, token) => {
+                    if (err) return callback(null, 1)
+                    return callback(null, (token.exp - Date.now()) / 1000 / 60 / 60 / 24)
+                })
+            },
+            setUserData (data, callback) {
+                if (data) {
+                    this.computeExpires(data, (_, expires) => {
+                        if (data.token) Cookies.set('access_token', data.token, { expires: expires })
+                        if (data.name) window.localStorage.setItem('name', data.name)
+                        if (data.id) window.localStorage.setItem('id', data.id)
+                        return callback()
+                    })
+                }
+            },
             async login (form) {
                 if (!this.validateLogin()) return form.scrollIntoView({ behavior: 'smooth' })
                 try {
                     const data = await Api.login(this.email.toLowerCase(), this.password)
-                    if (data) {
-                        if (data.token) Cookies.set('access_token', data.token, { expires: 0.25 })
-                        if (data.name) window.localStorage.setItem('name', data.name)
-                        if (data.id) window.localStorage.setItem('id', data.id)
-                    }
-                    return this.$router.push(this.$route.query.redirect || '/')
+                    return this.setUserData(data, _ => this.$router.push(this.$route.query.redirect || '/'))
                 } catch (err) {
                     this.submitError = 'Your email and password combination don\'t match any of our records.'
                     form.scrollIntoView({ behavior: 'smooth' })
@@ -169,12 +180,7 @@
                 if (!this.validateRegistration()) return form.scrollIntoView({ behavior: 'smooth' })
                 try {
                     const data = await Api.register(this.email, this.name, this.password)
-                    if (data) {
-                        if (data.token) Cookies.set('access_token', data.token, { expires: 0.25 })
-                        if (data.name) window.localStorage.setItem('name', data.name)
-                        if (data.id) window.localStorage.setItem('id', data.id)
-                    }
-                    return this.$router.push(this.$route.query.redirect || '/')
+                    return this.setUserData(data, _ => this.$router.push(this.$route.query.redirect || '/'))
                 } catch (err) {
                     this.submitError = 'We could not create account, please try again later.'
                     form.scrollIntoView({ behavior: 'smooth' })

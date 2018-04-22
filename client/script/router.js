@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Auth from '@/script/auth'
-import Cookies from 'js-cookie'
 
 import Home from '@/pages/home'
 import Album from '@/pages/album'
@@ -68,8 +67,8 @@ const router = new Router({
 router.beforeEach(async (to, from, next) => {
     let query = { redirect: to.fullPath }
     if (to.name === 'Logout') {
-        Cookies.remove('access_token')
-        query = {}
+        Auth.logout()
+        return next({ path: '/login' })
     }
 
     if (await Auth.checkAuth()) {

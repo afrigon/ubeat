@@ -7,7 +7,7 @@
                 button.text-button.transparent.text-primary-light(@click="back") Return to playlists
             .row
                 .column.s12
-                    user-sidebar(v-if="me" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="me.id")
+                    user-sidebar(v-if="selfId" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="selfId")
                     .column.s12.l9.padding-0
                         .container.margin-up-30
                             h1.text-white.text-size-3.text-light.text-center Following ({{ targetUser.following.length }})
@@ -40,7 +40,7 @@
                 email: null,
                 following: []
             },
-            me: null,
+            selfId: null,
             error: null,
             loading: null
         }),
@@ -78,7 +78,7 @@
                 }
 
                 try {
-                    this.me = await UserApi.me()
+                    this.selfId = window.localStorage.getItem('id')
                 } catch (err) { this.error = 'An error occured while fetching data for this user.' }
 
                 this.error = null
