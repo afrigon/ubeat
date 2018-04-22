@@ -29,7 +29,7 @@
         components: {
             'loading': Loading
         },
-        props: [ 'id', 'name', 'email', 'following', 'selfId' ],
+        props: [ 'id', 'name', 'email', 'following' ],
         data: () => ({
             avatar: null,
             loading: null,
