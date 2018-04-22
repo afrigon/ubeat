@@ -42,7 +42,7 @@
     import Loading from '@/components/loading'
     import PlaylistCard from '@/components/playlist-card'
 
-    import { PlaylistApi, UserApi } from '@/api'
+    import { PlaylistApi } from '@/api'
     import { FScript, Banner } from '@/script/fscript'
     import { SET_PLAYLIST_NAME, PLAY_SONG, RESTORE_RADIO } from '@/store/mutation-types'
 
@@ -72,7 +72,7 @@
                 }
             },
             playingId () {
-                return this.$store.state.persistent.audioPlayer.trackId
+                return this.$store.state.session.audioPlayer.trackId
             }
         },
         watch: {
@@ -107,11 +107,10 @@
                 this.name = data.name
             },
             async setEditAccess () {
-                let me = await UserApi.me()
-                this.canEdit = this.playlist.owner.id === me.id
+                this.canEdit = this.playlist.owner.id === this.$store.state.persistent.user.id
             },
             play (id, meta, url) {
-                if (this.$store.state.persistent.audioPlayer.trackId === id) {
+                if (this.$store.state.session.audioPlayer.trackId === id) {
                     this.$store.commit(RESTORE_RADIO)
                 } else {
                     this.$store.commit(PLAY_SONG, { trackId: id, meta: meta, url: url })

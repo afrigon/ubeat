@@ -9,7 +9,6 @@ import User from '@/pages/user'
 import Following from '@/pages/following'
 import Playlists from '@/pages/playlists'
 import Playlist from '@/pages/playlist'
-import Settings from '@/pages/settings'
 
 import AuthPage from '@/pages/auth'
 
@@ -46,10 +45,6 @@ const router = new Router({
         name: 'Playlist',
         component: Playlist
     }, {
-        path: '/settings',
-        name: 'Settings',
-        component: Settings
-    }, {
         path: '/login',
         name: 'Login',
         component: AuthPage,
@@ -72,8 +67,8 @@ const router = new Router({
 router.beforeEach(async (to, from, next) => {
     let query = { redirect: to.fullPath }
     if (to.name === 'Logout') {
-        window.localStorage.removeItem('access_token')
-        query = {}
+        Auth.logout()
+        return next({ path: '/login' })
     }
 
     if (await Auth.checkAuth()) {

@@ -12,16 +12,16 @@
         #options-divider.divider.hide-until-m
         #avatar.text-right.flex.flex-right.clickable.margin-left-25.margin-right-25
             i#search-action.material-icons.m.text-white.clickable.margin-right-20 search
-            router-link(:to="{ path: '/user/' + me.id, query: $route.query }")
+            router-link(:to="{ path: '/user/' + selfId, query: $route.query }")
                 p#username.no-decoration.text-white.inline-block.margin-0.margin-right-20.truncate.hide-until-l {{ username }}
             .flex.flex-center.clickable
-                router-link(:to="{ path: '/user/' + me.id, query: $route.query }")
+                router-link(:to="{ path: '/user/' + selfId, query: $route.query }")
                     img.circle.primary-border.hide-until-m(:src="avatar")
                 i#options-button.material-icons.s.text-white.margin-left-5.hide-until-m.padding-left-5.padding-right-5(@click.stop="opened = !opened") keyboard_arrow_down
 </template>
 
 <script>
-    import Api, { UserApi } from '@/api'
+    import Api from '@/api'
 
     export default {
         props: {
@@ -30,20 +30,11 @@
         data: () => ({
             avatar: null,
             opened: false,
-            me: {
-                id: null
-            }
+            selfId: null
         }),
-        watch: {
-            '$route' () {
-                this.avatar = Api.getGravatar()
-            }
-        },
-        async created () {
-            this.avatar = Api.getGravatar()
-            this.me = await UserApi.me()
-        },
         mounted () {
+            this.avatar = Api.getGravatar(this.$store.state.persistent.user.email)
+            this.selfId = this.$store.state.persistent.user.id
             document.body.addEventListener('click', this.closeOptions)
             document.body.addEventListener('resize', this.closeOptions)
         },
@@ -122,7 +113,7 @@
             img {
                 height: 40px;
                 width: 40px;
-                border: solid 2px;
+                margin: 2px;
             }
 
             i {

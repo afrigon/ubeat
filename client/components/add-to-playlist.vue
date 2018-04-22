@@ -1,5 +1,5 @@
 <template lang="pug">
-    main.dark.no-scroll.flex.flex-spaced.flex-vertical.scroll-invisible
+    .dark.no-scroll.flex.flex-spaced.flex-vertical.scroll-invisible
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
 
@@ -9,7 +9,7 @@
             h1.text-white.text-size-3.text-light.text-center Add to a playlist
             .section
                 .row.text-center
-                    playlist-card.item.playlist.clickable(v-for="playlist in playlists" :key="playlist.id" :name="playlist.name" :tracks="playlist.tracks" @click.native="() => selectPlaylist(playlist.id)")
+                    playlist-card.item.playlist.clickable(v-for="playlist in playlists" :key="playlist.id" :name="playlist.name" :tracks="playlist.tracks" @click.native.stop="() => selectPlaylist(playlist.id)")
 </template>
 
 <script>

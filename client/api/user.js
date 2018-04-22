@@ -2,8 +2,8 @@ import Auth from '@/script/auth'
 
 export default class UserApi {
     static async me () {
-        const user = await Auth.authRequest(`/api/users/${await Auth.getUserId()}`)
-        return user
+        const me = await this.getUser(await Auth.getUserId())
+        return me
     }
 
     static async getUsers () {
@@ -26,10 +26,5 @@ export default class UserApi {
 
     static async unfollowUser (id) {
         await Auth.authRequest(`/api/follow/${id}`, { method: 'DELETE' })
-    }
-
-    static async isFollowing (id) {
-        const me = await UserApi.me()
-        return me.following.filter(n => n.id === id).length > 0
     }
 }

@@ -41,7 +41,8 @@ export default class Api {
         return info
     }
 
-    static getGravatar (size = 150, email = (window.localStorage.getItem('email') || '').trim().toLowerCase()) {
-        return `https://secure.gravatar.com/avatar/${md5(email)}?s=${size}`
+    static getGravatar (email, size = 150) {
+        if (!email) return
+        return `https://secure.gravatar.com/avatar/${md5(email.trim().toLowerCase())}?s=${size}`
     }
 }

@@ -9,38 +9,28 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex'
     import Navigation from '@/components/navigation'
     import Drawer from '@/components/drawer'
     import Search from '@/components/search'
     import Options from '@/components/options'
 
     export default {
-        data: () => ({
-            username: null
-        }),
         components: {
             'navigation': Navigation,
             'drawer': Drawer,
             'search': Search,
             'options': Options
         },
-        watch: {
-            '$route': () => {
-                this.username = window.localStorage.getItem('name') || window.localStorage.getItem('email') || ''
-            }
-        },
-        created () {
-            this.username = window.localStorage.getItem('name') || window.localStorage.getItem('email') || ''
+        computed: {
+            ...mapState({
+                username: state => state.persistent.user.name
+            })
         }
     }
 </script>
 
 <style lang="scss" scoped>
-    header nav.underline-animate li::after {
-        opacity: 0.75;
-    }
-
-    nav ul li {
-        line-height: 1.5;
-    }
+    header nav.underline-animate li::after { opacity: 0.75; }
+    nav ul li { line-height: 1.5; }
 </style>

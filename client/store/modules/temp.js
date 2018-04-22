@@ -1,4 +1,8 @@
-import { SET_PLAYLIST_NAME, PREPARE_SONG_FOR_INSERT, CREATE_PLAYLIST } from '../mutation-types'
+import {
+    SET_PLAYLIST_NAME,
+    PREPARE_SONG_FOR_INSERT,
+    CREATE_PLAYLIST
+} from '../mutation-types'
 
 const Temp = {
     state: {

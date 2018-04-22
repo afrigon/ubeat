@@ -6,20 +6,19 @@
             .absolute.action.action-left
                 button.text-button.transparent.text-primary-light(@click="back") Return to playlists
             .row
-                .column.s12
-                    user-sidebar(v-if="me" :id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following" :selfId="me.id")
-                    .column.s12.l9.padding-0
-                        .container.margin-up-30
+                .column.s12(v-if="targetUser")
+                    user-card(:id="targetUser.id" :name="targetUser.name" :email="targetUser.email" :following="targetUser.following")
+                    .column.s12.l8.padding-0
+                        .margin-up-30
                             h1.text-white.text-size-3.text-light.text-center Following ({{ targetUser.following.length }})
                             .section
                                 .row.text-center
                                     i.text-white.text-size-2(v-if="targetUser.following.length === 0") This user does not have any friends.
-                                    user-card.user-card.clickable(v-else v-for="followingUser in targetUser.following" :key="followingUser.id" :user="followingUser" @click.native="() => selectFollowingUser (followingUser.id)")
+                                    user-card(v-else v-for="followingUser in targetUser.following" :id="followingUser.id" :key="followingUser.id" :name="followingUser.name" :email="followingUser.email" @click.native="() => selectFollowingUser (followingUser.id)")
 
 </template>
 
 <script>
-    import UserSidebar from '@/components/user-sidebar'
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
     import UserCard from '@/components/user-card'
@@ -30,17 +29,10 @@
         components: {
             'error': ErrorBox,
             'loading': Loading,
-            'user-card': UserCard,
-            'user-sidebar': UserSidebar
+            'user-card': UserCard
         },
         data: () => ({
-            targetUser: {
-                id: null,
-                name: null,
-                email: null,
-                following: []
-            },
-            me: null,
+            targetUser: null,
             error: null,
             loading: null
         }),
@@ -76,10 +68,6 @@
                     this.targetUser = null
                     return (this.error = 'An error occured while fetching data for this user.')
                 }
-
-                try {
-                    this.me = await UserApi.me()
-                } catch (err) { this.error = 'An error occured while fetching data for this user.' }
 
                 this.error = null
                 this.targetUser = data

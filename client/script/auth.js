@@ -1,13 +1,14 @@
 import Api from '@/api'
 import { HttpError, Network } from '@/script/fscript'
+import Cookies from 'js-cookie'
 
 class Auth {
     static getToken () {
-        const token = window.localStorage.getItem('access_token')
+        const token = Cookies.get('access_token')
         if (!token) return null
         const exp = atob(token.split('.')[1])
         if (!exp || exp <= Date.now()) {
-            window.localStorage.removeItem('access_token')
+            Cookies.remove('access_token')
             return null
         }
         return token
@@ -35,6 +36,10 @@ class Auth {
         options.headers['Authorization'] = token
         const data = await Network.requestJSON(url, options)
         return data
+    }
+
+    static logout () {
+        Cookies.remove('access_token')
     }
 }
 

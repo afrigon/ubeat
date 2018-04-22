@@ -25,7 +25,7 @@
         },
         computed: {
             playingId () {
-                return this.$store.state.persistent.audioPlayer.trackId
+                return this.$store.state.session.audioPlayer.trackId
             }
         },
         methods: {

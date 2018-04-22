@@ -3,8 +3,6 @@
         error(:message="error" v-if="error")
         loading(v-if="loading" color="#b29adb")
 
-        transition(name="playlist-modal")
-            add-to-playlist.fixed.playlists(v-if="isAddingToPlaylist")
         .section
             .row
                 .column.s12(v-if="album")
@@ -61,7 +59,6 @@
 <script type="text/javascript">
     import ErrorBox from '@/components/error'
     import Loading from '@/components/loading'
-    import AddToPlaylist from '@/components/add-to-playlist'
 
     import { AlbumApi } from '@/api'
     import { PREPARE_SONG_FOR_INSERT, PLAY_SONG, RESTORE_RADIO } from '@/store/mutation-types'
@@ -69,8 +66,7 @@
     export default {
         components: {
             'error': ErrorBox,
-            'loading': Loading,
-            'add-to-playlist': AddToPlaylist
+            'loading': Loading
         },
         data: () => ({
             album: null,
@@ -79,11 +75,8 @@
             loading: null
         }),
         computed: {
-            isAddingToPlaylist () {
-                return this.$store.state.temp.songs
-            },
             playingId () {
-                return this.$store.state.persistent.audioPlayer.trackId
+                return this.$store.state.session.audioPlayer.trackId
             }
         },
         beforeRouteEnter (to, from, next) {
@@ -113,7 +106,7 @@
                 this.tracks = data.tracks
             },
             play (id, meta, url) {
-                if (this.$store.state.persistent.audioPlayer.trackId === id) {
+                if (this.$store.state.session.audioPlayer.trackId === id) {
                     this.$store.commit(RESTORE_RADIO)
                 } else {
                     this.$store.commit(PLAY_SONG, { trackId: id, meta: meta, url: url })
@@ -149,26 +142,5 @@
         width: 50%;
         height: auto;
         border-radius: 5px;
-    }
-
-    .playlists {
-        z-index: 10001;
-        top: 100px;
-        bottom: 30px;
-        left: 30px;
-        right: 30px;
-        background-color: #454545 !important;
-        border-radius: 4px;
-    }
-
-    .playlist-modal-enter-active, .playlist-modal-leave-active {
-        will-change: transform, opacity;
-        transition: transform 250ms ease-out, opacity 250ms ease-out;
-        transform: scale(1);
-        opacity: 1;
-    }
-    .playlist-modal-enter, .playlist-modal-leave-to {
-        transform: scale(.95);
-        opacity: 0;
     }
 </style>

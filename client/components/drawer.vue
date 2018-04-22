@@ -3,7 +3,7 @@
         div.drawer-header
             div.drawer-close
                 i.material-icons close
-        router-link.no-decoration.drawer-close(:to="{ path: '/user/' + me.id, query: $route.query }")
+        router-link.no-decoration.drawer-close(:to="{ path: '/user/' + selfId, query: $route.query }")
             div.drawer-profile
                 div.drawer-profile-image
                     img.circle.primary-border(:src="avatar")
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import Api, { UserApi } from '@/api'
+    import Api from '@/api'
     import { FScript, Drawer } from '@/script/fscript'
 
     export default {
@@ -41,13 +41,11 @@
         },
         data: () => ({
             avatar: null,
-            me: {
-                id: null
-            }
+            selfId: null
         }),
         async mounted () {
-            this.avatar = Api.getGravatar()
-            this.me = await UserApi.me()
+            this.avatar = Api.getGravatar(this.$store.state.persistent.user.email)
+            this.selfId = this.$store.state.persistent.user.id
             FScript.addComponent(new Drawer())
         }
     }

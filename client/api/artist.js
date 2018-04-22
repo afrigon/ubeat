@@ -1,4 +1,5 @@
 import Auth from '@/script/auth'
+import AlbumApi from './album'
 
 export default class ArtistApi {
     static async getArtist (id) {
@@ -44,5 +45,17 @@ export default class ArtistApi {
         const artist = await ArtistApi.getArtist(id)
         const albums = ArtistApi.partitionLatestAlbums(await ArtistApi.getArtistAlbums(id), latestReleasesCount)
         return Object.assign({}, { artist: artist }, albums)
+    }
+
+    static async getArtistTracks (id) {
+        const albums = await ArtistApi.getArtistAlbums(id)
+        let tracks = []
+        let albumTracks = []
+
+        for (let i = 0; i < albums.length; i++) {
+            albumTracks = await AlbumApi.getAlbumTracks(albums[i].collectionId)
+            tracks = [...tracks, ...albumTracks.list]
+        }
+        return tracks
     }
 }

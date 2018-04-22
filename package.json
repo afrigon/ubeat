@@ -29,6 +29,7 @@
     "cors": "^2.8.4",
     "express": "^4.16.2",
     "http-proxy-middleware": "^0.17.4",
+    "js-cookie": "^2.2.0",
     "pug": "^2.0.0-rc.4",
     "request": "^2.83.0",
     "serve-favicon": "^2.4.5",

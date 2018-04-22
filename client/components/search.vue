@@ -6,6 +6,7 @@
                 input.text-white.text-fat.transparent.browser-default(type="text" name="q" autocomplete="off" @keyup="search" ref="search" v-model="qString")
                 .close-search.absolute.clickable(@click="close")
                     i.material-icons.l.text-white close
+
             .results.grey.darken-5
                 ul.no-select.filter-wrapper.text-white.text-size-1.text-fat.text-center.clickable(@click="focus")
                     li.filter(@click="_ => selectMode(0)" :class="{ selected: mode == 0 }") ALL RESULTS
@@ -13,25 +14,35 @@
                     li.filter(@click="_ => selectMode(2)" :class="{ selected: mode == 2 }") ALBUMS
                     li.filter(@click="_ => selectMode(3)" :class="{ selected: mode == 3 }") SONGS
                     li.filter(@click="_ => selectMode(4)" :class="{ selected: mode == 4 }") USERS
+
                 .result-items.scroll
+                    loading(v-if="loading" color="#b29adb")
                     .container
                         .section.result-item.result-artists(v-if="mode <= 1 && artists && artists.length > 0" @click="close")
-                            h1.row.text-white.text-size-3.text-regular Artists
+                            h1.row.text-white.text-size-3.text-regular
+                                i.material-icons.margin-right-5 account_circle
+                                span Artists ({{artists.length}})
                             .text-center
                                 artist.row(v-for="artist in artists" :key="artist.artistId" :id="artist.artistId" :name="artist.artistName")
                         .section.result-item.result-albums(v-if="(mode == 0 || mode == 2) && albums && albums.length > 0" @click="close")
-                            h1.row.text-white.text-size-3.text-regular Albums
+                            h1.row.text-white.text-size-3.text-regular
+                                i.material-icons.margin-right-5 album
+                                span Albums ({{albums.length}})
                             .text-center
                                 album.row(v-for="album in albums" :key="album.collectionId" :id="album.collectionId" :title="album.collectionName" :pictureUrl="album.artworkUrl100")
                         .section.result-item.result-songs(v-if="(mode == 0 || mode == 3) && songs && songs.length > 0" @click="close")
-                            h1.row.text-white.text-size-3.text-regular Songs
+                            h1.row.text-white.text-size-3.text-regular
+                                i.material-icons.margin-right-5 audiotrack
+                                span Songs ({{songs.length}})
                             .text-center
                                 song.row(v-for="song in songs" :key="song.trackId" :id="song.trackId" :albumId="song.collectionId" :name="song.trackName" :pictureUrl="song.artworkUrl60")
                         .section.result-item.result-users(v-if="(mode == 0 || mode == 4) && users && users.length > 0" @click="close")
-                            h1.row.text-white.text-size-3.text-regular Users
+                            h1.row.text-white.text-size-3.text-regular
+                                i.material-icons.margin-right-5 person
+                                span Users ({{users.length}})
                             .text-center
                                 router-link.inline-block.text-center.text-white.text-size-2.user(v-for="user in users" :to="{ path: `/user/${user.id}` }" :key="user.id")
-                                    user-sidebar.row(v-if="me" :id="user.id" :name="user.name" :email="user.email" :selfId="me.id")
+                                    user-card.row(:id="user.id" :name="user.name" :email="user.email")
                         .section(v-if="error")
                             .row.text-center
                                 h1.text-red.text-size-2 {{ error }}
@@ -39,18 +50,20 @@
 
 <script>
     import Vue from 'vue'
-    import { UserApi, SearchApi } from '@/api'
+    import { SearchApi } from '@/api'
     import Artist from '@/components/search-results/artist'
     import Album from '@/components/search-results/album'
     import Song from '@/components/search-results/song'
-    import UserSidebar from '@/components/user-sidebar'
+    import UserCard from '@/components/user-card'
+    import Loading from '@/components/loading'
 
     export default {
         components: {
             'artist': Artist,
             'album': Album,
             'song': Song,
-            'user-sidebar': UserSidebar
+            'user-card': UserCard,
+            'loading': Loading
         },
         data: () => ({
             opened: false,
@@ -62,7 +75,7 @@
             users: null,
             timer: null,
             error: null,
-            me: null
+            loading: null
         }),
         async mounted () {
             const action = document.getElementById('search-action')
@@ -71,10 +84,6 @@
                 this.opened = true
                 Vue.nextTick(_ => this.focus())
             })
-
-            try {
-                this.me = await UserApi.me()
-            } catch (err) { this.error = 'An error occured while fetching data for this user.' }
         },
         methods: {
             focus () {
@@ -82,7 +91,10 @@
             },
             selectMode (mode) {
                 this.mode = mode
-                if (this.qString !== '') this.search()
+                if (this.qString !== '') {
+                    this.loading = true
+                    this.search()
+                }
             },
             close () {
                 this.opened = false
@@ -102,6 +114,7 @@
                             this.artists = result.filter(n => n.wrapperType === 'artist')
                             this.songs = result.filter(n => n.wrapperType === 'track')
                             this.users = await SearchApi.searchUsers(this.qString)
+                            this.users.splice(30, this.users.length - 1)
                             break
                         case 1:
                             this.artists = await SearchApi.searchArtists(this.qString)
@@ -118,6 +131,7 @@
                             break
                         }
                     } catch (err) { this.error = `An error occured while searching for '${this.qString}', try again later.` }
+                    this.loading = false
                 }, 500)
             }
         }
@@ -135,7 +149,21 @@
     .result-items {
         height: calc(100vh - 125px - 62px);
         overflow-x: hidden;
+
+        .result-item {
+            padding-top: 26px;
+            border-bottom: 1px solid #9E9E9E;
+        }
     }
+
+    .result-item:last-child {
+        border-bottom: none;
+    }
+
+    .result-item:first-child {
+        padding-top: 14.5px;
+    }
+
     .filter {
         display: inline-block;
         margin: 20px;
@@ -154,6 +182,9 @@
         bottom: 25px;
         left: 100px;
         right: 100px;
+        width: 80%;
+        padding: 10px 15px;
+        border-bottom: 1px solid #9E9E9E;
     }
     .tagline {
         margin: 0;
@@ -164,7 +195,7 @@
         right: 50px;
         bottom: 23px;
     }
-    .filter.selected { border-bottom: 1px solid white; }
+    .filter.selected { border-bottom: 2px solid rgb(178, 154, 219); }
     .section { box-sizing: content-box; }
 
     .result-items::-webkit-scrollbar {
@@ -214,8 +245,8 @@
             overflow: scroll;
             white-space: nowrap;
         }
-        ul::-webkit-scrollbar { 
-            display: none; 
+        ul::-webkit-scrollbar {
+            display: none;
         }
     }
 </style>
