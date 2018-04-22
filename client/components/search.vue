@@ -7,13 +7,13 @@
                 .close-search.absolute.clickable(@click="close")
                     i.material-icons.l.text-white close
 
-            .results.grey.darken-5
+            .results.grey.darken-5.underline-animate
                 ul.no-select.filter-wrapper.text-white.text-size-1.text-fat.text-center.clickable(@click="focus")
-                    li.filter(@click="_ => selectMode(0)" :class="{ selected: mode == 0 }") ALL RESULTS
-                    li.filter(@click="_ => selectMode(1)" :class="{ selected: mode == 1 }") ARTISTS
-                    li.filter(@click="_ => selectMode(2)" :class="{ selected: mode == 2 }") ALBUMS
-                    li.filter(@click="_ => selectMode(3)" :class="{ selected: mode == 3 }") SONGS
-                    li.filter(@click="_ => selectMode(4)" :class="{ selected: mode == 4 }") USERS
+                    li.filter(@click="_ => selectMode(0)" :class="{ active: mode == 0 }") ALL RESULTS
+                    li.filter(@click="_ => selectMode(1)" :class="{ active: mode == 1 }") ARTISTS
+                    li.filter(@click="_ => selectMode(2)" :class="{ active: mode == 2 }") ALBUMS
+                    li.filter(@click="_ => selectMode(3)" :class="{ active: mode == 3 }") SONGS
+                    li.filter(@click="_ => selectMode(4)" :class="{ active: mode == 4 }") USERS
 
                 .result-items.scroll
                     loading(v-if="loading" color="#b29adb")
@@ -152,7 +152,7 @@
 
         .result-item {
             padding-top: 26px;
-            border-bottom: 1px solid #9E9E9E;
+            border-bottom: 1px solid #b29adb;
         }
     }
 
@@ -195,7 +195,6 @@
         right: 50px;
         bottom: 23px;
     }
-    .filter.selected { border-bottom: 2px solid rgb(178, 154, 219); }
     .section { box-sizing: content-box; }
 
     .result-items::-webkit-scrollbar {
