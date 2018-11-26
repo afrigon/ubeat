@@ -1,7 +1,7 @@
 module.exports = {
     prod: {
-        ip: 'localhost',
-        port: 9016
+        ip: '0.0.0.0',
+        port: 80
     },
     dev: {
         ip: '0.0.0.0',
