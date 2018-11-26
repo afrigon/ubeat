@@ -2,7 +2,7 @@ import Auth from '@/script/auth'
 
 export default class SearchApi {
     static async search (q, limit = 30, type = '') {
-        const result = await Auth.authRequest(`/api/search${type}?q=${q}&limit=${limit}`)
+        const result = await Auth.authRequest(`/api/search${type}?q=${q.toLowerCase()}&limit=${limit}`)
         if (result.results) return result.results
         return result
     }

@@ -114,7 +114,7 @@
                             this.artists = result.filter(n => n.wrapperType === 'artist')
                             this.songs = result.filter(n => n.wrapperType === 'track')
                             this.users = await SearchApi.searchUsers(this.qString)
-                            this.users.splice(30, this.users.length - 1)
+                            if (this.users) this.users.splice(30, this.users.length - 1)
                             break
                         case 1:
                             this.artists = await SearchApi.searchArtists(this.qString)
@@ -127,10 +127,14 @@
                             break
                         case 4:
                             this.users = await SearchApi.searchUsers(this.qString)
-                            this.users.splice(30, this.users.length - 1)
+                            if (this.users) this.users.splice(30, this.users.length - 1)
                             break
                         }
-                    } catch (err) { this.error = `An error occured while searching for '${this.qString}', try again later.` }
+                    } catch (err) {
+                        this.artists = this.albums = this.songs = this.users = null
+                        if (err.status === 403) (this.error = `There are no results for '${this.qString}'`)
+                        else (this.error = `An error occured while searching for '${this.qString}', try again later.`)
+                    }
                     this.loading = false
                 }, 500)
             }
