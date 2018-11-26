@@ -1,4 +1,5 @@
 FROM node:10-alpine
+ENV NPM_CONFIG_LOGLEVEL info
 
 RUN apk update
 RUN apk add python
