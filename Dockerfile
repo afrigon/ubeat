@@ -1,7 +1,7 @@
 FROM node:10-alpine
 
-RUN apt-get update
-RUN apt-get install python
+RUN apk update
+RUN apk add python
 
 RUN mkdir -p /opt/app
 WORKDIR /opt/app
